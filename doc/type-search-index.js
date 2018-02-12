@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"com.dezzy.skorp3.field","l":"Entity"}]

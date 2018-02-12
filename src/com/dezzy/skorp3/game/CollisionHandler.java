@@ -4,8 +4,19 @@ import java.awt.Point;
 
 import com.dezzy.skorp3.field.Entity;
 
-public class CollisionHandler {
-	//Rectangles checked here are assumed to be axis aligned
+/**
+ * Private boolean methods here check for collisions between different shapes. If you want to add a new shape and write methods for collision,
+ * add your shape to the Shape enum first. Then define collision logic in a private boolean method. Finally, see hasCollided and add your
+ * implementation there.
+ * 
+ * Please use descriptive names so that the behavior of your method is clear.
+ * 
+ * @see Shape
+ * @see CollisionHandler#hasCollided(Entity, Entity)
+ * @author Dezzmeister
+ *
+ */
+class CollisionHandler {
 	
 	private boolean circleHitCircle(Entity circle1, Entity circle2) {
 		int circle1Radius = circle1.width/2;
@@ -45,6 +56,16 @@ public class CollisionHandler {
 			   (actualYDifference < maximumYDifference);
 	}
 	
+	/**
+	 * Collision logic is NOT defined here. This evaluates the Shapes associated with the Entity parameters
+	 * and calls the appropriate private collision method based on their values.
+	 * 
+	 * @see Entity
+	 * @see Shape
+	 * @param ent1 
+	 * @param ent2
+	 * @return boolean determining if the two Entities have collided
+	 */
 	public boolean hasCollided(Entity ent1, Entity ent2) {
 		Shape shape1 = ent1.getShape();
 		Shape shape2 = ent2.getShape();
