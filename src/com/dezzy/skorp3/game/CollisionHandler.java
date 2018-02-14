@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.game;
 
+import java.lang.reflect.Method;
 import java.awt.Point;
 
 import com.dezzy.skorp3.field.Entity;
@@ -91,6 +92,7 @@ class CollisionHandler {
 	 * @return boolean determining if the two Entities have collided
 	 */
 	public boolean hasCollided(Entity ent1, Entity ent2) {
+		/*
 		Shape shape1 = ent1.getShape();
 		Shape shape2 = ent2.getShape();
 		
@@ -103,5 +105,14 @@ class CollisionHandler {
 		if (shape1==Shape.RECTANGLE && shape2==Shape.LINE) return lineHitRectangle((Line) ent2,ent1);
 		
 		return false;
+		*/
+		Method m = getClass().getDeclaredMethod(format(ent1,ent2));
+		return m.invoke(ent1,ent2);
+	}
+	private static String format(Entity e1, Entity e2){
+		Entity first = (e1.getShpae().ordinal() < e2.getShpae().ordinal())?e1:e2;
+		Entity second = (e1.getShpae().ordinal() > e2.getShpae().ordinal())?e1:e2;
+		return first.getShape().name().toLowerCase() + "Hit" + 
+		       second.getShape().name().charAt(0) + second.getShape().name().substring(1).toLowerCase();
 	}
 }
