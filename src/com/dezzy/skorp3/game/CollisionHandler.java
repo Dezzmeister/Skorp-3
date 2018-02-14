@@ -82,6 +82,8 @@ class CollisionHandler {
 	 * Collision logic is NOT defined here. This evaluates the Shapes associated with the Entity parameters
 	 * and calls the appropriate private collision method based on their values.
 	 * 
+	 * Maybe a HashMap<String,Method> could work here instead of conditionals?
+	 * 
 	 * @see Entity
 	 * @see Shape
 	 * @param ent1 
