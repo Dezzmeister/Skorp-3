@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.field;
 
+import com.dezzy.skorp3.game.Pair;
 import com.dezzy.skorp3.game.Shape;
 
 /**
@@ -12,10 +13,16 @@ import com.dezzy.skorp3.game.Shape;
  */
 public abstract class Entity {
 	protected Shape shape;
-	public int x; //Center
-	public int y; //Center
+	public Pair point;
 	public int width;
 	public int height;
+	
+	//An extra coordinate pair, to be used where necessary
+	public Pair endpoint;
+	
+	protected Entity() {
+		
+	}
 	
 	public Entity(int x, int y, int width, int height) {
 		initGeometry(x,y,width,height);
@@ -27,8 +34,7 @@ public abstract class Entity {
 	}
 	
 	private void initGeometry(int _x, int _y, int _width, int _height) {
-		x = _x;
-		y = _y;
+		point = new Pair(_x,_y);
 		width = _width;
 		height = _height;
 	}
@@ -39,8 +45,18 @@ public abstract class Entity {
 	}
 	
 	public void placeAt(int _x, int _y) {
-		x = _x;
-		y = _y;
+		point.x = _x;
+		point.y = _y;
+	}
+	
+	public void placeEndAt(int x, int y) {
+		endpoint.x = x;
+		endpoint.y = y;
+	}
+	
+	public void placeAt(int x, int y, int x2, int y2) {
+		placeAt(x,y);
+		placeEndAt(x2,y2);
 	}
 
 	public Shape getShape() {
