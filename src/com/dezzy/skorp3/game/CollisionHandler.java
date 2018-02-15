@@ -63,24 +63,25 @@ class CollisionHandler {
 	private boolean lineHitRectangle(Line line, Entity rect) {
 		return false; //Everyone knows that it is physically impossible for a line to touch a rectangle.
 			      //Woah, did you just say that all lines touch rectangles?
+					//yes
 	}
 	
 	private boolean lineHitCircle(Line line, Entity circle) {
 		if(pointInCircle(line.getPairAt(0),circle)||pointInCircle(line.getPairAt(1),circle))
 			return true;
 		double pSlope = (line.getXAt(1)-line.getXAt(0))/(line.getYAt(0)-line.getYAt(1));
-		int x1 = circle.point.x-circle.width/2*Math.cos(Math.atan(pSlope));
-		int x2 = circle.point.x+circle.width/2*Math.cos(Math.atan(pSlope));
-		int y1 = circle.point.y-circle.width/2*Math.sin(Math.atan(pSlope));
-		int y2 = circle.point.y+circle.width/2*Math.sin(Math.atan(pSlope));
+		int x1 = (int) (circle.point.x-circle.width/2*Math.cos(Math.atan(pSlope)));
+		int x2 = (int) (circle.point.x+circle.width/2*Math.cos(Math.atan(pSlope)));
+		int y1 = (int) (circle.point.y-circle.width/2*Math.sin(Math.atan(pSlope)));
+		int y2 = (int) (circle.point.y+circle.width/2*Math.sin(Math.atan(pSlope)));
 		return lineHitLine(line, new Line(x1,x2,y1,y2));
 	}
 	
 	private boolean lineHitLine(Line line1, Line line2){
 		double slope1 = (line1.getYAt(0)-line1.getYAt(1))/(line1.getXAt(0)-line1.getXAt(1));
 		double slope2 = (line2.getYAt(0)-line2.getYAt(1))/(line2.getXAt(0)-line2.getXAt(1));
-		int intercept1 = line1.getYAt(0)-slope1*line1.getXAt(0);
-		int intercept2 = line2.getYAt(0)-slope2*line2.getXAt(0);
+		int intercept1 = (int) (line1.getYAt(0)-slope1*line1.getXAt(0));
+		int intercept2 = (int) (line2.getYAt(0)-slope2*line2.getXAt(0));
 		if(slope1==slope2)
 			return false;
 		int intersectionX = (intercept2-intercept1)/((int)(slope1-slope2));
@@ -91,13 +92,14 @@ class CollisionHandler {
 	
 	private boolean pointInLine(Pair pair, Line line) {
 		double slope = (line.getYAt(0)-line.getYAt(1))/(line.getXAt(0)-line.getXAt(1));
-		int intercept = line.getYAt(0)-slope*line.getXAt(0);
+		int intercept = (int) (line.getYAt(0)-slope*line.getXAt(0));
 		return pair.y == (int)(slope*pair.x)+intercept && line.getXAt(0)<pair.x && line.getXAt(1)>pair.x
 							       && line.getYAt(0)<pair.y && line.getYAt(1)>pair.y;
 	}
 	
 	private boolean pointInCircle(Pair pair, Entity circle) {
-			  //sqrt sqrt
+			  //sqrt sqrt,
+			  //hit the dirt
 		return Math.sqrt(Math.pow(circle.point.x-pair.x,2)+Math.pow(circle.point.y-pair.y,2))<=circle.width/2;
 	}
 	
@@ -143,12 +145,16 @@ class CollisionHandler {
 		
 		return false;
 		*/
-		Method m = getClass().getDeclaredMethod(format(ent1,ent2));
-		return m.invoke(ent1,ent2);
+		try {
+			Method m = getClass().getDeclaredMethod(format(ent1,ent2));
+			return (boolean) m.invoke(ent1,ent2);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	private String format(Entity e1, Entity e2){
-		Entity first = (e1.getShpae().ordinal() < e2.getShpae().ordinal())?e1:e2;
-		Entity second = (e1.getShpae().ordinal() > e2.getShpae().ordinal())?e1:e2;
+		Entity first = (e1.getShape().ordinal() < e2.getShape().ordinal())?e1:e2;
+		Entity second = (e1.getShape().ordinal() > e2.getShape().ordinal())?e1:e2;
 		return first.getShape().name().toLowerCase() + "Hit" + 
 		       second.getShape().name().charAt(0) + second.getShape().name().substring(1).toLowerCase();
 	}
