@@ -15,7 +15,7 @@ package com.dezzy.skorp3.game;
  *
  */
 public enum Shape {
+	LINE,
 	RECTANGLE, //Axis aligned rectangle
-	CIRCLE,
-	LINE
+	CIRCLE
 }
