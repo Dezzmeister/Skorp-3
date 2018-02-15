@@ -1,1 +1,1 @@
-typeSearchIndex = [{"p":"com.dezzy.skorp3.field","l":"Entity"}]
+typeSearchIndex = [{"p":"com.dezzy.skorp3.game","l":"CollisionHandler"},{"p":"com.dezzy.skorp3.game","l":"CollisionTest"},{"p":"com.dezzy.skorp3.field","l":"Entity"},{"p":"com.dezzy.skorp3.field","l":"Line"},{"p":"com.dezzy.skorp3.field","l":"Obstacle"},{"p":"com.dezzy.skorp3.game","l":"Pair"},{"p":"com.dezzy.skorp3.game","l":"Physics"},{"p":"com.dezzy.skorp3.field","l":"Player"},{"p":"com.dezzy.skorp3.game","l":"Shape"},{"p":"com.dezzy.skorp3.game","l":"Side"},{"p":"com.dezzy.skorp3","l":"Skorp3"}]

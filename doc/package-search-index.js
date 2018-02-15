@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"com.dezzy.skorp3.field"}]
+packageSearchIndex = [{"l":"com.dezzy.skorp3"},{"l":"com.dezzy.skorp3.field"},{"l":"com.dezzy.skorp3.game"}]
