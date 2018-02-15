@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.game;
 
+import com.dezzy.skorp3.field.Entity;
+
 /**
  * Shape is used to determine how collision handling will work. Every Entity must have a shape
  * because as members of the field package, entities will be playing field components and should be able to interact
@@ -15,7 +17,23 @@ package com.dezzy.skorp3.game;
  *
  */
 public enum Shape {
+	//TODO we need an ELLIPSE and also maybe a QUAD or something (LSP)
 	LINE,
 	RECTANGLE, //Axis aligned rectangle
-	CIRCLE
+	CIRCLE;
+	
+	/**
+	 * Orders a pair of entities by their shape values and returns an array of Entities like 
+	 * [lowest,highest].
+	 * 
+	 * @param e1
+	 * @param e2
+	 * @return
+	 */
+	public static Entity[] orderByShape(Entity e1, Entity e2) {
+		Entity first = (e1.getShape().ordinal() < e2.getShape().ordinal()) ? e1 : e2;
+		Entity second = (first==e2) ? e1 : e2;
+		
+		return new Entity[]{first,second};
+	}
 }

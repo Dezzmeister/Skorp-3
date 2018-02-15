@@ -1,7 +1,9 @@
 package com.dezzy.skorp3.game;
 
-import java.lang.reflect.Method;
 import java.awt.Point;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field.Line;
@@ -21,6 +23,13 @@ import com.dezzy.skorp3.field.Line;
  */
 @SuppressWarnings("unused")
 class CollisionHandler {
+	private static Map<String, Method> methods = new HashMap<String, Method>();
+	
+	static {
+		for (Method m : CollisionHandler.class.getDeclaredMethods()) {
+			methods.put(m.getName(), m);
+		}
+	}
 	
 	private boolean circleHitCircle(Entity circle1, Entity circle2) {
 		int circle1Radius = circle1.width/2;
@@ -67,6 +76,7 @@ class CollisionHandler {
 					//yes
 	}
 	
+	//TODO check logic here
 	private boolean lineHitCircle(Line line, Entity circle) {
 		if(pointInCircle(line.getPairAt(0),circle)||pointInCircle(line.getPairAt(1),circle))
 			return true;
@@ -85,12 +95,16 @@ class CollisionHandler {
 		int intercept2 = (int) (line2.getYAt(0)-slope2*line2.getXAt(0));
 		if(slope1==slope2)
 			return false;
+		//TODO what if they have the same slope and are exactly on top of each other (that's what she said)
 		int intersectionX = (intercept2-intercept1)/((int)(slope1-slope2));
 		return pointInLine(new Pair(intersectionX,(int)(slope1*intersectionX)+intercept1),line1) &&
 		       pointInLine(new Pair(intersectionX,(int)(slope1*intersectionX)+intercept1),line2);
 		
 	}
 	
+	//TODO please yooze som clare viribil nims, joj (becos of teh stile of tis coad, is be not cool one lin whammrs like it shuld but 
+	//have descriptive variable names so as to avoid the use of comments to explain things or long mathematical expressions
+	//where 50 things are dereferenced in one line and you end up with One Great Boolean
 	private boolean pointInLine(Pair pair, Line line) {
 		double slope = (line.getYAt(0)-line.getYAt(1))/(line.getXAt(0)-line.getXAt(1));
 		int intercept = (int) (line.getYAt(0)-slope*line.getXAt(0));
@@ -146,33 +160,30 @@ class CollisionHandler {
 		
 		return false;
 		*/
-		Entity[] ordered = orderByShape(ent1,ent2);
+		Entity[] ordered = Shape.orderByShape(ent1,ent2);
+		System.out.println("Formatted Name: "+format(ordered[0],ordered[1]));
+		
 		try {			
-			Method m = getClass().getDeclaredMethod(format(ordered[0],ordered[1]),Entity.class, Entity.class);
+			Method collisionMethod = methods.get(format(ordered[0],ordered[1]));
 
-			return (boolean) m.invoke(ordered[0],ordered[1]);
+			return (boolean) collisionMethod.invoke(this, ordered[0],ordered[1]);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
 	
+	/**
+	 * Takes two entities and returns a formatted String. Example:
+	 * "rectangleHitCircle" if the first Entity has a RECTANGLE and the second Entity
+	 * has a CIRCLE.
+	 * 
+	 * @param first
+	 * @param second
+	 * @return
+	 */
 	private String format(Entity first, Entity second){		
 		return first.getShape().name().toLowerCase() + "Hit" + 
 		       second.getShape().name().charAt(0) + second.getShape().name().substring(1).toLowerCase();
-	}
-	
-	/**
-	 * Orders a pair of entities by their shape values and returns an array of Entities like 
-	 * [lowest,highest].
-	 * 
-	 * @param e1
-	 * @param e2
-	 * @return
-	 */
-	private Entity[] orderByShape(Entity e1, Entity e2) {
-		Entity first = (e1.getShape().ordinal() < e2.getShape().ordinal()) ? e1 : e2;
-		Entity second = (first==e2) ? e1 : e2;
-		
-		return new Entity[]{first,second};
 	}
 }

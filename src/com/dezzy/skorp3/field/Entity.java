@@ -21,7 +21,8 @@ public abstract class Entity {
 	public Pair endpoint;
 	
 	protected Entity() {
-		
+		point = new Pair(0,0);
+		endpoint = new Pair(0,0);
 	}
 	
 	public Entity(int x, int y, int width, int height) {
