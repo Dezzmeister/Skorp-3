@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.game;
 
+import com.dezzy.skorp3.field.Entity;
+
 /**
  * Physics governs game physics (or what little there is so far).
  * 
@@ -13,4 +15,8 @@ package com.dezzy.skorp3.game;
  */
 public final class Physics {
 	public static CollisionHandler collider = new CollisionHandler();
+	
+	public static boolean hasCollided(Entity entity1, Entity entity2) {
+		return collider.hasCollided(entity1, entity2);
+	}
 }

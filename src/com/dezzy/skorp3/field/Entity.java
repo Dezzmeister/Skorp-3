@@ -1,6 +1,9 @@
 package com.dezzy.skorp3.field;
 
+import java.util.function.BiConsumer;
+
 import com.dezzy.skorp3.game.Pair;
+import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
 
 /**
@@ -20,6 +23,8 @@ public abstract class Entity {
 	//An extra coordinate pair, to be used where necessary
 	public Pair endpoint;
 	
+	private BiConsumer<Entity,Entity> collisionMethod;
+	
 	protected Entity() {
 		point = new Pair(0,0);
 		endpoint = new Pair(0,0);
@@ -31,7 +36,7 @@ public abstract class Entity {
 	
 	public Entity(int x, int y, int width, int height, Shape _shape) {
 		initGeometry(x,y,width,height);
-		setShape(_shape);
+		shape = _shape;
 	}
 	
 	private void initGeometry(int _x, int _y, int _width, int _height) {
@@ -63,8 +68,20 @@ public abstract class Entity {
 	public Shape getShape() {
 		return shape;
 	}
-
-	public void setShape(Shape _shape) {
-		shape = _shape;
+	
+	/**
+	 * This method accepts a BiConsumer<Entity,Entity> defining what happens when this Entity collides with another.
+	 * The first Entity parameter when accept() is called will be "this", and the second parameter will be the other Entity being tested for collision.
+	 * 
+	 * @param _collisionMethod BiConsumer<Entity,Entity>
+	 */
+	public void setCollisionAction(BiConsumer<Entity,Entity> _collisionMethod) {
+		collisionMethod = _collisionMethod;
+	}
+	
+	public void onCollisionWith(Entity entity) {
+		if (Physics.hasCollided(this,entity) && collisionMethod != null) {
+			collisionMethod.accept(this, entity);
+		}
 	}
 }
