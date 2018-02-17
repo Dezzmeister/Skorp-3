@@ -115,18 +115,24 @@ class CollisionHandler {
 		
 		int mx = (int)slope*point.x();
 		int y = mx+b;
-		return (y==point.y());		
+		
+		int centerX = line.getXAt(0.5);
+		int centerY = line.getYAt(0.5);
+		int xDiff = line.endpoint.x - line.point.x;
+		int yDiff = line.endpoint.y - line.point.y;
+		return y==point.y() && pointHitRectangle(point, new Geometric(centerX,centerY,xDiff,yDiff){});
 	}
 	
-	private boolean pointInCircle(Pair<Integer> pair, Geometric circle) {
-			  //sqrt sqrt,
-			  //hit the dirt
-		return Math.sqrt(Math.pow(circle.point.x-pair.x,2)+Math.pow(circle.point.y-pair.y,2))<=circle.width/2;
+	private boolean pointHitCircle(Point point, Geometric circle) {
+		int radius = circle.width;
+		double distanceFromCircle = point.distance(new Point(circle.point));
+		
+		return radius >= distanceFromCircle;
 	}
 	
-	private boolean pairInRectangle(Pair<Integer> pair, Geometric rect) {
-		int x = pair.x;
-		int y = pair.y;
+	private boolean pointHitRectangle(Point point, Geometric rect) {
+		int x = point.x();
+		int y = point.y();
 		
 		int upperXBound = (int) (rect.point.x + (rect.width/2.0));
 		int lowerXBound = (int) (rect.point.x - (rect.width/2.0));

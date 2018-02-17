@@ -16,6 +16,11 @@ public class Line extends Geometric {
 		placeAt(x,y,x2,y2);
 	}
 	
+	public Line(Pair<Integer> _point, Pair<Integer> _endpoint) {
+		point = _point;
+		endpoint = _endpoint;
+	}
+	
 	public int getXAt(double normalizedDistance) {
 		return point.x + (int)(normalizedDistance*(endpoint.x-point.x));
 	}

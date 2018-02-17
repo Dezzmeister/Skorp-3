@@ -11,10 +11,12 @@ import com.dezzy.skorp3.game.Shape;
  *
  */
 public class Point extends Entity {
-
+	
+	{
+		shape = Shape.POINT;
+	}
 	public Point(int x, int y) {
 		super(x,y);
-		shape = Shape.POINT;
 	}
 	
 	public Point(Pair<Integer> pair) {
@@ -31,5 +33,9 @@ public class Point extends Entity {
 	
 	public static double distance(double x1, double y1, double x2, double y2) {
 		return java.awt.Point.distance(x1,y1,x2,y2);
+	}
+	
+	public double distance(Point otherPoint) {
+		return distance(point.x,point.y,otherPoint.x(),otherPoint.y());
 	}
 }

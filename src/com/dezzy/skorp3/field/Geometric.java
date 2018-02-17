@@ -50,11 +50,6 @@ public abstract class Geometric extends Entity {
 		height = _height;
 	}
 	
-	public void placeAt(int _x, int _y) {
-		point.x = _x;
-		point.y = _y;
-	}
-	
 	public void placeEndAt(int x, int y) {
 		endpoint.x = x;
 		endpoint.y = y;

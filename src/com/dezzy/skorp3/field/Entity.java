@@ -40,6 +40,11 @@ public abstract class Entity {
 		return shape;
 	}
 	
+	public void placeAt(int _x, int _y) {
+		point.x = _x;
+		point.y = _y;
+	}
+	
 	/**
 	 * This method accepts a BiConsumer<Entity,Entity> defining what happens when this Entity collides with another.
 	 * The first Entity parameter when accept() is called will be "this", and the second parameter will be the other Entity being tested for collision.
