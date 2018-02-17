@@ -16,53 +16,24 @@ import com.dezzy.skorp3.game.Shape;
  */
 public abstract class Entity {
 	protected Shape shape;
-	public Pair point;
-	public int width;
-	public int height;
-	
-	//An extra coordinate pair, to be used where necessary
-	public Pair endpoint;
+	public Pair<Integer> point;
 	
 	private BiConsumer<Entity,Entity> collisionMethod;
 	
+	{
+		point = new Pair<Integer>(0,0);
+	}
+	
 	protected Entity() {
-		point = new Pair(0,0);
-		endpoint = new Pair(0,0);
+		
 	}
 	
-	public Entity(int x, int y, int width, int height) {
-		initGeometry(x,y,width,height);
-	}
-	
-	public Entity(int x, int y, int width, int height, Shape _shape) {
-		initGeometry(x,y,width,height);
+	public Entity(Shape _shape) {
 		shape = _shape;
 	}
 	
-	private void initGeometry(int _x, int _y, int _width, int _height) {
-		point = new Pair(_x,_y);
-		width = _width;
-		height = _height;
-	}
-	
-	public void resize(int _width, int _height) {
-		width = _width;
-		height = _height;
-	}
-	
-	public void placeAt(int _x, int _y) {
-		point.x = _x;
-		point.y = _y;
-	}
-	
-	public void placeEndAt(int x, int y) {
-		endpoint.x = x;
-		endpoint.y = y;
-	}
-	
-	public void placeAt(int x, int y, int x2, int y2) {
-		placeAt(x,y);
-		placeEndAt(x2,y2);
+	public Entity(int x, int y) {
+		point = new Pair<Integer>(x,y);
 	}
 
 	public Shape getShape() {

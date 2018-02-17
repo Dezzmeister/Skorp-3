@@ -7,11 +7,11 @@ package com.dezzy.skorp3.game;
  * @author Dezzmeister
  *
  */
-public final class Pair {
-	public int x;
-	public int y;
+public final class Pair<T> {
+	public T x;
+	public T y;
 	
-	public Pair(int _x, int _y) {
+	public Pair(T _x, T _y) {
 		x = _x;
 		y = _y;
 	}

@@ -9,11 +9,10 @@ import com.dezzy.skorp3.game.Shape;
  * @author Dezzmeister
  *
  */
-public class Line extends Entity {
+public class Line extends Geometric {
 
 	public Line(int x, int y, int x2, int y2) {
-		super();
-		shape = Shape.LINE;
+		super(Shape.LINE);
 		placeAt(x,y,x2,y2);
 	}
 	
@@ -28,11 +27,24 @@ public class Line extends Entity {
 		return lowerY + (int)(normalizedDistance*(upperY-lowerY));
 	}
 	
-	public Pair getPairAt(double normalizedDistance) {
+	public Pair<Integer> getPairAt(double normalizedDistance) {
 		int xCoord = getXAt(normalizedDistance);
 		int yCoord = getYAt(normalizedDistance);
 		
-		return new Pair(xCoord,yCoord);
+		return new Pair<Integer>(xCoord,yCoord);
+	}
+	
+	public double slope() {
+		double xDiff = endpoint.x-point.x;
+		double yDiff = endpoint.y-point.y;
+		return yDiff/xDiff;
+	}
+	
+	public double yIntercept() {
+		int x = point.x;
+		int y = point.y;
+		
+		return y - (slope()*x);
 	}
 	
 	@Override

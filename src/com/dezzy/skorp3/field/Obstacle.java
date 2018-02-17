@@ -2,7 +2,7 @@ package com.dezzy.skorp3.field;
 
 import com.dezzy.skorp3.game.Shape;
 
-public class Obstacle extends Entity {
+public class Obstacle extends Geometric {
 
 	public Obstacle(int x, int y, int width, int height) {
 		super(x, y, width, height);

@@ -18,6 +18,7 @@ import com.dezzy.skorp3.field.Entity;
  */
 public enum Shape {
 	//TODO we need an ELLIPSE and also maybe a QUAD or something (LSP)
+	POINT,
 	LINE,
 	RECTANGLE, //Axis aligned rectangle
 	CIRCLE;

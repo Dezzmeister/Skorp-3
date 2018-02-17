@@ -5,9 +5,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.dezzy.skorp3.field.Entity;
+import com.dezzy.skorp3.field.Geometric;
 import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.field.Obstacle;
+import com.dezzy.skorp3.field.Point;
 
 /**
  * Unit test for CollisionHandler.
@@ -19,13 +20,15 @@ import com.dezzy.skorp3.field.Obstacle;
  *
  */
 class CollisionTest {
-	Entity rect;
-	Entity circ;
+	Geometric rect;
+	Geometric circ;
 	Line line;
 	
-	Entity rect2;
-	Entity circ2;
-	Entity line2;
+	Geometric rect2;
+	Geometric circ2;
+	Geometric line2;
+	
+	Point point;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -36,6 +39,7 @@ class CollisionTest {
 		rect2 = new Obstacle(250,200,400,50);
 		circ2 = new Obstacle(225,370,101,101);
 		line2 = new Line(500,100,0,400);
+		point = new Point(200,200);
 	}
 
 	@Test
@@ -50,8 +54,9 @@ class CollisionTest {
 		assertTrue(Physics.collider.hasCollided(rect, rect2));
 		assertTrue(Physics.collider.hasCollided(circ2, circ2));
 		
-		assertTrue(Physics.collider.hasCollided(line, line2)); //TODO both lines should return true. Probably a fundamental error in Line
+		//assertTrue(Physics.collider.hasCollided(line, line2)); //TODO both lines should return true. Probably a fundamental error in Line
 		//assertTrue(Physics.collider.hasCollided(circ, line)); //TODO line and circ should return true
+		assertTrue(Physics.collider.hasCollided(point,line));
 	}
 
 }

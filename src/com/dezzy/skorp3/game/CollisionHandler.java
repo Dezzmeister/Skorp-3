@@ -1,12 +1,13 @@
 package com.dezzy.skorp3.game;
 
-import java.awt.Point;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.dezzy.skorp3.field.Entity;
+import com.dezzy.skorp3.field.Geometric;
 import com.dezzy.skorp3.field.Line;
+import com.dezzy.skorp3.field.Point;
 
 /**
  * Private boolean methods here check for collisions between different shapes. If you want to add a new shape and write methods for collision,
@@ -31,7 +32,7 @@ class CollisionHandler {
 		}
 	}
 	
-	private boolean circleHitCircle(Entity circle1, Entity circle2) {
+	private boolean circleHitCircle(Geometric circle1, Geometric circle2) {
 		int circle1Radius = circle1.width/2;
 		int circle2Radius = circle2.width/2;
 		int maximumDistanceBetweenCircles = circle1Radius + circle2Radius;
@@ -40,7 +41,7 @@ class CollisionHandler {
 		return maximumDistanceBetweenCircles > actualDistanceBetweenCircles;
 	}
 	
-	private boolean rectangleHitRectangle(Entity rect1, Entity rect2) {
+	private boolean rectangleHitRectangle(Geometric rect1, Geometric rect2) {
 		double halfOfCombinedWidths = (rect1.width/2.0) + (rect2.width/2.0);
 		double halfOfCombinedHeights = (rect1.height/2.0) + (rect2.height/2.0);
 		
@@ -51,7 +52,7 @@ class CollisionHandler {
 			   (distanceOnYAxis < halfOfCombinedHeights);
 	}
 	
-	private boolean rectangleHitCircle(Entity rect, Entity circle) {
+	private boolean rectangleHitCircle(Geometric rect, Geometric circle) {
 		double halfOfRectDiagonal = Math.sqrt((rect.width*rect.width)+(rect.height*rect.height))/2.0;
 		double circleRadius = circle.width/2.0;
 		
@@ -70,13 +71,14 @@ class CollisionHandler {
 	}
 	
 	
-	private boolean lineHitRectangle(Line line, Entity rect) {
+	private boolean lineHitRectangle(Line line, Geometric rect) {
 		return false; //Everyone knows that it is physically impossible for a line to touch a rectangle.
 			      //Woah, did you just say that all lines touch rectangles?
 					//yes
 	}
 	
 	//TODO check logic here
+	/*
 	private boolean lineHitCircle(Line line, Entity circle) {
 		if(pointInCircle(line.getPairAt(0),circle)||pointInCircle(line.getPairAt(1),circle))
 			return true;
@@ -87,7 +89,8 @@ class CollisionHandler {
 		int y2 = (int) (circle.point.y+circle.width/2*Math.sin(Math.atan(pSlope)));
 		return lineHitLine(line, new Line(x1,x2,y1,y2));
 	}
-	
+	*/
+	/*
 	private boolean lineHitLine(Line line1, Line line2){
 		double slope1 = (line1.getYAt(0)-line1.getYAt(1))/(line1.getXAt(0)-line1.getXAt(1));
 		double slope2 = (line2.getYAt(0)-line2.getYAt(1))/(line2.getXAt(0)-line2.getXAt(1));
@@ -101,24 +104,27 @@ class CollisionHandler {
 		       pointInLine(new Pair(intersectionX,(int)(slope1*intersectionX)+intercept1),line2);
 		
 	}
+	*/
 	
 	//TODO please yooze som clare viribil nims, joj (becos of teh stile of tis coad, is be not cool one lin whammrs like it shuld but 
 	//have descriptive variable names so as to avoid the use of comments to explain things or long mathematical expressions
 	//where 50 things are dereferenced in one line and you end up with One Great Boolean
-	private boolean pointInLine(Pair pair, Line line) {
-		double slope = (line.getYAt(0)-line.getYAt(1))/(line.getXAt(0)-line.getXAt(1));
-		int intercept = (int) (line.getYAt(0)-slope*line.getXAt(0));
-		return pair.y == (int)(slope*pair.x)+intercept && line.getXAt(0)<pair.x && line.getXAt(1)>pair.x
-							       && line.getYAt(0)<pair.y && line.getYAt(1)>pair.y;
+	private boolean pointHitLine(Point point, Line line) {
+		double slope = line.slope();
+		int b = (int)line.yIntercept();
+		
+		int mx = (int)slope*point.x();
+		int y = mx+b;
+		return (y==point.y());		
 	}
 	
-	private boolean pointInCircle(Pair pair, Entity circle) {
+	private boolean pointInCircle(Pair<Integer> pair, Geometric circle) {
 			  //sqrt sqrt,
 			  //hit the dirt
 		return Math.sqrt(Math.pow(circle.point.x-pair.x,2)+Math.pow(circle.point.y-pair.y,2))<=circle.width/2;
 	}
 	
-	private boolean pointInRectangle(Pair pair, Entity rect) {
+	private boolean pairInRectangle(Pair<Integer> pair, Geometric rect) {
 		int x = pair.x;
 		int y = pair.y;
 		
