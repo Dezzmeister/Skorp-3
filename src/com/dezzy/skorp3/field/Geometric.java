@@ -15,22 +15,22 @@ public abstract class Geometric extends Entity {
 	public int width;
 	public int height;
 	
-	public Pair<Integer> endpoint;
+	public Pair<Double> endpoint;
 	
 	{
-		point = new Pair<Integer>(0,0);
-		endpoint = new Pair<Integer>(0,0);
+		point = new Pair<Double>(0.0,0.0);
+		endpoint = new Pair<Double>(0.0,0.0);
 	}
 	
 	public Geometric() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Geometric(int x, int y, int width, int height) {
+	public Geometric(double x, double y, int width, int height) {
 		initGeometry(x,y,width,height);
 	}
 	
-	public Geometric(int x, int y, int width, int height, Shape _shape) {
+	public Geometric(double x, double y, int width, int height, Shape _shape) {
 		initGeometry(x,y,width,height);
 		shape = _shape;
 	}
@@ -39,8 +39,8 @@ public abstract class Geometric extends Entity {
 		super(_shape);
 	}
 
-	private void initGeometry(int _x, int _y, int _width, int _height) {
-		point = new Pair<Integer>(_x,_y);
+	private void initGeometry(double _x, double _y, int _width, int _height) {
+		point = new Pair<Double>(_x,_y);
 		width = _width;
 		height = _height;
 	}
@@ -50,12 +50,12 @@ public abstract class Geometric extends Entity {
 		height = _height;
 	}
 	
-	public void placeEndAt(int x, int y) {
+	public void placeEndAt(double x, double y) {
 		endpoint.x = x;
 		endpoint.y = y;
 	}
 	
-	public void placeAt(int x, int y, int x2, int y2) {
+	public void placeAt(double x, double y, double x2, double y2) {
 		placeAt(x,y);
 		placeEndAt(x2,y2);
 	}

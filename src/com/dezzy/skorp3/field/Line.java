@@ -11,32 +11,30 @@ import com.dezzy.skorp3.game.Shape;
  */
 public class Line extends Geometric {
 
-	public Line(int x, int y, int x2, int y2) {
+	public Line(double x, double y, double x2, double y2) {
 		super(Shape.LINE);
 		placeAt(x,y,x2,y2);
 	}
 	
-	public Line(Pair<Integer> _point, Pair<Integer> _endpoint) {
+	public Line(Pair<Double> _point, Pair<Double> _endpoint) {
 		point = _point;
 		endpoint = _endpoint;
 	}
 	
-	public int getXAt(double normalizedDistance) {
-		return point.x + (int)(normalizedDistance*(endpoint.x-point.x));
+	public double getXAt(double normalizedDistance) {
+		return Math.abs(point.x + (normalizedDistance*(endpoint.x-point.x)));
 	}
 	
-	public int getYAt(double normalizedDistance) {
-		int lowerY = (point.y < endpoint.y) ? point.y : endpoint.y;
-		int upperY = (lowerY==point.y) ? endpoint.y : point.y;
+	public double getYAt(double normalizedDistance) {
 		
-		return lowerY + (int)(normalizedDistance*(upperY-lowerY));
+		return Math.abs(point.y + (normalizedDistance*(endpoint.y-point.y)));
 	}
 	
-	public Pair<Integer> getPairAt(double normalizedDistance) {
-		int xCoord = getXAt(normalizedDistance);
-		int yCoord = getYAt(normalizedDistance);
+	public Pair<Double> getPairAt(double normalizedDistance) {
+		double xCoord = getXAt(normalizedDistance);
+		double yCoord = getYAt(normalizedDistance);
 		
-		return new Pair<Integer>(xCoord,yCoord);
+		return new Pair<Double>(xCoord,yCoord);
 	}
 	
 	public double slope() {
@@ -46,8 +44,8 @@ public class Line extends Geometric {
 	}
 	
 	public double yIntercept() {
-		int x = point.x;
-		int y = point.y;
+		double x = point.x;
+		double y = point.y;
 		
 		return y - (slope()*x);
 	}

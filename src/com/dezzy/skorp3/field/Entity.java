@@ -16,12 +16,12 @@ import com.dezzy.skorp3.game.Shape;
  */
 public abstract class Entity {
 	protected Shape shape;
-	public Pair<Integer> point;
+	public Pair<Double> point;
 	
 	private BiConsumer<Entity,Entity> collisionMethod;
 	
 	{
-		point = new Pair<Integer>(0,0);
+		point = new Pair<Double>(0.0,0.0);
 	}
 	
 	protected Entity() {
@@ -32,15 +32,15 @@ public abstract class Entity {
 		shape = _shape;
 	}
 	
-	public Entity(int x, int y) {
-		point = new Pair<Integer>(x,y);
+	public Entity(double x, double y) {
+		point = new Pair<Double>(x,y);
 	}
 
 	public Shape getShape() {
 		return shape;
 	}
 	
-	public void placeAt(int _x, int _y) {
+	public void placeAt(double _x, double _y) {
 		point.x = _x;
 		point.y = _y;
 	}

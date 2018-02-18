@@ -90,37 +90,55 @@ class CollisionHandler {
 		return lineHitLine(line, new Line(x1,x2,y1,y2));
 	}
 	*/
-	/*
-	private boolean lineHitLine(Line line1, Line line2){
-		double slope1 = (line1.getYAt(0)-line1.getYAt(1))/(line1.getXAt(0)-line1.getXAt(1));
-		double slope2 = (line2.getYAt(0)-line2.getYAt(1))/(line2.getXAt(0)-line2.getXAt(1));
-		int intercept1 = (int) (line1.getYAt(0)-slope1*line1.getXAt(0));
-		int intercept2 = (int) (line2.getYAt(0)-slope2*line2.getXAt(0));
-		if(slope1==slope2)
-			return false;
-		//TODO what if they have the same slope and are exactly on top of each other (that's what she said)
-		int intersectionX = (intercept2-intercept1)/((int)(slope1-slope2));
-		return pointInLine(new Pair(intersectionX,(int)(slope1*intersectionX)+intercept1),line1) &&
-		       pointInLine(new Pair(intersectionX,(int)(slope1*intersectionX)+intercept1),line2);
+	/**
+	 * Finds both the equations of the lines and finds the point of intersection. Then tests if the point of intersection lies on both lines.
+	 * This can probably be changed to use fewer booleans.
+	 * 
+	 * @param line1
+	 * @param line2
+	 * @return
+	 */
+	private boolean lineHitLine(Line line1, Line line2) {		
+		double m1 = line1.slope();
+		double b1 = line1.yIntercept();
 		
+		double m2 = line2.slope();
+		double b2 = line2.yIntercept();
+		
+		//If the two lines are parallel or coincident, check if line2 contains one of line1's endpoints.
+		if (m1==m2) {
+			if (pointHitLine(new Point(line1.point),line2) ||
+				pointHitLine(new Point(line1.endpoint),line2)) {
+				return true;
+			}
+			return false;
+		}
+		
+		double bDiff = b1-b2;
+		double mDiff = m2-m1;
+
+		double sharedX = (bDiff/mDiff);
+
+		double sharedY = (m1*sharedX)+b1;
+
+		Point intersectionPoint = new Point((int)sharedX,(int)sharedY);
+		
+		return pointHitLine(intersectionPoint,line1) &&
+			   pointHitLine(intersectionPoint,line2);
 	}
-	*/
-	
-	//TODO please yooze som clare viribil nims, joj (becos of teh stile of tis coad, is be not cool one lin whammrs like it shuld but 
-	//have descriptive variable names so as to avoid the use of comments to explain things or long mathematical expressions
-	//where 50 things are dereferenced in one line and you end up with One Great Boolean
+
 	private boolean pointHitLine(Point point, Line line) {
 		double slope = line.slope();
-		int b = (int)line.yIntercept();
+		int b = (int) line.yIntercept();
 		
-		int mx = (int)slope*point.x();
-		int y = mx+b;
+		double mx = (slope*point.x());
+		int y = (int) (mx+b);
 		
-		int centerX = line.getXAt(0.5);
-		int centerY = line.getYAt(0.5);
-		int xDiff = line.endpoint.x - line.point.x;
-		int yDiff = line.endpoint.y - line.point.y;
-		return y==point.y() && pointHitRectangle(point, new Geometric(centerX,centerY,xDiff,yDiff){});
+		double centerX = line.getXAt(0.5);
+		double centerY = line.getYAt(0.5);
+		int xDiff = (int) Math.abs(line.endpoint.x - line.point.x);
+		int yDiff = (int) Math.abs(line.endpoint.y - line.point.y);
+		return y==(int)point.y() && pointHitRectangle(point, new Geometric(centerX,centerY,xDiff,yDiff){});
 	}
 	
 	private boolean pointHitCircle(Point point, Geometric circle) {
@@ -131,8 +149,8 @@ class CollisionHandler {
 	}
 	
 	private boolean pointHitRectangle(Point point, Geometric rect) {
-		int x = point.x();
-		int y = point.y();
+		double x = point.x();
+		double y = point.y();
 		
 		int upperXBound = (int) (rect.point.x + (rect.width/2.0));
 		int lowerXBound = (int) (rect.point.x - (rect.width/2.0));

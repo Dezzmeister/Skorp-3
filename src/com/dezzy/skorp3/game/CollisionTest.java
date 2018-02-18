@@ -30,6 +30,7 @@ class CollisionTest {
 	Geometric circ2;
 	Geometric line2;
 	Geometric circ3;
+	Geometric line3;
 	
 	Point point;
 	
@@ -45,6 +46,8 @@ class CollisionTest {
 		point = new Point(200,200);
 		
 		circ3 = new Obstacle(250,250,150,150,Shape.CIRCLE);
+		
+		line3 = new Line(50,50,0,0);
 	}
 
 	@Test
@@ -59,7 +62,10 @@ class CollisionTest {
 		assertTrue(hasCollided(rect, rect2));
 		assertTrue(hasCollided(circ2, circ2));
 		
-		//assertTrue(hasCollided(line, line2)); //TODO both lines should return true. Probably a fundamental error in Line
+		assertTrue(hasCollided(line, line2));
+		assertFalse(hasCollided(line,line3));
+		line3.point = new Pair<Double>(101.0,101.0);
+		assertTrue(hasCollided(line,line3));
 		//assertTrue(hasCollided(circ, line)); //TODO line and circ should return true
 		assertTrue(hasCollided(point,line));
 		point.placeAt(50, 50);

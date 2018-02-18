@@ -15,19 +15,19 @@ public class Point extends Entity {
 	{
 		shape = Shape.POINT;
 	}
-	public Point(int x, int y) {
-		super(x,y);
+	public Point(double sharedX, double sharedY) {
+		super(sharedX,sharedY);
 	}
 	
-	public Point(Pair<Integer> pair) {
+	public Point(Pair<Double> pair) {
 		point = pair;
 	}
 	
-	public int x() {
+	public double x() {
 		return point.x;
 	}
 	
-	public int y() {
+	public double y() {
 		return point.y;
 	}
 	
@@ -37,5 +37,9 @@ public class Point extends Entity {
 	
 	public double distance(Point otherPoint) {
 		return distance(point.x,point.y,otherPoint.x(),otherPoint.y());
+	}
+	
+	public static double cross(Point point1, Point point2) {
+		return (point1.x() * point2.y()) - (point2.x() - point1.y());
 	}
 }
