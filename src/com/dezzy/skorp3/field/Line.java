@@ -4,7 +4,7 @@ import com.dezzy.skorp3.game.Pair;
 import com.dezzy.skorp3.game.Shape;
 
 /**
- * Uses Entity's endpoint coordinate pair.
+ * Uses Geometric's endpoint coordinate pair.
  * 
  * @author Dezzmeister
  *

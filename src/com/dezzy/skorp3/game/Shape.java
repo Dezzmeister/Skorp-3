@@ -12,8 +12,8 @@ import com.dezzy.skorp3.field.Entity;
  * 
  * In the future, Shape may also be used to determine other behaviors.
  * 
- * @see CollisionHandler
  * @author Dezzmeister
+ * @see CollisionHandler
  *
  */
 public enum Shape {
@@ -29,7 +29,7 @@ public enum Shape {
 	 * 
 	 * @param e1
 	 * @param e2
-	 * @return
+	 * @return a pair of Entities ordered by Shape value
 	 */
 	public static Entity[] orderByShape(Entity e1, Entity e2) {
 		Entity first = (e1.getShape().ordinal() < e2.getShape().ordinal()) ? e1 : e2;

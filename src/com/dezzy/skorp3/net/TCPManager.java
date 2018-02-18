@@ -9,8 +9,8 @@ import java.util.Map;
  * Directive actions will have one parameter, a String containing the received message (without the header). The code provided as an action
  * will act on the String appropriately, and may return something if need be. 
  * 
- * @see StringActor
  * @author Dezzmeister
+ * @see StringActor
  *
  */
 public class TCPManager {

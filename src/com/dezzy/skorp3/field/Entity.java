@@ -10,8 +10,8 @@ import com.dezzy.skorp3.game.Shape;
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
  * by means of Shape.
  * 
- * @see Shape
  * @author Dezzmeister
+ * @see Shape
  *
  */
 public abstract class Entity {

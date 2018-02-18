@@ -11,16 +11,25 @@ import com.dezzy.skorp3.field.Point;
 
 /**
  * Private boolean methods here check for collisions between different shapes. If you want to add a new shape and write methods for collision,
- * add your shape to the Shape enum first. Then define collision logic in a private boolean method. Finally, see hasCollided and add your
- * implementation there.
+ * add your shape to the Shape enum first. Then define collision logic in a private boolean method. FOLLOW THE CONVENTION:
  * 
- * Please use descriptive names so that the behavior of your method is clear.
+ * -Your private boolean must be declared like such: "shape1HitShape2" example: "rectangleHitCircle", and
+ * shape1 MUST come before Shape2 in the Shape enum. Also, the two parameters should be ordered just like the name.
+ * "shape1HitShape2" should not have parameters in the order, "(Shape2 shape2, Shape1 shape1)"
  * 
+ * -Method names MUST be spelled correctly and every word must be either "Hit" or a Shape enum value (camel-case).
+ * 
+ * 
+ * The convention exists so that reflection can be used to call appropriate methods given two Entities. Instead of having to write dozens of if-statements
+ * or requiring the programmer to call "lineHitRectangle" or "pointHitLine" themselves, reflection is used to accept two Entities, order them by Shape, and format the names of their
+ * Shapes to produce a method name following the convention. Then, the appropriate method is called.
+ * 
+ * Also, please use descriptive variable names in your method so that the behavior of your method is clear.
+ * 
+ * @author Dezzmeister
  * @see Shape
  * @see Side
  * @see CollisionHandler#hasCollided(Entity, Entity)
- * @author Dezzmeister
- *
  */
 @SuppressWarnings("unused")
 class CollisionHandler {
@@ -87,8 +96,8 @@ class CollisionHandler {
 	 * Finds both the equations of the lines and finds the point of intersection. Then tests if the point of intersection lies on both lines.
 	 * This can probably be changed to use fewer booleans.
 	 * 
-	 * @param line1
-	 * @param line2
+	 * @param line1 first Line
+	 * @param line2 second Line
 	 * @return
 	 */
 	//TODO make it more efficient
@@ -161,29 +170,15 @@ class CollisionHandler {
 	 * Collision logic is NOT defined here. This evaluates the Shapes associated with the Entity parameters
 	 * and calls the appropriate private collision method based on their values.
 	 * 
-	 * Maybe a HashMap<String,Method> could work here instead of conditionals?
+	 * Maybe a HashMap(String,Method) could work here instead of conditionals?
 	 * 
-	 * @see Entity
-	 * @see Shape
-	 * @param ent1 
-	 * @param ent2
+	 * @param ent1 first Entity
+	 * @param ent2 second Entity
 	 * @return boolean determining if the two Entities have collided
+	 * @see com.dezzy.skorp3.field.Entity
+	 * @see Shape
 	 */
 	public boolean hasCollided(Entity ent1, Entity ent2) {
-		/*
-		Shape shape1 = ent1.getShape();
-		Shape shape2 = ent2.getShape();
-		
-		if (shape1==Shape.RECTANGLE && shape2==Shape.RECTANGLE) return rectangleHitRectangle(ent1,ent2);
-		if (shape1==Shape.CIRCLE && shape2==Shape.CIRCLE) return circleHitCircle(ent1,ent2);
-		if (shape1==Shape.CIRCLE && shape2==Shape.RECTANGLE) return rectangleHitCircle(ent1,ent2);
-		if (shape1==Shape.RECTANGLE && shape2==Shape.CIRCLE) return rectangleHitCircle(ent2,ent1);
-		
-		if (shape1==Shape.LINE && shape2==Shape.RECTANGLE) return lineHitRectangle((Line) ent1,ent2);
-		if (shape1==Shape.RECTANGLE && shape2==Shape.LINE) return lineHitRectangle((Line) ent2,ent1);
-		
-		return false;
-		*/
 		Entity[] ordered = Shape.orderByShape(ent1,ent2);
 		System.out.println("Formatted Name: "+format(ordered[0],ordered[1]));
 		
@@ -204,7 +199,7 @@ class CollisionHandler {
 	 * 
 	 * @param first
 	 * @param second
-	 * @return
+	 * @return String formatted like "firstshapeHitSecondshape"
 	 */
 	private String format(Entity first, Entity second){		
 		return first.getShape().name().toLowerCase() + "Hit" + 
