@@ -66,7 +66,10 @@ class CollisionTest {
 		assertFalse(hasCollided(line,line3));
 		line3.point = new Pair<Double>(101.0,101.0);
 		assertTrue(hasCollided(line,line3));
+		line3 = new Line(0,400,175,225);
+		assertFalse(hasCollided(line3,line));
 		//assertTrue(hasCollided(circ, line)); //TODO line and circ should return true
+		//assertTrue(hasCollided(rect2,line));
 		assertTrue(hasCollided(point,line));
 		point.placeAt(50, 50);
 		assertFalse(hasCollided(point,line));

@@ -70,13 +70,6 @@ class CollisionHandler {
 			   (actualYDifference < maximumYDifference);
 	}
 	
-	
-	private boolean lineHitRectangle(Line line, Geometric rect) {
-		return false; //Everyone knows that it is physically impossible for a line to touch a rectangle.
-			      //Woah, did you just say that all lines touch rectangles?
-					//yes
-	}
-	
 	//TODO check logic here
 	/*
 	private boolean lineHitCircle(Line line, Entity circle) {
@@ -98,6 +91,7 @@ class CollisionHandler {
 	 * @param line2
 	 * @return
 	 */
+	//TODO make it more efficient
 	private boolean lineHitLine(Line line1, Line line2) {		
 		double m1 = line1.slope();
 		double b1 = line1.yIntercept();
@@ -133,12 +127,12 @@ class CollisionHandler {
 		
 		double mx = (slope*point.x());
 		int y = (int) (mx+b);
-		
-		double centerX = line.getXAt(0.5);
-		double centerY = line.getYAt(0.5);
-		int xDiff = (int) Math.abs(line.endpoint.x - line.point.x);
-		int yDiff = (int) Math.abs(line.endpoint.y - line.point.y);
-		return y==(int)point.y() && pointHitRectangle(point, new Geometric(centerX,centerY,xDiff,yDiff){});
+	
+		return y==(int)point.y() && pointHitRectangle(point, line.getBoundingBox());
+	}
+	
+	private boolean lineHitRectangle(Line line, Geometric rect) {
+		return false;
 	}
 	
 	private boolean pointHitCircle(Point point, Geometric circle) {

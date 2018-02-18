@@ -50,6 +50,14 @@ public class Line extends Geometric {
 		return y - (slope()*x);
 	}
 	
+	public Geometric getBoundingBox() {
+		double centerX = getXAt(0.5);
+		double centerY = getYAt(0.5);
+		int xDiff = (int) Math.abs(endpoint.x - point.x);
+		int yDiff = (int) Math.abs(endpoint.y - point.y);
+		return new Geometric(centerX,centerY,xDiff,yDiff) {};
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		boolean isALine = object instanceof Line;
