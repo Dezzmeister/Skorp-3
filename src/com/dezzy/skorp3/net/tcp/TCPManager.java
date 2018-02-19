@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.net.tcp;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -64,11 +65,19 @@ public class TCPManager {
 	}
 	
 	public static Object executeClientDirective(String header) {
-		return clientDirectives.get(header).act(header);
+		try {
+			return clientDirectives.get(header).act(header);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public static Object executeServerDirective(String header) {
-		return serverDirectives.get(header).act(header);
+		try {
+			return serverDirectives.get(header).act(header);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public synchronized void send(String message) {

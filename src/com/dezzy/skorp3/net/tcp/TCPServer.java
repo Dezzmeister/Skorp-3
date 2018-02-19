@@ -19,6 +19,7 @@ public class TCPServer {
 	public void connect(int _port) {
 		port = _port;
 		try {
+			TCPManager.running = true;
 			server = new ServerSocket(port);
 			clientSocket = server.accept();
 			System.out.println("Connected to "+clientSocket.getInetAddress()+":"+clientSocket.getPort());
@@ -30,7 +31,6 @@ public class TCPServer {
 			sender = new SendToClient(clientSocket);
 			sendThread = new Thread(sender);
 			sendThread.start();
-			TCPManager.running = true;
 		} catch(Exception e) {
 			e.printStackTrace();
 			TCPManager.running = false;

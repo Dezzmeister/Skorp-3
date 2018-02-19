@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.net.tcp;
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -18,12 +19,14 @@ class SendToClient implements Runnable {
 		try {
 			writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 			while (true && TCPManager.running) {
-				String message = null;
-				BufferedReader input = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
-				message = input.readLine();
-				writer.println(message);
-				writer.flush();
-				//change to accept method input
+				if (TCPManager.sendMessage !=null) {
+					String message = null;
+					BufferedReader reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
+					message = reader.readLine();
+					writer.println(message);
+					writer.flush();
+					//change to accept method input
+				}
 			}			
 		} catch (Exception e) {
 			TCPManager.running = false;

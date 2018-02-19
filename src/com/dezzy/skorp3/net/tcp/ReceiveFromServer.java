@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.net.tcp;
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -17,8 +18,11 @@ class ReceiveFromServer implements Runnable {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String data = null;
 			while ((data = reader.readLine())!=null && TCPManager.running) {
-				//handle it
-				System.out.println(data);
+				if (data!=null && data.indexOf("null")==-1) {
+					String header = data.substring(0,data.indexOf(" ")!=-1?data.indexOf(" "):data.length());
+					TCPManager.executeClientDirective(header);
+					System.out.println(data);
+				}
 			}
 		} catch(Exception e) {
 			TCPManager.running = false;

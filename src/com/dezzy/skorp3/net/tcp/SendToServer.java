@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.net.tcp;
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -20,14 +21,19 @@ class SendToServer implements Runnable {
 				System.out.println("Client connected to "+socket.getInetAddress()+":"+socket.getPort());
 				writer = new PrintWriter(socket.getOutputStream(),true);
 				while (true && TCPManager.running) {
-					reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
-					String message = null;
-					message = reader.readLine();
-					writer.println(message);
-					writer.flush();
+					if (TCPManager.sendMessage !=null) {
+						reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
+						String message = null;
+						message = reader.readLine();
+						if (message != null) {
+							writer.println(message);
+							writer.flush();
 					
-					if (message.equals("exit")) {
-						break;
+							if (message.equals("exit")) {
+								TCPManager.running = false;
+								break;
+							}
+						}
 					}
 				}
 				socket.close();

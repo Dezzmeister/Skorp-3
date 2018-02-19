@@ -11,10 +11,15 @@ public class TCPClient {
 	Thread sendThread;
 	Thread receiveThread;
 	
+	public TCPClient() {
+		
+	}
+	
 	public void connect(String _ip, int _port) {
 		ip = _ip;
 		port = _port;
 		try {
+			TCPManager.running = true;
 			socket = new Socket(ip,port);
 			
 			sender = new SendToServer(socket);
@@ -24,7 +29,6 @@ public class TCPClient {
 			receiver = new ReceiveFromServer(socket);
 			receiveThread = new Thread(receiver);
 			receiveThread.start();
-			TCPManager.running = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			TCPManager.running = false;
