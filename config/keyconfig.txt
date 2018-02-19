@@ -1,0 +1,2 @@
+randomcontrol=t
+someothercontrol=i

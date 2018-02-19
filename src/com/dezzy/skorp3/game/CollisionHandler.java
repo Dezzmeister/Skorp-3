@@ -197,8 +197,8 @@ class CollisionHandler {
 	 * "rectangleHitCircle" if the first Entity has a RECTANGLE and the second Entity
 	 * has a CIRCLE.
 	 * 
-	 * @param first
-	 * @param second
+	 * @param first first Entity
+	 * @param second second Entity
 	 * @return String formatted like "firstshapeHitSecondshape"
 	 */
 	private String format(Entity first, Entity second){		

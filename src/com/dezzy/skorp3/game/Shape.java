@@ -27,8 +27,8 @@ public enum Shape {
 	 * Orders a pair of entities by their shape values and returns an array of Entities like 
 	 * [lowest,highest].
 	 * 
-	 * @param e1
-	 * @param e2
+	 * @param e1 first Entity
+	 * @param e2 second Entity
 	 * @return a pair of Entities ordered by Shape value
 	 */
 	public static Entity[] orderByShape(Entity e1, Entity e2) {

@@ -1,8 +1,5 @@
 package com.dezzy.skorp3.file;
 
-import java.io.BufferedReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +10,7 @@ import java.util.Map;
  * @author Dezzmeister
  *
  */
-//TODO Add methods that will reset the config file if it is messed up.
+//TODO Add methods that will reset the config file if it has been corrupted.
 public class Config {
 	public static Map<String, String> globalVars = new HashMap<String,String>();
 	public static Map<String, Character> globalKeys = new HashMap<String,Character>();
@@ -28,21 +25,11 @@ public class Config {
 	}
 	
 	public static void readConfig(String path) {
-		try (BufferedReader r = Files.newBufferedReader(Paths.get(path))) {
-			r.lines().forEach(Config::formatAndStoreConfigEntry);
-		} catch (Exception e) {
-			System.out.println("ERROR READING CONFIG FILE");
-			e.printStackTrace();
-		}
+		Load.load(path).forEach(Config::formatAndStoreConfigEntry);
 	}
 	
 	public static void readKeyConfig(String path) {
-		try (BufferedReader r = Files.newBufferedReader(Paths.get(path))) {
-			r.lines().forEach(Config::formatAndStoreKeyConfigEntry);
-		} catch (Exception e) {
-			System.out.println("ERROR READING KEY CONFIG FILE");
-			e.printStackTrace();
-		}
+		Load.load(path).forEach(Config::formatAndStoreKeyConfigEntry);
 	}
 	
 	/**

@@ -1,7 +1,9 @@
-package com.dezzy.skorp3.net;
+package com.dezzy.skorp3.net.tcp;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.dezzy.skorp3.net.StringActor;
 
 /**
  * TCPManager will control a Client-Server TCP connection using "directives."
@@ -16,6 +18,7 @@ import java.util.Map;
 public class TCPManager {
 	private Map<String,StringActor<?>> clientDirectives = new HashMap<String,StringActor<?>>();
 	private Map<String,StringActor<?>> serverDirectives = new HashMap<String,StringActor<?>>();
+	
 	
 	public TCPManager() {
 		// TODO Auto-generated constructor stub
