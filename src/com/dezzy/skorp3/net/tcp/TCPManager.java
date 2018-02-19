@@ -19,7 +19,7 @@ import com.dezzy.skorp3.net.StringActor;
  * The InputStream sendMessage is shared across the main thread and the client/server sending thread.
  * Calls to send() should update sendMessage and the sending thread should react appropriately.
  * 
- * TCPManager should only ever have one TCPServer or TCPClient, never both.
+ * One TCPManager should only ever have one TCPServer or TCPClient, never both.
  * 
  * @author Dezzmeister
  * @see StringActor
@@ -27,8 +27,8 @@ import com.dezzy.skorp3.net.StringActor;
  */
 public class TCPManager {
 	//Might not need a StringActor, Consumer<String> MAY work
-	static Map<String,StringActor<?>> clientDirectives = new HashMap<String,StringActor<?>>();
-	static Map<String,StringActor<?>> serverDirectives = new HashMap<String,StringActor<?>>();
+	static Map<String,StringActor<? extends Object>> clientDirectives = new HashMap<String,StringActor<? extends Object>>();
+	static Map<String,StringActor<? extends Object>> serverDirectives = new HashMap<String,StringActor<? extends Object>>();
 	static volatile InputStream sendMessage = new ByteArrayInputStream("".getBytes());
 	static volatile boolean running = false;
 	private TCPServer server;
