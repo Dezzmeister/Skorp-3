@@ -16,11 +16,12 @@ class ReceiveFromServer implements Runnable {
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String data = null;
-			while ((data = reader.readLine())!=null) {
+			while ((data = reader.readLine())!=null && TCPManager.running) {
 				//handle it
 				System.out.println(data);
 			}
 		} catch(Exception e) {
+			TCPManager.running = false;
 			e.printStackTrace();
 		}
 	}

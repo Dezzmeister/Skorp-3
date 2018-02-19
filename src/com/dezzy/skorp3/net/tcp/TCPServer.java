@@ -30,8 +30,10 @@ public class TCPServer {
 			sender = new SendToClient(clientSocket);
 			sendThread = new Thread(sender);
 			sendThread.start();
+			TCPManager.running = true;
 		} catch(Exception e) {
 			e.printStackTrace();
+			TCPManager.running = false;
 		}
 	}
 }

@@ -23,9 +23,11 @@ public class TCPClient {
 			
 			receiver = new ReceiveFromServer(socket);
 			receiveThread = new Thread(receiver);
-			receiveThread.start();			
+			receiveThread.start();
+			TCPManager.running = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			TCPManager.running = false;
 		}
 	}
 }

@@ -10,6 +10,8 @@ import com.dezzy.skorp3.field.Entity;
  * before you create a new one. For example, do not create a physics module to test for collisions between lines and circles;
  * it would be better implemented in CollisionHandler.
  * 
+ * Under normal circumstances, Physics cannot be subclassed or instantiated.
+ * 
  * @author Dezzmeister
  *
  */
@@ -18,5 +20,9 @@ public final class Physics {
 	
 	public static boolean hasCollided(Entity entity1, Entity entity2) {
 		return collider.hasCollided(entity1, entity2);
+	}
+	
+	private Physics() {
+		
 	}
 }

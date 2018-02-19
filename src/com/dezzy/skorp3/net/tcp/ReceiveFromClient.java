@@ -16,9 +16,10 @@ class ReceiveFromClient implements Runnable {
 		try {
 			reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			String message;
-			while (true) {
+			while (true && TCPManager.running) {
 				while ((message = reader.readLine())!=null) {
-					//react
+					String header = message.substring(0,message.indexOf(" "));
+					TCPManager.executeServerDirective(header);
 					System.out.println(message);
 					if (message.equals("exit")) {
 						break;
@@ -27,6 +28,7 @@ class ReceiveFromClient implements Runnable {
 				clientSocket.close();
 			}
 		} catch (Exception e) {
+			TCPManager.running = false;
 			e.printStackTrace();
 		}
 	}

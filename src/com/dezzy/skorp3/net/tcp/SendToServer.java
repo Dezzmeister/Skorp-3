@@ -19,8 +19,8 @@ class SendToServer implements Runnable {
 			if (socket.isConnected()) {
 				System.out.println("Client connected to "+socket.getInetAddress()+":"+socket.getPort());
 				writer = new PrintWriter(socket.getOutputStream(),true);
-				while (true) {
-					reader = new BufferedReader(new InputStreamReader(System.in));
+				while (true && TCPManager.running) {
+					reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
 					String message = null;
 					message = reader.readLine();
 					writer.println(message);
@@ -33,6 +33,7 @@ class SendToServer implements Runnable {
 				socket.close();
 			}
 		} catch (Exception e) {
+			TCPManager.running = false;
 			e.printStackTrace();
 		}
 	}

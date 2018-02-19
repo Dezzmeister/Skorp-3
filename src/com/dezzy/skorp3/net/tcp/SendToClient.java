@@ -17,16 +17,17 @@ class SendToClient implements Runnable {
 	public void run() {
 		try {
 			writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-			while (true) {
+			while (true && TCPManager.running) {
 				String message = null;
-				BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+				BufferedReader input = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
 				message = input.readLine();
 				writer.println(message);
 				writer.flush();
 				//change to accept method input
 			}			
 		} catch (Exception e) {
-			
+			TCPManager.running = false;
+			e.printStackTrace();
 		}
 	}
 }
