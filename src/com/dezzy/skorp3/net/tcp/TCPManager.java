@@ -47,12 +47,16 @@ public class TCPManager {
 	public void open(int port) {
 		if (server != null) {
 			server.connect(port);
+		} else {
+			System.out.println("Use theTCPManager.connect instead of theTCPManager.open");
 		}
 	}
 	
 	public void connect(String ip, int port) {
 		if (client != null) {
 			client.connect(ip, port);
+		} else {
+			System.out.println("Use theTCPManager.open instead of theTCPManager.connect");
 		}
 	}
 	
