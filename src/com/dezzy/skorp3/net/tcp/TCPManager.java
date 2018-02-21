@@ -48,7 +48,7 @@ public class TCPManager {
 		if (server != null) {
 			server.connect(port);
 		} else {
-			System.out.println("Use theTCPManager.connect instead of theTCPManager.open");
+			System.out.println("Use TCPManager.connect instead of TCPManager.open");
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class TCPManager {
 		if (client != null) {
 			client.connect(ip, port);
 		} else {
-			System.out.println("Use theTCPManager.open instead of theTCPManager.connect");
+			System.out.println("Use TCPManager.open instead of TCPManager.connect");
 		}
 	}
 	
