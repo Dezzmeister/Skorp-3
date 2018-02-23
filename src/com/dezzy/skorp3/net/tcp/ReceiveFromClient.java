@@ -4,23 +4,30 @@ package com.dezzy.skorp3.net.tcp;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.dezzy.skorp3.net.DirectiveContainer;
 
 class ReceiveFromClient implements Runnable {
-	Socket clientSocket = null;
-	BufferedReader reader = null;
+	private Socket clientSocket = null;
+	private BufferedReader reader = null;
+	private AtomicBoolean running;
+	private DirectiveContainer directives;
 	
-	public ReceiveFromClient(Socket _clientSocket) {
+	public ReceiveFromClient(Socket _clientSocket, AtomicBoolean _running, DirectiveContainer _directives) {
 		clientSocket = _clientSocket;
+		running = _running;
+		directives = _directives;
 	}
 	
 	public void run() {
 		try {
 			reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			String message;
-			while (true && TCPManager.running) {
+			while (true && running.get()) {
 				while ((message = reader.readLine())!=null) {
 					String header = message.substring(0,message.indexOf(" ")!=-1?message.indexOf(" "):message.length());
-					TCPManager.executeServerDirective(header);
+					directives.executeServerDirective(header);
 					System.out.println(message);
 					if (message.equals("exit")) {
 						break;
@@ -29,7 +36,7 @@ class ReceiveFromClient implements Runnable {
 				clientSocket.close();
 			}
 		} catch (Exception e) {
-			TCPManager.running = false;
+			running.set(false);
 			e.printStackTrace();
 		}
 	}

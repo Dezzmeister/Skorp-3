@@ -4,9 +4,9 @@ package com.dezzy.skorp3.net.tcp;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.dezzy.skorp3.net.DirectiveContainer;
 import com.dezzy.skorp3.net.StringActor;
 
 /**
@@ -23,24 +23,24 @@ import com.dezzy.skorp3.net.StringActor;
  * 
  * @author Dezzmeister
  * @see StringActor
- *
+ * @see com.dezzy.skorp3.net.DirectiveContainer
  */
 public class TCPManager {
-	//Might not need a StringActor, Consumer<String> MAY work
-	static Map<String,StringActor<? extends Object>> clientDirectives = new HashMap<String,StringActor<? extends Object>>();
-	static Map<String,StringActor<? extends Object>> serverDirectives = new HashMap<String,StringActor<? extends Object>>();
-	static volatile InputStream sendMessage = new ByteArrayInputStream("".getBytes());
-	static volatile boolean running = false;
+	public volatile DirectiveContainer directives;
+	private volatile InputStream sendMessage = new ByteArrayInputStream("".getBytes());
+	private volatile AtomicBoolean running;
 	private TCPServer server;
 	private TCPClient client;
 	public boolean isServer;
 	
 	public TCPManager(boolean _isServer) {
+		directives = new DirectiveContainer();
+		running = new AtomicBoolean(false);
 		isServer = _isServer;
 		if (isServer) {
-			server = new TCPServer();
+			server = new TCPServer(sendMessage,running,directives);
 		} else {
-			client = new TCPClient();
+			client = new TCPClient(sendMessage,running,directives);
 		}
 	}
 	
@@ -57,30 +57,6 @@ public class TCPManager {
 			client.connect(ip, port);
 		} else {
 			System.out.println("Use TCPManager.open instead of TCPManager.connect");
-		}
-	}
-	
-	public static <T> void addClientDirective(String header, StringActor<T> action) {
-		clientDirectives.put(header,action);
-	}
-	
-	public static <T> void addServerDirective(String header, StringActor<T> action) {
-		serverDirectives.put(header, action);
-	}
-	
-	public static Object executeClientDirective(String header) {
-		try {
-			return clientDirectives.get(header).act(header);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	public static Object executeServerDirective(String header) {
-		try {
-			return serverDirectives.get(header).act(header);
-		} catch (Exception e) {
-			return null;
 		}
 	}
 	

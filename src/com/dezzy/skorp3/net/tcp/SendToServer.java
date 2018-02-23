@@ -2,17 +2,23 @@ package com.dezzy.skorp3.net.tcp;
 
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class SendToServer implements Runnable {
-	Socket socket = null;
-	PrintWriter writer = null;
-	BufferedReader reader = null;
+	private Socket socket = null;
+	private PrintWriter writer = null;
+	private BufferedReader reader = null;
+	private AtomicBoolean running;
+	private InputStream sentMessage;
 	
-	public SendToServer(Socket _socket) {
+	public SendToServer(Socket _socket, InputStream _sentMessage, AtomicBoolean _running) {
 		socket = _socket;
+		sentMessage = _sentMessage;
+		running = _running;
 	}
 	
 	public void run() {
@@ -20,9 +26,9 @@ class SendToServer implements Runnable {
 			if (socket.isConnected()) {
 				System.out.println("Client connected to "+socket.getInetAddress()+":"+socket.getPort());
 				writer = new PrintWriter(socket.getOutputStream(),true);
-				while (true && TCPManager.running) {
-					if (TCPManager.sendMessage !=null) {
-						reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
+				while (true && running.get()) {
+					if (sentMessage !=null) {
+						reader = new BufferedReader(new InputStreamReader(sentMessage));
 						String message = null;
 						message = reader.readLine();
 						if (message != null) {
@@ -30,7 +36,7 @@ class SendToServer implements Runnable {
 							writer.flush();
 					
 							if (message.equals("exit")) {
-								TCPManager.running = false;
+								running.set(false);
 								break;
 							}
 						}
@@ -39,7 +45,7 @@ class SendToServer implements Runnable {
 				socket.close();
 			}
 		} catch (Exception e) {
-			TCPManager.running = false;
+			running.set(false);
 			e.printStackTrace();
 		}
 	}

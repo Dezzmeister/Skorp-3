@@ -2,26 +2,32 @@ package com.dezzy.skorp3.net.tcp;
 
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class SendToClient implements Runnable {
-	PrintWriter writer;
-	Socket clientSocket = null;
+	private PrintWriter writer;
+	private Socket clientSocket = null;
+	private InputStream sentMessage;
+	private AtomicBoolean running;
 	
-	public SendToClient(Socket _clientSocket) {
+	public SendToClient(Socket _clientSocket, InputStream _sentMessage, AtomicBoolean _running) {
 		clientSocket = _clientSocket;
+		sentMessage = _sentMessage;
+		running = _running;
 	}
 	
 	public void run() {
 		try {
 			writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-			while (true && TCPManager.running) {
-				if (TCPManager.sendMessage !=null) {
+			while (true && running.get()) {
+				if (sentMessage !=null) {
 					String message = null;
-					BufferedReader reader = new BufferedReader(new InputStreamReader(TCPManager.sendMessage));
+					BufferedReader reader = new BufferedReader(new InputStreamReader(sentMessage));
 					message = reader.readLine();
 					writer.println(message);
 					writer.flush();
@@ -29,7 +35,7 @@ class SendToClient implements Runnable {
 				}
 			}			
 		} catch (Exception e) {
-			TCPManager.running = false;
+			running.set(false);
 			e.printStackTrace();
 		}
 	}
