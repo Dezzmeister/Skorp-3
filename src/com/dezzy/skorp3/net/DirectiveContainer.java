@@ -16,17 +16,17 @@ public class DirectiveContainer {
 		serverDirectives.put(header, action);
 	}
 	
-	public Object executeClientDirective(String header) {
+	public Object executeClientDirective(String header, String full) {
 		try {
-			return clientDirectives.get(header).act(header);
+			return clientDirectives.get(header).act(full);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public Object executeServerDirective(String header) {
+	public Object executeServerDirective(String header, String full) {
 		try {
-			return serverDirectives.get(header).act(header);
+			return serverDirectives.get(header).act(full);
 		} catch (Exception e) {
 			return null;
 		}

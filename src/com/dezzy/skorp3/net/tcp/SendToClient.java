@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class SendToClient implements Runnable {
 	private PrintWriter writer;
 	private Socket clientSocket = null;
-	private InputStream sentMessage;
+	private volatile InputStream sentMessage;
 	private AtomicBoolean running;
 	
 	public SendToClient(Socket _clientSocket, InputStream _sentMessage, AtomicBoolean _running) {
@@ -29,6 +29,7 @@ class SendToClient implements Runnable {
 					String message = null;
 					BufferedReader reader = new BufferedReader(new InputStreamReader(sentMessage));
 					message = reader.readLine();
+					System.out.println(message); //NULL!!!
 					writer.println(message);
 					writer.flush();
 					//change to accept method input

@@ -62,5 +62,6 @@ public class TCPManager {
 	
 	public synchronized void send(String message) {
 		sendMessage = new ByteArrayInputStream(message.getBytes(StandardCharsets.UTF_8));
+		//Problem: sendMessage is reallocated and old reference variables in lower classes point elsewhere
 	}
 }

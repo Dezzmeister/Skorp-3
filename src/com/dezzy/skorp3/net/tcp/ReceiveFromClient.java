@@ -26,15 +26,17 @@ class ReceiveFromClient implements Runnable {
 			String message;
 			while (true && running.get()) {
 				while ((message = reader.readLine())!=null) {
+					System.out.println("lesgetit");
 					String header = message.substring(0,message.indexOf(" ")!=-1?message.indexOf(" "):message.length());
-					directives.executeServerDirective(header);
+					System.out.println(header);
+					directives.executeServerDirective(header,message);
 					System.out.println(message);
 					if (message.equals("exit")) {
 						break;
 					}
 				}
-				clientSocket.close();
 			}
+			clientSocket.close();
 		} catch (Exception e) {
 			running.set(false);
 			e.printStackTrace();

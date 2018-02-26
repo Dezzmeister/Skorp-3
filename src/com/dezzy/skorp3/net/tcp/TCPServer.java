@@ -15,7 +15,7 @@ public class TCPServer {
 	SendToClient sender;
 	Thread receiveThread;
 	Thread sendThread;
-	private InputStream sentMessage;
+	private volatile InputStream sentMessage;
 	private AtomicBoolean running;
 	private DirectiveContainer directives;
 	
