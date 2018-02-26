@@ -2,22 +2,22 @@ package com.dezzy.skorp3.net.tcp;
 
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.dezzy.skorp3.net.InputContainer;
 
 class SendToServer implements Runnable {
 	private Socket socket = null;
 	private PrintWriter writer = null;
 	private BufferedReader reader = null;
 	private AtomicBoolean running;
-	private InputStream sentMessage;
+	private volatile InputContainer input;
 	
-	public SendToServer(Socket _socket, InputStream _sentMessage, AtomicBoolean _running) {
+	public SendToServer(Socket _socket, InputContainer _input, AtomicBoolean _running) {
 		socket = _socket;
-		sentMessage = _sentMessage;
+		input = _input;
 		running = _running;
 	}
 	
@@ -27,8 +27,8 @@ class SendToServer implements Runnable {
 				System.out.println("Client connected to "+socket.getInetAddress()+":"+socket.getPort());
 				writer = new PrintWriter(socket.getOutputStream(),true);
 				while (true && running.get()) {
-					if (sentMessage !=null) {
-						reader = new BufferedReader(new InputStreamReader(sentMessage));
+					if (input.get() !=null) {
+						reader = new BufferedReader(new InputStreamReader(input.get()));
 						String message = null;
 						message = reader.readLine();
 						if (message != null) {

@@ -1,11 +1,11 @@
 package com.dezzy.skorp3.net.tcp;
 
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dezzy.skorp3.net.DirectiveContainer;
+import com.dezzy.skorp3.net.InputContainer;
 
 public class TCPServer {
 	int port = 10221;
@@ -15,12 +15,12 @@ public class TCPServer {
 	SendToClient sender;
 	Thread receiveThread;
 	Thread sendThread;
-	private volatile InputStream sentMessage;
+	private volatile InputContainer input;
 	private AtomicBoolean running;
 	private DirectiveContainer directives;
 	
-	public TCPServer(InputStream _sentMessage, AtomicBoolean _running, DirectiveContainer _directives) {
-		sentMessage = _sentMessage;
+	public TCPServer(InputContainer _input, AtomicBoolean _running, DirectiveContainer _directives) {
+		input = _input;
 		running = _running;
 		directives = _directives;
 	}
@@ -37,7 +37,7 @@ public class TCPServer {
 			receiveThread = new Thread(receiver);
 			receiveThread.start();
 			
-			sender = new SendToClient(clientSocket,sentMessage,running);
+			sender = new SendToClient(clientSocket,input,running);
 			sendThread = new Thread(sender);
 			sendThread.start();
 		} catch(Exception e) {

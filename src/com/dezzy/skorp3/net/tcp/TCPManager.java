@@ -1,12 +1,10 @@
 package com.dezzy.skorp3.net.tcp;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dezzy.skorp3.net.DirectiveContainer;
+import com.dezzy.skorp3.net.InputContainer;
 import com.dezzy.skorp3.net.StringActor;
 
 /**
@@ -27,7 +25,7 @@ import com.dezzy.skorp3.net.StringActor;
  */
 public class TCPManager {
 	public volatile DirectiveContainer directives;
-	private volatile InputStream sendMessage = new ByteArrayInputStream("".getBytes());
+	private volatile InputContainer input;
 	private volatile AtomicBoolean running;
 	private TCPServer server;
 	private TCPClient client;
@@ -35,12 +33,13 @@ public class TCPManager {
 	
 	public TCPManager(boolean _isServer) {
 		directives = new DirectiveContainer();
+		input = new InputContainer();
 		running = new AtomicBoolean(false);
 		isServer = _isServer;
 		if (isServer) {
-			server = new TCPServer(sendMessage,running,directives);
+			server = new TCPServer(input,running,directives);
 		} else {
-			client = new TCPClient(sendMessage,running,directives);
+			client = new TCPClient(input,running,directives);
 		}
 	}
 	
@@ -61,7 +60,7 @@ public class TCPManager {
 	}
 	
 	public synchronized void send(String message) {
-		sendMessage = new ByteArrayInputStream(message.getBytes(StandardCharsets.UTF_8));
+		input.set(message);
 		//Problem: sendMessage is reallocated and old reference variables in lower classes point elsewhere
 	}
 }
