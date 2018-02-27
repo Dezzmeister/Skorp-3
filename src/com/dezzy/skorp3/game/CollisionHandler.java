@@ -101,7 +101,8 @@ class CollisionHandler {
 	 * @return
 	 */
 	//TODO make it more efficient
-	private boolean lineHitLine(Line line1, Line line2) {		
+	private boolean lineHitLine(Line line1, Line line2) {
+		//y = mx+b
 		double m1 = line1.slope();
 		double b1 = line1.yIntercept();
 		
