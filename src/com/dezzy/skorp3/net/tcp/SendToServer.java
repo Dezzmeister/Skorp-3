@@ -35,7 +35,7 @@ class SendToServer implements Runnable {
 							writer.println(message);
 							writer.flush();
 					
-							if (message.equals("exit")) {
+							if (message.equals("stop")) {
 								running.set(false);
 								break;
 							}

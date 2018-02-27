@@ -24,12 +24,12 @@ import com.dezzy.skorp3.net.StringActor;
  * @see com.dezzy.skorp3.net.DirectiveContainer
  */
 public class TCPManager {
-	public volatile DirectiveContainer directives;
+	private volatile DirectiveContainer directives;
 	private volatile InputContainer input;
 	private volatile AtomicBoolean running;
 	private TCPServer server;
 	private TCPClient client;
-	public boolean isServer;
+	private boolean isServer;
 	
 	public TCPManager(boolean _isServer) {
 		directives = new DirectiveContainer();
@@ -44,7 +44,7 @@ public class TCPManager {
 	}
 	
 	public void open(int port) {
-		if (server != null) {
+		if (isServer) {
 			server.connect(port);
 		} else {
 			System.out.println("Use TCPManager.connect instead of TCPManager.open");
@@ -52,7 +52,7 @@ public class TCPManager {
 	}
 	
 	public void connect(String ip, int port) {
-		if (client != null) {
+		if (!isServer) {
 			client.connect(ip, port);
 		} else {
 			System.out.println("Use TCPManager.open instead of TCPManager.connect");
@@ -61,6 +61,17 @@ public class TCPManager {
 	
 	public synchronized void send(String message) {
 		input.set(message);
-		//Problem: sendMessage is reallocated and old reference variables in lower classes point elsewhere
+	}
+	
+	public synchronized <T> void addDirective(String header, StringActor<T> action) {
+		if (isServer) {
+			directives.<T>addServerDirective(header, action);
+		} else {
+			directives.<T>addServerDirective(header, action);
+		}
+	}
+	
+	public boolean isServer() {
+		return isServer;
 	}
 }

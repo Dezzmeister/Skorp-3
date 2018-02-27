@@ -30,10 +30,15 @@ class SendToClient implements Runnable {
 					String message = null;
 					BufferedReader reader = new BufferedReader(new InputStreamReader(input.get()));
 					message = reader.readLine();
-					System.out.println(message); //NULL!!!
-					writer.println(message);
-					writer.flush();
-					//change to accept method input
+					if (message!=null) {
+						writer.println(message);
+						writer.flush();
+						
+						if (message.equals("stop")) {
+							running.set(false);
+							break;
+						}
+					}
 				}
 			}			
 		} catch (Exception e) {
