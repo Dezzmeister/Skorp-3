@@ -34,11 +34,11 @@ public class TCPServer {
 			System.out.println("Connected to "+clientSocket.getInetAddress()+":"+clientSocket.getPort());
 			
 			receiver = new ReceiveFromClient(clientSocket,running,directives);
-			receiveThread = new Thread(receiver);
+			receiveThread = new Thread(receiver,"Skorp TCP Receiver");
 			receiveThread.start();
 			
 			sender = new SendToClient(clientSocket,input,running);
-			sendThread = new Thread(sender);
+			sendThread = new Thread(sender, "Skorp TCP Sender");
 			sendThread.start();
 		} catch(Exception e) {
 			e.printStackTrace();

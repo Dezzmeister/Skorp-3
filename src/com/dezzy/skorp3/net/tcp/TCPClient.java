@@ -32,11 +32,11 @@ public class TCPClient {
 			socket = new Socket(ip,port);
 			
 			sender = new SendToServer(socket,input,running);
-			sendThread = new Thread(sender);
+			sendThread = new Thread(sender, "Skorp TCP Sender");
 			sendThread.start();
 			
 			receiver = new ReceiveFromServer(socket,running,directives);
-			receiveThread = new Thread(receiver);
+			receiveThread = new Thread(receiver, "Skorp TCP Receiver");
 			receiveThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
