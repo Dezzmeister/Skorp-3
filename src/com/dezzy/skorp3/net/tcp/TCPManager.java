@@ -4,6 +4,7 @@ package com.dezzy.skorp3.net.tcp;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dezzy.skorp3.net.DirectiveContainer;
+import com.dezzy.skorp3.net.End;
 import com.dezzy.skorp3.net.InputContainer;
 import com.dezzy.skorp3.net.StringActor;
 
@@ -31,11 +32,15 @@ public class TCPManager {
 	private TCPClient client;
 	private boolean isServer;
 	
-	public TCPManager(boolean _isServer) {
+	public TCPManager(End end) {
 		directives = new DirectiveContainer();
 		input = new InputContainer();
 		running = new AtomicBoolean(false);
-		isServer = _isServer;
+		if (end == End.SERVER) {
+			isServer = true;
+		} else {
+			isServer = false;
+		}
 		if (isServer) {
 			server = new TCPServer(input,running,directives);
 		} else {
