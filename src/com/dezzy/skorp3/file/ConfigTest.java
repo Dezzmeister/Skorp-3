@@ -1,8 +1,8 @@
 package com.dezzy.skorp3.file;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.dezzy.skorp3.file.Config.globalVars;
-import static com.dezzy.skorp3.file.Config.globalKeys;
+import static com.dezzy.skorp3.file.Configs.globalVars;
+import static com.dezzy.skorp3.file.Configs.globalKeys;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
