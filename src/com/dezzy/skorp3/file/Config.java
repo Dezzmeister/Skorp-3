@@ -71,7 +71,7 @@ public class Config<T> {
 	 * 
 	 * @param key
 	 * @param klazz E's Class type (example: Integer.class if E is Integer)
-	 * @return parsed value identified by key: null if E is not a "convertable" type.
+	 * @return parsed value identified by key; null if E is not a "convertable" type.
 	 */
 	@SuppressWarnings("unchecked")
 	public <E> E get(String key, Class<E> klazz) {
