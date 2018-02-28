@@ -42,4 +42,10 @@ public class Point extends Entity {
 	public static double cross(Point point1, Point point2) {
 		return (point1.x() * point2.y()) - (point2.x() - point1.y());
 	}
+
+	@Override
+	public String encode() {
+		String shapeName = shape.toString();
+		return shapeName + point.encode();
+	}
 }

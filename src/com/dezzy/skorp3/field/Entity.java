@@ -14,7 +14,7 @@ import com.dezzy.skorp3.game.Shape;
  * @see Shape
  *
  */
-public abstract class Entity {
+public abstract class Entity implements Sendable {
 	protected Shape shape;
 	public Pair<Double> point;
 	

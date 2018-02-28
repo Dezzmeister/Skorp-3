@@ -59,4 +59,13 @@ public abstract class Geometric extends Entity {
 		placeAt(x,y);
 		placeEndAt(x2,y2);
 	}
+	
+	/**
+	 * Returned String format: "rectangle x:9 y:3.5 w:40 h:40"
+	 */
+	@Override
+	public String encode() {
+		String shapeName = shape.toString();
+		return shapeName + point.encode()+" w:"+width+" h:"+height;
+	}
 }

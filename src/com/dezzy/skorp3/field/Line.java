@@ -58,6 +58,16 @@ public class Line extends Geometric {
 		return new Geometric(centerX,centerY,xDiff,yDiff) {};
 	}
 	
+	/**
+	 * Returned String format: "line x:0 y:0 x:100 y:100".
+	 * Note that both points will be labeled "x" and "y".
+	 */
+	@Override
+	public String encode() {
+		String shapeName = shape.toString();
+		return shapeName+point.encode()+endpoint.encode();
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		boolean isALine = object instanceof Line;
