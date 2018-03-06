@@ -9,7 +9,7 @@ import com.dezzy.skorp3.field.Sendable;
  * @author Dezzmeister
  *
  */
-public final class Pair<T> implements Sendable {
+public class Pair<T> implements Sendable {
 	public T x;
 	public T y;
 	
