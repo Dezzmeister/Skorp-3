@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.game;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,5 +25,14 @@ public class VBO {
 	
 	public String name() {
 		return name;
+	}
+	
+	public void render(int i, Graphics graphics) {
+		Entity entity = objects.get(i);
+		Physics.render(entity, graphics);
+	}
+	
+	public void renderAll(Graphics graphics) {
+		objects.forEach((entity) -> Physics.render(entity, graphics));
 	}
 }
