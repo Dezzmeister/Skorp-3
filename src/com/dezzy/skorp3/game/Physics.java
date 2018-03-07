@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.game;
 
+import java.awt.Graphics;
+
 import com.dezzy.skorp3.field.Entity;
 
 /**
@@ -16,10 +18,15 @@ import com.dezzy.skorp3.field.Entity;
  *
  */
 public final class Physics {
-	public static CollisionHandler collider = new CollisionHandler();
+	private static CollisionHandler collider = new CollisionHandler();
+	private static Renderer renderer = new Renderer();
 	
 	public static boolean hasCollided(Entity entity1, Entity entity2) {
 		return collider.hasCollided(entity1, entity2);
+	}
+	
+	public static void render(Entity entity, Graphics graphics) {
+		renderer.render(entity, graphics);
 	}
 	
 	private Physics() {

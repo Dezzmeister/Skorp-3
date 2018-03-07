@@ -1,10 +1,12 @@
 package com.dezzy.skorp3.field;
 
+import java.awt.Color;
 import java.util.function.BiConsumer;
 
 import com.dezzy.skorp3.game.Pair;
 import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
+import com.dezzy.skorp3.game.VBO;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
@@ -14,9 +16,10 @@ import com.dezzy.skorp3.game.Shape;
  * @see Shape
  *
  */
-public abstract class Entity implements Sendable {
+public abstract class Entity implements Sendable {	
 	protected Shape shape;
 	public Pair<Double> point;
+	public Color color;
 	
 	private BiConsumer<Entity,Entity> collisionMethod;
 	
@@ -24,15 +27,18 @@ public abstract class Entity implements Sendable {
 		point = new Pair<Double>(0.0,0.0);
 	}
 	
+	/**
+	 * Protected constructors. Entity is abstract and the only instances should be instances of subclasses.
+	 */
 	protected Entity() {
 		
 	}
 	
-	public Entity(Shape _shape) {
+	protected Entity(Shape _shape) {
 		shape = _shape;
 	}
 	
-	public Entity(double x, double y) {
+	protected Entity(double x, double y) {
 		point = new Pair<Double>(x,y);
 	}
 
@@ -43,6 +49,18 @@ public abstract class Entity implements Sendable {
 	public void placeAt(double _x, double _y) {
 		point.x = _x;
 		point.y = _y;
+	}
+	
+	/**
+	 * This method is part of the fluent interface and allows for method chaining.
+	 * This should be used on construction.
+	 * 
+	 * @param vbo VBO to add this to
+	 * @return this (for method chaining)
+	 */
+	public Entity add(VBO vbo) {
+		vbo.add(this);
+		return this;
 	}
 	
 	/**

@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.field;
 
+import java.util.Objects;
+
 import com.dezzy.skorp3.game.Pair;
 import com.dezzy.skorp3.game.Shape;
 
@@ -76,5 +78,10 @@ public class Line extends Geometric {
 			   ((Line)object).point.y == this.point.y &&
 			   ((Line)object).endpoint.x == this.endpoint.x &&
 			   ((Line)object).endpoint.y == this.endpoint.y;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(point,endpoint);
 	}
 }

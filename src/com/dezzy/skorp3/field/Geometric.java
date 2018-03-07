@@ -60,6 +60,14 @@ public abstract class Geometric extends Entity {
 		placeEndAt(x2,y2);
 	}
 	
+	public double getCornerX() {
+		return point.x - (width/2.0);
+	}
+	
+	public double getCornerY() {
+		return point.y - (height/2.0);
+	}
+	
 	/**
 	 * Returned String format: "rectangle x:9 y:3.5 w:40 h:40"
 	 */
