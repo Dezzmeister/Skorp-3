@@ -29,7 +29,7 @@ class ReceiveFromClient implements Runnable {
 					System.out.println("lesgetit");
 					String header = message.substring(0,message.indexOf(" ")!=-1?message.indexOf(" "):message.length());
 					System.out.println(header);
-					directives.executeServerDirective(header,message);
+					directives.findAndExecuteServerDirective(header,message);
 					System.out.println(message);
 					if (message.equals("exit")) {
 						break;

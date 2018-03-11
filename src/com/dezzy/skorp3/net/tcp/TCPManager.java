@@ -2,6 +2,7 @@ package com.dezzy.skorp3.net.tcp;
 
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import com.dezzy.skorp3.net.DirectiveContainer;
 import com.dezzy.skorp3.net.End;
@@ -38,12 +39,9 @@ public class TCPManager {
 		running = new AtomicBoolean(false);
 		if (end == End.SERVER) {
 			isServer = true;
-		} else {
-			isServer = false;
-		}
-		if (isServer) {
 			server = new TCPServer(input,running,directives);
 		} else {
+			isServer = false;
 			client = new TCPClient(input,running,directives);
 		}
 	}
@@ -68,11 +66,11 @@ public class TCPManager {
 		input.set(message);
 	}
 	
-	public synchronized <T> void addDirective(String header, StringActor<T> action) {
+	public synchronized void addDirective(String header, Consumer<String> action) {
 		if (isServer) {
-			directives.<T>addServerDirective(header, action);
+			directives.addConstantServerDirective(header, action);
 		} else {
-			directives.<T>addServerDirective(header, action);
+			directives.addConstantClientDirective(header, action);
 		}
 	}
 	

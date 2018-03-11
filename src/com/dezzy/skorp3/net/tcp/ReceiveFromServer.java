@@ -27,7 +27,7 @@ class ReceiveFromServer implements Runnable {
 			while ((data = reader.readLine())!=null && running.get()) {
 				if (data!=null && data.indexOf("null")==-1) {
 					String header = data.substring(0,data.indexOf(" ")!=-1?data.indexOf(" "):data.length());
-					directives.executeClientDirective(header,data);
+					directives.findAndExecuteClientDirective(header,data);
 					System.out.println(data);
 				}
 			}

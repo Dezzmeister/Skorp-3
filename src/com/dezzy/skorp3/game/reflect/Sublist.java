@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(PARAMETER)
 public @interface Sublist {
-	String value() default "mainList";
+	String value() default "main";
 }
