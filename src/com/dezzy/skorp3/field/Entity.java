@@ -58,7 +58,7 @@ public abstract class Entity implements Sendable {
 	 * @param vbo VBO to add this to
 	 * @return this (for method chaining)
 	 */
-	public Entity add(VBO vbo) {
+	public Entity addto(VBO vbo) {
 		vbo.add(this);
 		return this;
 	}
