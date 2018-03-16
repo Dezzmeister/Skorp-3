@@ -1,4 +1,4 @@
-package com.dezzy.skorp3.field.three;
+package com.dezzy.skorp3.field3D;
 
 import java.awt.Color;
 import java.util.function.BiConsumer;
@@ -8,7 +8,7 @@ import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
 import com.dezzy.skorp3.game.Triple;
 import com.dezzy.skorp3.game.VBO3D;
-import com.dezzy.skorp3.game.three.Shape3D;
+import com.dezzy.skorp3.game3D.Shape3D;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other

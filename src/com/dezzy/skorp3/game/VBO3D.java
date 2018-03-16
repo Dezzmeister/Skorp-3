@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dezzy.skorp3.field.three.Entity3D;
+import com.dezzy.skorp3.field3D.Entity3D;
 
 public class VBO3D {
 	private List<Entity3D> objects;

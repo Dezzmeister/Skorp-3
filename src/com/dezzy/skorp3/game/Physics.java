@@ -3,8 +3,8 @@ package com.dezzy.skorp3.game;
 import java.awt.Graphics;
 
 import com.dezzy.skorp3.field.Entity;
-import com.dezzy.skorp3.field.three.Entity3D;
-import com.dezzy.skorp3.game.three.CollisionHandler3D;
+import com.dezzy.skorp3.field3D.Entity3D;
+import com.dezzy.skorp3.game3D.CollisionHandler3D;
 
 /**
  * Physics governs game physics (or what little there is so far).

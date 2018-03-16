@@ -1,4 +1,4 @@
-package com.dezzy.skorp3.field.three;
+package com.dezzy.skorp3.field3D;
 
 import com.dezzy.skorp3.game.Triple;
 

@@ -1,4 +1,4 @@
-package com.dezzy.skorp3.game.three;
+package com.dezzy.skorp3.game3D;
 
 public enum Shape3D {
 	MODEL,
