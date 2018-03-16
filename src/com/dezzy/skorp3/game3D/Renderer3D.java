@@ -1,4 +1,4 @@
-package com.dezzy.skorp3.game;
+package com.dezzy.skorp3.game3D;
 
 import java.awt.Graphics;
 

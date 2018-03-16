@@ -7,8 +7,8 @@ import com.dezzy.skorp3.field.Sendable;
 import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
 import com.dezzy.skorp3.game.Triple;
-import com.dezzy.skorp3.game.VBO3D;
 import com.dezzy.skorp3.game3D.Shape3D;
+import com.dezzy.skorp3.game3D.VBO3D;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other

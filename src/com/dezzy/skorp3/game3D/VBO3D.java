@@ -1,10 +1,11 @@
-package com.dezzy.skorp3.game;
+package com.dezzy.skorp3.game3D;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dezzy.skorp3.field3D.Entity3D;
+import com.dezzy.skorp3.game.Physics;
 
 public class VBO3D {
 	private List<Entity3D> objects;
