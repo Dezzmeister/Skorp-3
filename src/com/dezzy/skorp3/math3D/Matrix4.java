@@ -12,6 +12,8 @@ public class Matrix4 {
 	public Matrix4(double[] _values) {
 		if (_values.length==16) {
 			values = _values;
+		} else {
+			System.out.println("Matrix4 array should have 16 values!");
 		}
 	}
 	

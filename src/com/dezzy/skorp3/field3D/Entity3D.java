@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.field3D;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import com.dezzy.skorp3.field.Sendable;
@@ -9,6 +10,7 @@ import com.dezzy.skorp3.game.Shape;
 import com.dezzy.skorp3.game.Triple;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
+import com.dezzy.skorp3.math3D.Vertex;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
@@ -81,5 +83,12 @@ public abstract class Entity3D implements Sendable {
 			collisionMethod.accept(this, entity);
 		}
 	}
+	
+	/**
+	 * Decompose an Entity3D into its vertices.
+	 * 
+	 * @return
+	 */
+	public abstract List<Vertex> decompose();
 }
 
