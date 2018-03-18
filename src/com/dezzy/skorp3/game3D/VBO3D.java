@@ -1,6 +1,5 @@
 package com.dezzy.skorp3.game3D;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.dezzy.skorp3.field3D.Entity3D;
-import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.math3D.Vertex;
 
 public class VBO3D {
@@ -24,6 +22,10 @@ public class VBO3D {
 		vertices.put(entity,entity.decompose());
 	}
 	
+	public void remove(Entity3D entity) {
+		vertices.remove(entity);
+	}
+	
 	public List<Entity3D> getObjects() {
 		List<Entity3D> temp = new ArrayList<>();
 		temp.addAll(vertices.keySet());
@@ -37,16 +39,11 @@ public class VBO3D {
 		return result;
 	}
 	
+	public List<Vertex> getVBOFor(Entity3D entity) {
+		return vertices.get(entity);
+	}
+	
 	public String name() {
 		return name;
-	}
-	
-	public void render(int i, Graphics graphics) {
-		Entity3D entity = objects.get(i);
-		Physics.render(entity, graphics);
-	}
-	
-	public void renderAll(Graphics graphics) {
-		objects.forEach((entity) -> Physics.render(entity, graphics));
 	}
 }

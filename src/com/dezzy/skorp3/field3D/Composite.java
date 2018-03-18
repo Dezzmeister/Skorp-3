@@ -7,10 +7,10 @@ import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.math3D.Vertex;
 
 public class Composite extends Geometric3D {
-	private VBO3D vbo = new VBO3D("vbo");
+	private VBO3D vbo = new VBO3D("Composite VBO");
 	
 	{
-		shape = Shape3D.MODEL;
+		shape = Shape3D.COMPOSITE;
 	}
 	
 	public Composite(double x, double y, double z) {
@@ -23,7 +23,6 @@ public class Composite extends Geometric3D {
 
 	@Override
 	public List<Vertex> decompose() {
-		// TODO Auto-generated method stub
-		return null;
+		return vbo.getVBO();
 	}
 }
