@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
-import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.geometry3D.Triangle;
 
 public class Composite extends Geometric3D {
 	private VBO3D vbo = new VBO3D("Composite VBO");
@@ -22,7 +22,7 @@ public class Composite extends Geometric3D {
 	}
 
 	@Override
-	public List<Vertex> decompose() {
+	public List<Triangle> decompose() {
 		return vbo.getVBO();
 	}
 }

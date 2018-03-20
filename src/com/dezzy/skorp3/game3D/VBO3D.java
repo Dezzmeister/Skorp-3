@@ -7,40 +7,40 @@ import java.util.List;
 import java.util.Map;
 
 import com.dezzy.skorp3.field3D.Entity3D;
-import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.geometry3D.Triangle;
 
 public class VBO3D {
-	private Map<Entity3D,List<Vertex>> vertices;
+	private Map<Entity3D,List<Triangle>> triangles;
 	private String name;
 	
 	public VBO3D(String _name) {
 		name = _name;
-		vertices = new HashMap<Entity3D,List<Vertex>>();
+		triangles = new HashMap<Entity3D,List<Triangle>>();
 	}
 	
 	public void add(Entity3D entity) {
-		vertices.put(entity,entity.decompose());
+		triangles.put(entity,entity.decompose());
 	}
 	
 	public void remove(Entity3D entity) {
-		vertices.remove(entity);
+		triangles.remove(entity);
 	}
 	
 	public List<Entity3D> getObjects() {
 		List<Entity3D> temp = new ArrayList<>();
-		temp.addAll(vertices.keySet());
+		temp.addAll(triangles.keySet());
 		return temp;
 	}
 	
-	public List<Vertex> getVBO() {
-		Collection<List<Vertex>> temp = vertices.values();
-		List<Vertex> result = new ArrayList<>();
+	public List<Triangle> getVBO() {
+		Collection<List<Triangle>> temp = triangles.values();
+		List<Triangle> result = new ArrayList<>();
 		temp.forEach((l) -> result.addAll(l));
 		return result;
 	}
 	
-	public List<Vertex> getVBOFor(Entity3D entity) {
-		return vertices.get(entity);
+	public List<Triangle> getVBOFor(Entity3D entity) {
+		return triangles.get(entity);
 	}
 	
 	public String name() {

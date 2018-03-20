@@ -3,7 +3,7 @@ package com.dezzy.skorp3.field3D;
 import java.util.List;
 
 import com.dezzy.skorp3.game3D.Shape3D;
-import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.geometry3D.Triangle;
 
 public class RectPrism extends Geometric3D {
 	
@@ -23,7 +23,7 @@ public class RectPrism extends Geometric3D {
 	}
 
 	@Override
-	public List<Vertex> decompose() {
+	public List<Triangle> decompose() {
 		// TODO Auto-generated method stub
 		return null;
 	}

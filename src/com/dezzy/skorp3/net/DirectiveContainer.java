@@ -13,7 +13,6 @@ import java.util.function.Consumer;
  * @author Dezzmeister
  *
  */
-@SuppressWarnings("unused")
 public class DirectiveContainer {
 	//Might not need a StringActor, Consumer<String> MAY work
 	private volatile Map<String,Consumer<String>> clientDirectives = new HashMap<String,Consumer<String>>();

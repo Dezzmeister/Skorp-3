@@ -10,7 +10,7 @@ import com.dezzy.skorp3.game.Shape;
 import com.dezzy.skorp3.game.Triple;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
-import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.geometry3D.Triangle;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
@@ -85,10 +85,10 @@ public abstract class Entity3D implements Sendable {
 	}
 	
 	/**
-	 * Decompose an Entity3D into its vertices.
+	 * Decompose an Entity3D into its triangles.
 	 * 
 	 * @return
 	 */
-	public abstract List<Vertex> decompose();
+	public abstract List<Triangle> decompose();
 }
 
