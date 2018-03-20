@@ -7,6 +7,13 @@ package com.dezzy.skorp3.math3D;
  *
  */
 public class Matrix4 {
+	public static final Matrix4 IDENTITY = new Matrix4(new double[] {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+	});
+	
 	public double[] values = new double[16];
 	
 	public Matrix4(double[] _values) {
