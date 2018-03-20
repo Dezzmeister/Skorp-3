@@ -13,4 +13,10 @@ public class Vertex extends Triple<Double> {
 		super(_x, _y, _z);
 		w = _w;
 	}
+	
+	public static double distance(Vertex v1, Vertex v2) {
+		return Math.sqrt(((v1.x-v2.x)*(v1.x-v2.x))+
+					     ((v1.y-v2.y)*(v1.y-v2.y))+
+					     ((v1.z-v2.z)*(v1.z-v2.z)));
+	}
 }
