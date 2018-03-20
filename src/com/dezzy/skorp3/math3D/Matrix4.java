@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.math3D;
 
+import java.util.List;
+
 /**
  * Represents a 4x4 matrix.
  * 
@@ -52,5 +54,13 @@ public class Matrix4 {
                 in.x * values[2] + in.y * values[6] + in.z * values[10] + in.w * values[14],
                 in.x * values[3] + in.y * values[7] + in.z * values[11] + in.w * values[15]
                 );
+	}
+	
+	public static Matrix4 collapse(List<Matrix4> list) {
+		Matrix4 result = IDENTITY;
+		list.forEach((m) -> {
+			result.multiply(m);
+		});
+		return result;
 	}
 }

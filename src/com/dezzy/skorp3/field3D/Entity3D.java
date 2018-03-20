@@ -20,7 +20,7 @@ import com.dezzy.skorp3.geometry3D.Triangle;
  * @see Shape
  *
  */
-public abstract class Entity3D implements Sendable {	
+public abstract class Entity3D implements Sendable, Transformable {	
 	protected Shape3D shape;
 	public Triple<Double> point;
 	public Color color;
