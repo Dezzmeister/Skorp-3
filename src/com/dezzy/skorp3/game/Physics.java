@@ -38,10 +38,6 @@ public final class Physics {
 		renderer.render(entity, graphics);
 	}
 	
-	public static void render(Entity3D entity, Graphics graphics) {
-		renderer3D.render(entity, graphics);
-	}
-	
 	private Physics() {
 		
 	}
