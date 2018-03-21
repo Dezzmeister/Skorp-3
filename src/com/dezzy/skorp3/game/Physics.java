@@ -2,10 +2,13 @@ package com.dezzy.skorp3.game;
 
 import java.awt.Graphics;
 
+import javax.swing.JPanel;
+
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.CollisionHandler3D;
 import com.dezzy.skorp3.game3D.Renderer3D;
+import com.dezzy.skorp3.game3D.VBO3D;
 
 /**
  * Physics governs game physics (or what little there is so far).
@@ -36,6 +39,10 @@ public final class Physics {
 	
 	public static void render(Entity entity, Graphics graphics) {
 		renderer.render(entity, graphics);
+	}
+	
+	public static void barycentricRaster(VBO3D vbo, Graphics graphics, JPanel panel) {
+		renderer3D.barycentricRaster(vbo, graphics, panel);
 	}
 	
 	private Physics() {

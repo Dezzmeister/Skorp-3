@@ -1,6 +1,8 @@
 package com.dezzy.skorp3.game3D;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -14,7 +16,11 @@ public class Renderer3D {
 	private final static int zBufferLimit = 0;
 	public boolean perspectiveMode = true;
 	
-	public void barycentricRaster(VBO3D vbo, JPanel panel) {
+	public void barycentricRaster(VBO3D vbo, Graphics g, JPanel panel) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0,  0, panel.getWidth(), panel.getHeight());
+			
 		List<Triangle> triangles = vbo.getVBO();
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
@@ -148,6 +154,8 @@ public class Renderer3D {
 				}
 			}
 		}
+		
+		g2.drawImage(img,  0,  0, null);
 	}
 	
 	private static Color getShade(Color color, double shade) {
