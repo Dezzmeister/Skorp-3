@@ -18,11 +18,8 @@ public class AARectPrism extends Geometric3D {
 		color = _color;
 	}
 	
-	public AARectPrism(double x, double y, double z, int _width, int _height, int _length, Color _color) {
-		super(x,y,z);
-		width = _width;
-		height = _height;
-		length = _length;
+	public AARectPrism(double x, double y, double z, int width, int height, int length, Color _color) {
+		super(x,y,z,width,height,length);
 		color = _color;
 	}
 

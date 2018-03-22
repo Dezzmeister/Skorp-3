@@ -13,8 +13,8 @@ import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Vertex;
 
 /**
- * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
- * by means of Shape.
+ * Entity3D should be a superclass for any 3D game component that appears on the field. Entities can collide with each other
+ * by means of Shape3D.
  * 
  * @author Dezzmeister
  * @see Shape
@@ -22,8 +22,9 @@ import com.dezzy.skorp3.math3D.Vertex;
  */
 public abstract class Entity3D implements Sendable, Transformable {	
 	protected Shape3D shape;
-	public Vertex point;
-	public Color color;
+	protected Vertex point;
+	protected Color color;
+	public boolean updated = false;
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	
@@ -48,6 +49,50 @@ public abstract class Entity3D implements Sendable, Transformable {
 
 	public Shape3D getShape() {
 		return shape;
+	}
+	
+	public double x() {
+		return point.x;
+	}
+	
+	public double y() {
+		return point.y;
+	}
+	
+	public double z() {
+		return point.z;
+	}
+	
+	public Color color() {
+		return color;
+	}
+	
+	public void x(double x) {
+		point.x = x;
+		update();
+	}
+	
+	public void y(double y) {
+		point.y = y;
+		update();
+	}
+	
+	public void z(double z) {
+		point.z = z;
+		update();
+	}
+	
+	public void color(Color _color) {
+		color = _color;
+		update();
+	}
+	
+	public Vertex point() {
+		return point;
+	}
+	
+	protected void update() {
+		updated = true;
 	}
 	
 	public void placeAt(double _x, double _y, double _z) {

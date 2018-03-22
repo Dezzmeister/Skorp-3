@@ -27,7 +27,7 @@ public class Renderer3D {
 		
 		float heading = (float)Math.toRadians(0);
 		float pitch = (float)Math.toRadians(30);
-		float roll = (float)Math.toRadians(0);
+		float roll = (float)Math.toRadians(30);
 		
 		Matrix4 headingTransform;
 		Matrix4 pitchTransform;

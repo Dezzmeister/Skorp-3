@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.field3D.Geometric3D;
+import com.dezzy.skorp3.math3D.Vertex;
 
 @SuppressWarnings("unused")
 public class CollisionHandler3D {
@@ -21,14 +22,16 @@ public class CollisionHandler3D {
 		}
 	}
 	
-	private boolean rectprismHitRectprism(Geometric3D entity1, Geometric3D entity2) {
-		double halfOfCombinedWidths = (entity1.width + entity2.width) / 2;
-		double halfOfCombinedHeights = (entity1.height + entity2.height) / 2;
-		double halfOfCombinedLengths = (entity1.length + entity2.length) / 2;
+	private boolean rectprismHitRectprism(Geometric3D entity1, Geometric3D entity2) {		
+		double halfOfCombinedWidths = (entity1.width() + entity2.width()) / 2;
+		double halfOfCombinedHeights = (entity1.height() + entity2.height()) / 2;
+		double halfOfCombinedLengths = (entity1.length() + entity2.length()) / 2;
+		Vertex point1 = entity1.point();
+		Vertex point2 = entity2.point();
 		
-		double xDistance = Math.abs(entity1.point.x - entity2.point.x);
-		double yDistance = Math.abs(entity1.point.y - entity2.point.y);
-		double zDistance = Math.abs(entity1.point.z - entity2.point.z);
+		double xDistance = Math.abs(point1.x - point2.x);
+		double yDistance = Math.abs(point1.y - point2.y);
+		double zDistance = Math.abs(point1.z - point2.z);
 		
 		return (xDistance < halfOfCombinedWidths) ||
 			   (yDistance < halfOfCombinedHeights) ||

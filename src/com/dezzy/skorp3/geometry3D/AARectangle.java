@@ -52,7 +52,6 @@ public class AARectangle extends Entity3D {
 
 	@Override
 	public List<Triangle> decompose() {
-		
 		switch (plane) {
 		case XZ:
 			return decomposeXZ();
@@ -68,6 +67,7 @@ public class AARectangle extends Entity3D {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
+		
 		Vertex v1 = new Vertex(x - (width/2),y,z + (height/2));
 		Vertex v2 = new Vertex(x + (width/2),y,z + (height/2));
 		Vertex v3 = new Vertex(x - (width/2),y,z - (height/2));

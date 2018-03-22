@@ -32,6 +32,8 @@ public class VBO3D {
 		return temp;
 	}
 	
+	
+	
 	public List<Triangle> getVBO() {
 		Collection<List<Triangle>> temp = triangles.values();
 		List<Triangle> result = new ArrayList<>();
