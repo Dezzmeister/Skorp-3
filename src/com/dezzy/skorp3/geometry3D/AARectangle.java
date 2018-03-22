@@ -110,4 +110,15 @@ public class AARectangle extends Entity3D {
 		}
 		return result;
 	}
+	
+	@SafeVarargs
+	public static List<Triangle> addTriangles(List<Triangle> ... lists) {
+		List<Triangle> result = new ArrayList<Triangle>();
+		
+		for (List<Triangle> l : lists) {
+			result.addAll(l);
+		}
+		
+		return result;
+	}
 }

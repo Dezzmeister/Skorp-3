@@ -25,9 +25,9 @@ public class Renderer3D {
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
 		
-		float heading = (float)Math.toRadians(60);
-		float pitch = (float)Math.toRadians(60);
-		float roll = (float)Math.toRadians(60);
+		float heading = (float)Math.toRadians(0);
+		float pitch = (float)Math.toRadians(30);
+		float roll = (float)Math.toRadians(0);
 		
 		Matrix4 headingTransform;
 		Matrix4 pitchTransform;
