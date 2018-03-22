@@ -7,10 +7,10 @@ import java.util.function.BiConsumer;
 import com.dezzy.skorp3.field.Sendable;
 import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
-import com.dezzy.skorp3.game.Triple;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
+import com.dezzy.skorp3.math3D.Vertex;
 
 /**
  * Entity should be a superclass for any game component that appears on the field. Entities can collide with each other
@@ -22,13 +22,13 @@ import com.dezzy.skorp3.geometry3D.Triangle;
  */
 public abstract class Entity3D implements Sendable, Transformable {	
 	protected Shape3D shape;
-	public Triple<Double> point;
+	public Vertex point;
 	public Color color;
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	
 	{
-		point = new Triple<Double>(0.0,0.0,0.0);
+		point = new Vertex(0.0,0.0,0.0);
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public abstract class Entity3D implements Sendable, Transformable {
 	}
 	
 	protected Entity3D(double x, double y, double z) {
-		point = new Triple<Double>(x,y,z);
+		point = new Vertex(x,y,z);
 	}
 
 	public Shape3D getShape() {

@@ -41,4 +41,10 @@ public class RectPrism extends Geometric3D {
 		result.add(yee);
 		return result;
 	}
+
+	@Override
+	public String encode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

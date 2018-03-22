@@ -25,4 +25,10 @@ public class Composite extends Geometric3D {
 	public List<Triangle> decompose() {
 		return vbo.getVBO();
 	}
+
+	@Override
+	public String encode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

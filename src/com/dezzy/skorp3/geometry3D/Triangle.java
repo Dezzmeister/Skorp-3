@@ -13,17 +13,16 @@ public class Triangle extends Entity3D {
 	public Vertex v1;
 	public Vertex v2;
 	public Vertex v3;
-	private Shape3D shape = Shape3D.TRIANGLE;
+
+	{
+		shape = Shape3D.TRIANGLE;
+	}
 	
 	public Triangle(Vertex _v1, Vertex _v2, Vertex _v3, Color _color) {
 		v1 = _v1;
 		v2 = _v2;
 		v3 = _v3;
 		color = _color;
-	}
-	
-	public Shape3D getShape() {
-		return shape;
 	}
 
 	@Override
