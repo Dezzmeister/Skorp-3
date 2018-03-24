@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.field3D.Transformer;
@@ -16,13 +17,7 @@ public class VBO3D {
 	private Map<Entity3D,List<Triangle>> triangles;
 	private String name;
 	private Transformer transformer = new Transformer();
-	private Stack<Matrix4> stack = new Stack<Matrix4>((l) -> {
-		Matrix4 result = Matrix4.IDENTITY;
-		for (Matrix4 m : l) {
-			result = result.multiply(m);
-		}
-		return result;
-	});
+	private Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse);
 	
 	public VBO3D(String _name) {
 		name = _name;
@@ -68,7 +63,20 @@ public class VBO3D {
 		return temp;
 	}
 	
+	private void transformAll() {
+		Matrix4 transform = stack.collapse();
+		for (Entry<Entity3D,List<Triangle>> e : triangles.entrySet()) {
+			for (Triangle t : e.getValue()) {
+				t.v1 = transform.transform(t.v1);
+				t.v2 = transform.transform(t.v2);
+				t.v3 = transform.transform(t.v3);
+			}
+		}
+	}
+	
 	public List<Triangle> getVBO() {
+		transformAll();
+		
 		Collection<List<Triangle>> temp = triangles.values();
 		List<Triangle> result = new ArrayList<>();
 		temp.forEach((l) -> result.addAll(l));

@@ -56,7 +56,7 @@ public class Matrix4 {
                 );
 	}
 	
-	public static Matrix4 collapse(List<Matrix4> list) {
+	public static final Matrix4 collapse(List<Matrix4> list) {
 		Matrix4 result = IDENTITY;
 		list.forEach((m) -> {
 			result.multiply(m);

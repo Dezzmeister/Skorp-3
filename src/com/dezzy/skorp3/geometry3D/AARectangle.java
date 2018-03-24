@@ -78,7 +78,7 @@ public class AARectangle extends Entity3D {
 	
 	@Override
 	public List<Triangle> decompose() {
-		return addTriangles(t1,t2);
+		return Triangle.addTriangles(t1,t2);
 	}
 	
 	private void decomposeXZ() {
@@ -116,24 +116,5 @@ public class AARectangle extends Entity3D {
 		Vertex v4 = new Vertex(x,y - (width/2),z - (height/2));
 		t1 = new Triangle(v1,v2,v3,color);
 		t2 = new Triangle(v3,v4,v2,color);
-	}
-	
-	public static List<Triangle> addTriangles(Triangle ... triangles) {
-		List<Triangle> result = new ArrayList<Triangle>();
-		for (Triangle t : triangles) {
-			result.add(t);
-		}
-		return result;
-	}
-	
-	@SafeVarargs
-	public static List<Triangle> addTriangles(List<Triangle> ... lists) {
-		List<Triangle> result = new ArrayList<Triangle>();
-		
-		for (List<Triangle> l : lists) {
-			result.addAll(l);
-		}
-		
-		return result;
 	}
 }
