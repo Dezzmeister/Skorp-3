@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.dezzy.skorp3.Skorp3;
 import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
@@ -15,6 +16,14 @@ import com.dezzy.skorp3.math3D.Vertex;
 public class Renderer3D {
 	private final static int zBufferLimit = 0;
 	public boolean perspectiveMode = true;
+	
+	public static double map(double value, double min1, double max1, double min2, double max2) {
+		double range1 = max1-min1;
+		double norm = value/range1;
+		double range2 = max2-min2;
+		double mapped = range2*norm;
+		return (mapped + min2);
+	}
 	
 	public void barycentricRaster(VBO3D vbo, Graphics g, JPanel panel) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -25,9 +34,9 @@ public class Renderer3D {
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
 		
-		float heading = (float)Math.toRadians(0);
-		float pitch = (float)Math.toRadians(30);
-		float roll = (float)Math.toRadians(30);
+		double heading = Math.toRadians(map(Skorp3.mouse.x(),0,600,0,360)); //Y
+		double pitch = Math.toRadians(map(Skorp3.mouse.y(),0,600,0,360)); //X
+		double roll = Math.toRadians(0); //Z
 		
 		Matrix4 headingTransform;
 		Matrix4 pitchTransform;

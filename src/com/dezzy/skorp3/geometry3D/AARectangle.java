@@ -18,6 +18,7 @@ import com.dezzy.skorp3.math3D.Vertex;
  */
 public class AARectangle extends Entity3D {
 	public Plane plane;
+	Triangle t1,t2;
 	/**
 	 * X or Y
 	 */
@@ -31,9 +32,19 @@ public class AARectangle extends Entity3D {
 		shape = Shape3D.RECTANGLE;
 	}
 	
+	public AARectangle(Vertex _point, int _width, int _height, Plane _plane, Color _color) {
+		point = _point;
+		width = _width;
+		height = _height;
+		plane = _plane;
+		color = _color;
+		init();
+	}
+	
 	public AARectangle(double x, double y, double z, Color _color) {
 		super(x, y, z);
 		color = _color;
+		init();
 	}
 	
 	public AARectangle(double x, double y, double z, int _width, int _height, Plane _plane, Color _color) {
@@ -42,6 +53,7 @@ public class AARectangle extends Entity3D {
 		height = _height;
 		plane = _plane;
 		color = _color;
+		init();
 	}
 	
 	@Override
@@ -50,20 +62,26 @@ public class AARectangle extends Entity3D {
 		return null;
 	}
 
-	@Override
-	public List<Triangle> decompose() {
+	public void init() {
 		switch (plane) {
 		case XZ:
-			return decomposeXZ();
+			decomposeXZ();
+			break;
 		case XY:
-			return decomposeXY();
+			decomposeXY();
+			break;
 		case YZ:
-		default:
-			return decomposeYZ();
+			decomposeYZ();
+			break;
 		}
 	}
 	
-	private List<Triangle> decomposeXZ() {
+	@Override
+	public List<Triangle> decompose() {
+		return addTriangles(t1,t2);
+	}
+	
+	private void decomposeXZ() {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
@@ -72,12 +90,11 @@ public class AARectangle extends Entity3D {
 		Vertex v2 = new Vertex(x + (width/2),y,z + (height/2));
 		Vertex v3 = new Vertex(x - (width/2),y,z - (height/2));
 		Vertex v4 = new Vertex(x + (width/2),y,z - (height/2));
-		Triangle t1 = new Triangle(v1,v2,v3,color);
-		Triangle t2 = new Triangle(v3,v4,v2,color);
-		return addTriangles(t1,t2);
+		t1 = new Triangle(v1,v2,v3,color);
+		t2 = new Triangle(v3,v4,v2,color);
 	}
 	
-	private List<Triangle> decomposeXY() {
+	private void decomposeXY() {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
@@ -85,12 +102,11 @@ public class AARectangle extends Entity3D {
 		Vertex v2 = new Vertex(x + (width/2),y + (height/2),z);
 		Vertex v3 = new Vertex(x - (width/2),y - (height/2),z);
 		Vertex v4 = new Vertex(x + (width/2),y - (height/2),z);
-		Triangle t1 = new Triangle(v1,v2,v3,color);
-		Triangle t2 = new Triangle(v3,v4,v2,color);
-		return addTriangles(t1,t2);
+		t1 = new Triangle(v1,v2,v3,color);
+		t2 = new Triangle(v3,v4,v2,color);
 	}
 	
-	private List<Triangle> decomposeYZ() {
+	private void decomposeYZ() {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
@@ -98,9 +114,8 @@ public class AARectangle extends Entity3D {
 		Vertex v2 = new Vertex(x,y + (width/2),z - (height/2));
 		Vertex v3 = new Vertex(x,y - (width/2),z + (height/2));
 		Vertex v4 = new Vertex(x,y - (width/2),z - (height/2));
-		Triangle t1 = new Triangle(v1,v2,v3,color);
-		Triangle t2 = new Triangle(v3,v4,v2,color);
-		return addTriangles(t1,t2);
+		t1 = new Triangle(v1,v2,v3,color);
+		t2 = new Triangle(v3,v4,v2,color);
 	}
 	
 	public static List<Triangle> addTriangles(Triangle ... triangles) {
