@@ -20,7 +20,7 @@ import com.dezzy.skorp3.math3D.Vertex;
  * @see Shape
  *
  */
-public abstract class Entity3D implements Sendable, Transformable {	
+public abstract class Entity3D implements Sendable {	
 	protected Shape3D shape;
 	protected Vertex point;
 	protected Color color;

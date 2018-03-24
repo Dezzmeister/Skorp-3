@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.math3D.datastructures;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @param <T> Stack's type
  */
 public class Stack<T> {
-	private List<T> stack;
+	private List<T> stack = new ArrayList<T>();
 	private int maxSize = 20;
 	
 	private Collapser<T> collapser;
@@ -46,6 +47,10 @@ public class Stack<T> {
 	
 	public int size() {
 		return stack.size();
+	}
+	
+	public void clear() {
+		stack = new ArrayList<T>();
 	}
 	
 	/**

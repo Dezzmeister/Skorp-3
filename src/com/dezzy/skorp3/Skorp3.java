@@ -28,9 +28,12 @@ public class Skorp3 {
 	            Color.YELLOW));
 	            */
 		vbo.add(new AARectangle(0,50,-200,50,50,Plane.XZ,Color.MAGENTA));
+		vbo.add(new AARectangle(0,-10000,-500,5000,5000,Plane.XZ,Color.RED));
 		//vbo.add(new AARectPrism(-500,2000,-2000,500,500,500,Color.GREEN));
 		
 		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		Container pane = frame.getContentPane();
 		
 		SkorpPanel renderPanel = new SkorpPanel(mouse) {

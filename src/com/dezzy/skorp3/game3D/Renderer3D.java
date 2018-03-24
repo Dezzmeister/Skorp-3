@@ -34,8 +34,8 @@ public class Renderer3D {
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
 		
-		double heading = Math.toRadians(map(Skorp3.mouse.x(),0,600,0,360)); //Y
-		double pitch = Math.toRadians(map(Skorp3.mouse.y(),0,600,0,360)); //X
+		double heading = Math.toRadians(0); //Y
+		double pitch = Math.toRadians(0); //X
 		double roll = Math.toRadians(0); //Z
 		
 		Matrix4 headingTransform;
