@@ -8,7 +8,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1-sources.jar"/>
-	<classpathentry kind="lib" path="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1.jar" sourcepath="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/aparapi/aparapi-jni/1.1.2/aparapi-jni-1.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
