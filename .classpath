@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-10">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/aparapi/aparapi/1.4.1/aparapi-1.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/aparapi/aparapi-jni/1.1.2/aparapi-jni-1.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
