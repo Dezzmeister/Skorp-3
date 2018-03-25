@@ -3,6 +3,7 @@ package com.dezzy.skorp3.field3D;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dezzy.skorp3.GPU.GPUKernel;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
@@ -82,4 +83,9 @@ public class Transformable {
 			v = u1.transform(v);
 		}
 	}
+    
+    public void transformAllGPU() {
+    	Matrix4 u1 = computeTransformationMatrix();
+    	vertices = GPUKernel.transformVertices(u1, vertices);
+    }
 }
