@@ -32,7 +32,9 @@ public class VBO3D {
 		return temp;
 	}
 	
-	
+	public Map<Entity3D,List<Triangle>> get() {
+		return triangles;
+	}
 	
 	public List<Triangle> getVBO() {
 		Collection<List<Triangle>> temp = triangles.values();
@@ -47,5 +49,9 @@ public class VBO3D {
 	
 	public String name() {
 		return name;
+	}
+	
+	public void addAll(VBO3D vbo) {
+		triangles.putAll(vbo.get());
 	}
 }

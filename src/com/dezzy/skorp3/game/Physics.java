@@ -1,9 +1,11 @@
 package com.dezzy.skorp3.game;
 
 import java.awt.Graphics;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.CollisionHandler3D;
@@ -11,7 +13,7 @@ import com.dezzy.skorp3.game3D.Renderer3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 
 /**
- * Physics governs game physics (or what little there is so far).
+ * Physics governs game physics.
  * 
  * Physics is meant to follow the OOP delegation model and provide public access to package-private
  * physics modules, such as CollisionHandler. If you wish to add functionality, add to a specific module if you can
@@ -41,8 +43,8 @@ public final class Physics {
 		renderer.render(entity, graphics);
 	}
 	
-	public static void barycentricRaster(VBO3D vbo, Graphics graphics, JPanel panel) {
-		renderer3D.barycentricRaster(vbo, graphics, panel);
+	public static void barycentricRaster(List<VBO3D> vboList, Graphics graphics, JPanel panel, MouseData mouseData) {
+		renderer3D.barycentricRaster(vboList, graphics, panel, mouseData);
 	}
 	
 	private Physics() {

@@ -1,7 +1,6 @@
 package com.dezzy.skorp3.field3D;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -30,7 +29,6 @@ public abstract class Entity3D extends Transformable implements Sendable {
 	protected Vertex point;
 	protected Color color;
 	public boolean updated = false;
-	protected List<Vertex> vertices = new ArrayList<Vertex>();
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	

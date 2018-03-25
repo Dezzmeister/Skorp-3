@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import com.dezzy.skorp3.Skorp3;
+import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
@@ -25,18 +25,23 @@ public class Renderer3D {
 		return (mapped + min2);
 	}
 	
-	public void barycentricRaster(VBO3D vbo, Graphics g, JPanel panel) {
+	public void barycentricRaster(List<VBO3D> vboList, Graphics g, JPanel panel, MouseData mouse) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0, panel.getWidth(), panel.getHeight());
+		
+		VBO3D vbo = new VBO3D("vbo");
+		for (VBO3D v : vboList) {
+			vbo.addAll(v);
+		}
 			
 		List<Triangle> triangles = vbo.getVBO();
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
 		
 		//TODO get the mouse out of here and transform vertices in the VBO
-		double heading = Math.toRadians(map(Skorp3.mouse.x(),0,600,0,360)); //Y
-		double pitch = Math.toRadians(map(Skorp3.mouse.y(),0,600,0,360)); //X
+		double heading = Math.toRadians(map(mouse.x(),0,600,0,360)); //Y
+		double pitch = Math.toRadians(map(mouse.y(),0,600,0,360)); //X
 		double roll = Math.toRadians(0); //Z
 		
 		Matrix4 headingTransform;

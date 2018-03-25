@@ -1,11 +1,23 @@
 package com.dezzy.skorp3.UI;
 
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
-public class SkorpPanel extends JPanel implements MouseMotionListener {
+import com.dezzy.skorp3.Global;
+import com.dezzy.skorp3.game.Physics;
+
+/**
+ * A wrapper for JPanel that incorporates 3D rendering methods from Renderer3D and MouseListeners.
+ * SkorpPanel is abstract because paintComponent should be defined for every SkorpPanel.
+ * 
+ * @author Dezzmeister
+ *
+ */
+//TODO add support for mouse clicks
+public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 	private MouseData mouseData;
 	/**
 	 * 
@@ -19,6 +31,25 @@ public class SkorpPanel extends JPanel implements MouseMotionListener {
 	public SkorpPanel(MouseData data) {
 		super();
 		mouseData = data;
+	}
+	
+	/**
+	 * Creates a SkorpPanel using Global objects
+	 * 
+	 * @return new SkorpPanel
+	 */
+	public static SkorpPanel create() {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
+			
+			private static final long serialVersionUID = -2463995051870675710L;
+
+			@Override
+			public void paintComponent(Graphics g) {
+				Physics.barycentricRaster(Global.renderList, g, this, Global.mouseData);
+			}
+		};
+		
+		return panel;
 	}
 	
 	@Override

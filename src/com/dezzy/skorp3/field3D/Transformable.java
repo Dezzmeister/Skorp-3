@@ -1,10 +1,15 @@
 package com.dezzy.skorp3.field3D;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dezzy.skorp3.math3D.Matrix4;
+import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 
 public class Transformable {
 	protected Stack<Matrix4> stack  = new Stack<Matrix4>(Matrix4::collapse);
+	protected List<Vertex> vertices = new ArrayList<Vertex>();
 	
 	public void rotateX(double deg) {
 		double angle = Math.toRadians(deg);
@@ -67,7 +72,14 @@ public class Transformable {
 		stack.push(scale);
 	}
     
-    public Matrix4 collapse() {
+    public Matrix4 computeTransformationMatrix() {
     	return stack.collapse();
     }
+    
+    public void transformAll() {
+		Matrix4 u1 = computeTransformationMatrix();
+		for (Vertex v : vertices) {
+			v = u1.transform(v);
+		}
+	}
 }
