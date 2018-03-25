@@ -65,26 +65,22 @@ public class VBO3D {
 	
 	private void transformAll() {
 		Matrix4 transform = stack.collapse();
-		for (Entry<Entity3D,List<Triangle>> e : triangles.entrySet()) {
-			for (Triangle t : e.getValue()) {
-				t.v1 = transform.transform(t.v1);
-				t.v2 = transform.transform(t.v2);
-				t.v3 = transform.transform(t.v3);
+		for (int i = 0; i < triangles.entrySet().size(); i++) {
+			Entry<Entity3D,List<Triangle>> entry = triangles.entrySet().iterator().next();
+			while(triangles.entrySet().iterator().hasNext()) {
+				
+				
+				entry = triangles.entrySet().iterator().next();
 			}
 		}
 	}
 	
 	public List<Triangle> getVBO() {
 		transformAll();
-		
 		Collection<List<Triangle>> temp = triangles.values();
 		List<Triangle> result = new ArrayList<>();
 		temp.forEach((l) -> result.addAll(l));
 		return result;
-	}
-	
-	public List<Triangle> getVBOFor(Entity3D entity) {
-		return triangles.get(entity);
 	}
 	
 	public String name() {

@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import com.dezzy.skorp3.Skorp3;
 import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;

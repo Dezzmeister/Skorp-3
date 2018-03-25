@@ -10,7 +10,9 @@ import com.dezzy.skorp3.game.Shape;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
+import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.math3D.datastructures.Stack;
 
 /**
  * Entity3D should be a superclass for any 3D game component that appears on the field. Entities can collide with each other
@@ -25,6 +27,8 @@ public abstract class Entity3D implements Sendable {
 	protected Vertex point;
 	protected Color color;
 	public boolean updated = false;
+	protected Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse);
+	private Transformer transformer = new Transformer();
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	
@@ -95,11 +99,33 @@ public abstract class Entity3D implements Sendable {
 		updated = true;
 	}
 	
-	public void placeAt(double _x, double _y, double _z) {
+	public final void rotateX(double deg) {
+		transformer.rotateX(stack, deg);
+	}
+	
+	public final void rotateY(double deg) {
+		transformer.rotateY(stack, deg);
+	}
+	
+	public final void rotateZ(double deg) {
+		transformer.rotateZ(stack, deg);
+	}
+	
+	public final void translate(double x, double y, double z) {
+		transformer.translate(stack, x, y, z);
+	}
+	
+	public final void scale(double x, double y, double z) {
+		transformer.scale(stack, x, y, z);
+	}
+	
+	public final void placeAt(double _x, double _y, double _z) {
 		point.x = _x;
 		point.y = _y;
 		point.z = _z;
 	}
+	
+	public abstract List<Triangle> getTriangles();
 	
 	/**
 	 * This method is part of the fluent interface and allows for method chaining.
