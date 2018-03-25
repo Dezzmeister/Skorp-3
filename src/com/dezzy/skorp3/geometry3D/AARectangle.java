@@ -1,7 +1,6 @@
 package com.dezzy.skorp3.geometry3D;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dezzy.skorp3.field3D.Entity3D;
@@ -17,8 +16,8 @@ import com.dezzy.skorp3.math3D.Vertex;
  *
  */
 public class AARectangle extends Entity3D {
-	public Plane plane;
-	Triangle t1,t2;
+	private Plane plane;
+	
 	/**
 	 * X or Y
 	 */
@@ -38,13 +37,11 @@ public class AARectangle extends Entity3D {
 		height = _height;
 		plane = _plane;
 		color = _color;
-		init();
 	}
 	
 	public AARectangle(double x, double y, double z, Color _color) {
 		super(x, y, z);
 		color = _color;
-		init();
 	}
 	
 	public AARectangle(double x, double y, double z, int _width, int _height, Plane _plane, Color _color) {
@@ -53,7 +50,6 @@ public class AARectangle extends Entity3D {
 		height = _height;
 		plane = _plane;
 		color = _color;
-		init();
 	}
 	
 	@Override
@@ -61,79 +57,54 @@ public class AARectangle extends Entity3D {
 		
 		return null;
 	}
-
-	public void init() {
-		switch (plane) {
-		case XZ:
-			decomposeXZ();
-			break;
-		case XY:
-			decomposeXY();
-			break;
-		case YZ:
-			decomposeYZ();
-			break;
-		}
-	}
 	
 	@Override
 	public List<Triangle> decompose() {
-		return addTriangles(t1,t2);
-	}
-	
-	private void decomposeXZ() {
-		double x = point.x;
-		double y = point.y;
-		double z = point.z;
-		
-		Vertex v1 = new Vertex(x - (width/2),y,z + (height/2));
-		Vertex v2 = new Vertex(x + (width/2),y,z + (height/2));
-		Vertex v3 = new Vertex(x - (width/2),y,z - (height/2));
-		Vertex v4 = new Vertex(x + (width/2),y,z - (height/2));
-		t1 = new Triangle(v1,v2,v3,color);
-		t2 = new Triangle(v3,v4,v2,color);
-	}
-	
-	private void decomposeXY() {
-		double x = point.x;
-		double y = point.y;
-		double z = point.z;
-		Vertex v1 = new Vertex(x - (width/2),y + (height/2),z);
-		Vertex v2 = new Vertex(x + (width/2),y + (height/2),z);
-		Vertex v3 = new Vertex(x - (width/2),y - (height/2),z);
-		Vertex v4 = new Vertex(x + (width/2),y - (height/2),z);
-		t1 = new Triangle(v1,v2,v3,color);
-		t2 = new Triangle(v3,v4,v2,color);
-	}
-	
-	private void decomposeYZ() {
-		double x = point.x;
-		double y = point.y;
-		double z = point.z;
-		Vertex v1 = new Vertex(x,y + (width/2),z + (height/2));
-		Vertex v2 = new Vertex(x,y + (width/2),z - (height/2));
-		Vertex v3 = new Vertex(x,y - (width/2),z + (height/2));
-		Vertex v4 = new Vertex(x,y - (width/2),z - (height/2));
-		t1 = new Triangle(v1,v2,v3,color);
-		t2 = new Triangle(v3,v4,v2,color);
-	}
-	
-	public static List<Triangle> addTriangles(Triangle ... triangles) {
-		List<Triangle> result = new ArrayList<Triangle>();
-		for (Triangle t : triangles) {
-			result.add(t);
+		switch (plane) {
+		case XZ:
+			return decomposeXZ();
+		case XY:
+			return decomposeXY();
+		case YZ:
+		default:
+			return decomposeYZ();
 		}
-		return result;
 	}
 	
-	@SafeVarargs
-	public static List<Triangle> addTriangles(List<Triangle> ... lists) {
-		List<Triangle> result = new ArrayList<Triangle>();
+	private List<Triangle> decomposeXZ() {
+		double x = point.x;
+		double y = point.y;
+		double z = point.z;
 		
-		for (List<Triangle> l : lists) {
-			result.addAll(l);
-		}
-		
-		return result;
+		vertices.add(new Vertex(x - (width/2),y,z + (height/2)));
+		vertices.add(new Vertex(x + (width/2),y,z + (height/2)));
+		vertices.add(new Vertex(x - (width/2),y,z - (height/2)));
+		vertices.add(new Vertex(x + (width/2),y,z - (height/2)));
+		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+				 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+	}
+	
+	private List<Triangle> decomposeXY() {
+		double x = point.x;
+		double y = point.y;
+		double z = point.z;
+		vertices.add(new Vertex(x - (width/2),y + (height/2),z));
+		vertices.add(new Vertex(x + (width/2),y + (height/2),z));
+		vertices.add(new Vertex(x - (width/2),y - (height/2),z));
+		vertices.add(new Vertex(x + (width/2),y - (height/2),z));
+		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+									 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+	}
+	
+	private List<Triangle> decomposeYZ() {
+		double x = point.x;
+		double y = point.y;
+		double z = point.z;
+		vertices.add(new Vertex(x,y + (width/2),z + (height/2)));
+		vertices.add(new Vertex(x,y + (width/2),z - (height/2)));
+		vertices.add(new Vertex(x,y - (width/2),z + (height/2)));
+		vertices.add(new Vertex(x,y - (width/2),z - (height/2)));
+		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+				 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
 	}
 }

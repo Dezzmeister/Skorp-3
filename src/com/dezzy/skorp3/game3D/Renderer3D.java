@@ -34,6 +34,7 @@ public class Renderer3D {
 		int windowWidth = panel.getWidth();
 		int windowHeight = panel.getHeight();
 		
+		//TODO get the mouse out of here and transform vertices in the VBO
 		double heading = Math.toRadians(map(Skorp3.mouse.x(),0,600,0,360)); //Y
 		double pitch = Math.toRadians(map(Skorp3.mouse.y(),0,600,0,360)); //X
 		double roll = Math.toRadians(0); //Z

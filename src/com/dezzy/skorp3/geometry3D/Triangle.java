@@ -37,4 +37,23 @@ public class Triangle extends Entity3D {
 		result.add(this);
 		return result;
 	}
+	
+	public static List<Triangle> addTriangles(Triangle ... triangles) {
+		List<Triangle> result = new ArrayList<Triangle>();
+		for (Triangle t : triangles) {
+			result.add(t);
+		}
+		return result;
+	}
+	
+	@SafeVarargs
+	public static List<Triangle> addTriangles(List<Triangle> ... lists) {
+		List<Triangle> result = new ArrayList<Triangle>();
+		
+		for (List<Triangle> l : lists) {
+			result.addAll(l);
+		}
+		
+		return result;
+	}
 }

@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.field3D;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -15,16 +16,21 @@ import com.dezzy.skorp3.math3D.Vertex;
 /**
  * Entity3D should be a superclass for any 3D game component that appears on the field. Entities can collide with each other
  * by means of Shape3D.
+ * Entity3D extends Transformable because Transformable provides Matrix operations. Since all Entity3D's can appear as objects on
+ * the field, they should be Transformable.
+ * Entity3D implements Sendable to ensure that all Entity3D's can be encoded and sent through TCP or UDP for decoding on
+ * another computer. This ensures that multiplayer will work with Entity3D's.
  * 
  * @author Dezzmeister
  * @see Shape
  *
  */
-public abstract class Entity3D implements Sendable, Transformable {	
+public abstract class Entity3D extends Transformable implements Sendable {	
 	protected Shape3D shape;
 	protected Vertex point;
 	protected Color color;
 	public boolean updated = false;
+	protected List<Vertex> vertices = new ArrayList<Vertex>();
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	
