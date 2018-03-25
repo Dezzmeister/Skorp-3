@@ -13,6 +13,8 @@ import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.geometry3D.AARectangle;
 import com.dezzy.skorp3.geometry3D.Plane;
+import com.dezzy.skorp3.geometry3D.Triangle;
+import com.dezzy.skorp3.math3D.Vertex;
 
 public class Skorp3 {
 	public static MouseData mouse = new MouseData();
@@ -29,7 +31,11 @@ public class Skorp3 {
 	            */
 		vbo.add(new AARectangle(0,50,-200,50,50,Plane.XY,Color.MAGENTA));
 		vbo.add(new AARectangle(0,-10000,-500,5000,5000,Plane.XZ,Color.RED));
-		vbo.rotateY(60);
+		Triangle important = new Triangle(new Vertex(100, 100, 100),
+	            new Vertex(-100, -100, -50),
+	            new Vertex(-100, 100, -100),
+	            Color.YELLOW);
+		vbo.add(important);
 		//vbo.add(new AARectPrism(-500,2000,-2000,500,500,500,Color.GREEN));
 		
 		JFrame frame = new JFrame();
