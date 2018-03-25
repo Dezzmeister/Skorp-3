@@ -35,6 +35,7 @@ public class Skorp3 {
 	            new Vertex(-100, -100, -50),
 	            new Vertex(-100, 100, -100),
 	            Color.YELLOW);
+		vbo.add(new AARectangle(0,0,200,50,50,Plane.XY,Color.BLUE));
 		vbo.add(important);
 		//vbo.add(new AARectPrism(-500,2000,-2000,500,500,500,Color.GREEN));
 		
@@ -58,7 +59,7 @@ public class Skorp3 {
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		
-		frame.setSize(600,600);
+		frame.setSize(900,900);
 		frame.setVisible(true);	
 	}
 }

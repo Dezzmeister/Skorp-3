@@ -52,6 +52,11 @@ public class Triangle extends Entity3D {
 		List<Triangle> result = new ArrayList<Triangle>();
 		
 		for (List<Triangle> l : lists) {
+			for (Triangle t : l) {
+				if (t.v1.z > 0 && t.v2.z > 0 && t.v3.z > 0) {
+					l.remove(t);
+				}
+			}
 			result.addAll(l);
 		}
 		
