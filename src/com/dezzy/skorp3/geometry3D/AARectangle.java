@@ -1,11 +1,11 @@
 package com.dezzy.skorp3.geometry3D;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.Shape3D;
+import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 
 /**
@@ -116,5 +116,20 @@ public class AARectangle extends Entity3D {
 		Vertex v4 = new Vertex(x,y - (width/2),z - (height/2));
 		t1 = new Triangle(v1,v2,v3,color);
 		t2 = new Triangle(v3,v4,v2,color);
+	}
+	
+	@Override
+	public List<Triangle> getTriangles() {
+		Matrix4 u1 = stack.collapse();
+		
+		t1.v1 = u1.transform(t1.v1);
+		t1.v2 = u1.transform(t1.v2);
+		t1.v3 = u1.transform(t1.v3);
+		
+		t2.v1 = u1.transform(t2.v1);
+		t2.v2 = u1.transform(t2.v2);
+		t2.v3 = u1.transform(t2.v3);
+		
+		return Triangle.addTriangles(t1,t2);
 	}
 }

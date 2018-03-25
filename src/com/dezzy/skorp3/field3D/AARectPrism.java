@@ -8,7 +8,8 @@ import com.dezzy.skorp3.geometry3D.AARectangle;
 import com.dezzy.skorp3.geometry3D.Plane;
 import com.dezzy.skorp3.geometry3D.Triangle;
 
-public class AARectPrism extends Geometric3D {
+//TODO change this class, implement getTriangles() and make it non-abstract
+public abstract class AARectPrism extends Geometric3D {
 	
 	{
 		shape = Shape3D.RECTPRISM;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.Shape3D;
+import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 
 public class Triangle extends Entity3D {
@@ -55,5 +56,16 @@ public class Triangle extends Entity3D {
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public List<Triangle> getTriangles() {
+		Matrix4 u1 = stack.collapse();
+		
+		v1 = u1.transform(v1);
+		v2 = u1.transform(v2);
+		v3 = u1.transform(v3);
+		
+		return addTriangles(this);
 	}
 }
