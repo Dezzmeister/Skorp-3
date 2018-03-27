@@ -16,6 +16,7 @@ import com.dezzy.skorp3.math3D.Vertex;
 public class Renderer3D {
 	private final static int zBufferLimit = 0;
 	public boolean perspectiveMode = true;
+	private static final int FOV_ANGLE = 90;
 	
 	public static double map(double value, double min1, double max1, double min2, double max2) {
 		double range1 = max1-min1;
@@ -40,8 +41,8 @@ public class Renderer3D {
 		int windowHeight = panel.getHeight();
 		
 		//TODO get the mouse out of here and transform vertices in the VBO
-		double heading = Math.toRadians(map(mouse.x(),0,600,0,360)); //Y
-		double pitch = Math.toRadians(map(mouse.y(),0,600,0,360)); //X
+		double heading = Math.toRadians(map(mouse.x(),0,panel.getWidth(),0,360)); //Y
+		double pitch = Math.toRadians(map(mouse.y(),0,panel.getHeight(),0,360)); //X
 		double roll = Math.toRadians(0); //Z
 		
 		Matrix4 headingTransform;
@@ -79,7 +80,7 @@ public class Renderer3D {
 			
 		transform = headingTransform.multiply(pitchTransform).multiply(rollTransform).multiply(panOutTransform);
 		
-		double fovAngle = Math.toRadians(60);
+		double fovAngle = Math.toRadians(FOV_ANGLE);
 
         double fov = Math.tan(fovAngle / 2) * 170;
         
