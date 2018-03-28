@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.field3D;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,13 @@ import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 
-public class Transformable {
-	protected Stack<Matrix4> stack  = new Stack<Matrix4>(Matrix4::collapse);
+public class Transformable implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6355738060061476562L;
+	private static final int STACK_MAX_SIZE = 20;
+	protected Stack<Matrix4> stack  = new Stack<Matrix4>(Matrix4::collapse,STACK_MAX_SIZE);
 	protected List<Vertex> vertices = new ArrayList<Vertex>();
 	
 	public void rotateX(double deg) {

@@ -18,17 +18,22 @@ import com.dezzy.skorp3.math3D.Vertex;
  * Entity3D extends Transformable because Transformable provides Matrix operations. Since all Entity3D's can appear as objects on
  * the field, they should be Transformable.
  * Entity3D implements Sendable to ensure that all Entity3D's can be encoded and sent through TCP or UDP for decoding on
- * another computer. This ensures that multiplayer will work with Entity3D's.
+ * another computer. This ensures that multiplayer will work with Entity3Ds.
  * 
  * @author Dezzmeister
  * @see Shape
  *
  */
 public abstract class Entity3D extends Transformable implements Sendable {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8901159389312514444L;
+	
 	protected Shape3D shape;
 	protected Vertex point;
 	protected Color color;
-	public boolean updated = false;
+	public transient boolean updated = false;
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	
@@ -138,6 +143,7 @@ public abstract class Entity3D extends Transformable implements Sendable {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public abstract List<Triangle> decompose();
 }
 

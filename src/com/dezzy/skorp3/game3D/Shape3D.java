@@ -1,6 +1,8 @@
 package com.dezzy.skorp3.game3D;
 
-public enum Shape3D {
+import java.io.Serializable;
+
+public enum Shape3D implements Serializable {
 	//True 3D shapes
 	COMPOSITE,
 	RECTPRISM,

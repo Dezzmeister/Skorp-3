@@ -3,6 +3,10 @@ package com.dezzy.skorp3.field3D;
 import com.dezzy.skorp3.math3D.Vertex;
 
 public abstract class Geometric3D extends Entity3D {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6207377303394476708L;
 	protected int width;	//X axis
 	protected int height;	//Y axis
 	protected int length;	//Z axis

@@ -10,6 +10,11 @@ import com.dezzy.skorp3.geometry3D.Triangle;
 
 public class AARectPrism extends Geometric3D {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1070846476672380639L;
+
 	{
 		shape = Shape3D.RECTPRISM;
 	}

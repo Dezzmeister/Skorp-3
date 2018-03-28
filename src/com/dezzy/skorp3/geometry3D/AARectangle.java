@@ -16,6 +16,11 @@ import com.dezzy.skorp3.math3D.Vertex;
  *
  */
 public class AARectangle extends Entity3D {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1280555775726110766L;
+
 	private Plane plane;
 	
 	/**

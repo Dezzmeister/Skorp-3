@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.math3D.datastructures;
 
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -9,19 +11,19 @@ import java.util.List;
  *
  * @param <T> Stack's type
  */
-public class Stack<T> {
+public class Stack<T> implements Serializable, Collapsable<T> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5353549904744124977L;
 	private List<T> stack;
 	private int maxSize = 20;
 	
 	private Collapser<T> collapser;
 	
-	public Stack(Collapser<T> _collapser) {
+	public Stack(Collapser<T> _collapser, int maxSize) {
+		stack = new LinkedList<T>();
 		collapser = _collapser;
-	}
-	
-	public Stack<T> setMaxSize(int size) {
-		maxSize = size;
-		return this;
 	}
 	
 	public void defineCollapseLogic(Collapser<T> _collapser) {
@@ -36,8 +38,12 @@ public class Stack<T> {
 		return stack.remove(stack.size()-1);
 	}
 	
-	public int maxSize() {
-		return maxSize;
+	public Collapser<T> collapser() {
+		return collapser;
+	}
+	
+	public void clear() {
+		stack.clear();
 	}
 	
 	public T collapse() {
@@ -55,6 +61,6 @@ public class Stack<T> {
 	 * @return a new Stack
 	 */
 	public Stack<T> copy() {
-		return new Stack<T>(collapser).setMaxSize(maxSize);
+		return new Stack<T>(collapser,maxSize);
 	}
 }

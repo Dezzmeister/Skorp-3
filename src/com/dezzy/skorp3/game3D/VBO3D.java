@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.game3D;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,7 +10,11 @@ import java.util.Map;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
 
-public class VBO3D {
+public class VBO3D implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1126661781636952261L;
 	private Map<Entity3D,List<Triangle>> triangles;
 	private String name;
 	
@@ -18,6 +23,7 @@ public class VBO3D {
 		triangles = new HashMap<Entity3D,List<Triangle>>();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void add(Entity3D entity) {
 		triangles.put(entity,entity.decompose());
 	}

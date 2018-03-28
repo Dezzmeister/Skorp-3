@@ -7,6 +7,10 @@ import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
 
 public class Composite extends Geometric3D {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1554972797781794548L;
 	private VBO3D vbo = new VBO3D("Composite VBO");
 	
 	{

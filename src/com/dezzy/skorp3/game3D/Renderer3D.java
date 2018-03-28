@@ -15,7 +15,7 @@ import com.dezzy.skorp3.math3D.Vertex;
 
 public class Renderer3D {
 	private final static int zBufferLimit = 0;
-	public boolean perspectiveMode = true;
+	public boolean perspectiveMode = false;
 	private static final int FOV_ANGLE = 90;
 	
 	public static double map(double value, double min1, double max1, double min2, double max2) {
@@ -26,7 +26,7 @@ public class Renderer3D {
 		return (mapped + min2);
 	}
 	
-	public void barycentricRaster(List<VBO3D> vboList, Graphics g, JPanel panel, MouseData mouse) {
+	public void barycentricRaster(VBO3DList vboList, Graphics g, JPanel panel, MouseData mouse) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0, panel.getWidth(), panel.getHeight());
@@ -82,7 +82,7 @@ public class Renderer3D {
 		
 		double fovAngle = Math.toRadians(FOV_ANGLE);
 
-        double fov = Math.tan(fovAngle / 2) * 170;
+        double fov = Math.tan(fovAngle / 2) * 180;
         
         BufferedImage img = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
         
