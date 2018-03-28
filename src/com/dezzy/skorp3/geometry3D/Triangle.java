@@ -16,6 +16,10 @@ import com.dezzy.skorp3.math3D.Vertex;
  *
  */
 public class Triangle extends Entity3D {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2882166168334107220L;
 	public Color color;
 	public Vertex v1;
 	public Vertex v2;

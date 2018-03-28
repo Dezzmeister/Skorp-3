@@ -23,7 +23,6 @@ public class VBO3D implements Serializable {
 		triangles = new HashMap<Entity3D,List<Triangle>>();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void add(Entity3D entity) {
 		triangles.put(entity,entity.decompose());
 	}
