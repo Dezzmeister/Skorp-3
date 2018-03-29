@@ -2,15 +2,10 @@ package com.dezzy.skorp3.game;
 
 import java.awt.Graphics;
 
-import javax.swing.JPanel;
-
-import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.CollisionHandler3D;
-import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.Renderer3D;
-import com.dezzy.skorp3.game3D.VBO3DList;
 
 /**
  * Physics governs game physics.

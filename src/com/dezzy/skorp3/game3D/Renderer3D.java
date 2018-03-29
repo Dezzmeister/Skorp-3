@@ -8,9 +8,7 @@ import javax.swing.JPanel;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer;
 
-public class Renderer3D {
-	private Data3D data3D = new Data3D(true,90);
-	
+public class Renderer3D {	
 	private BarycentricVBORenderer bRenderer;
 	
 	public static double map(double value, double min1, double max1, double min2, double max2) {

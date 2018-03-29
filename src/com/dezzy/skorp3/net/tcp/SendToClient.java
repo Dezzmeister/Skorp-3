@@ -1,8 +1,6 @@
 package com.dezzy.skorp3.net.tcp;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -26,10 +24,8 @@ class SendToClient implements Runnable {
 		try {
 			writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 			while (true && running.get()) {
-				if (input.get() !=null) {
-					String message = null;
-					BufferedReader reader = new BufferedReader(new InputStreamReader(input.get()));
-					message = reader.readLine();
+				if (input.get() !=null && input.isUpdated()) {
+					String message = input.read();
 					if (message!=null) {
 						writer.println(message);
 						writer.flush();
