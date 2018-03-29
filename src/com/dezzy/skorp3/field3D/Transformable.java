@@ -9,7 +9,7 @@ import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 
-public class Transformable implements Serializable {
+public abstract class Transformable implements Serializable {
 	/**
 	 * 
 	 */
