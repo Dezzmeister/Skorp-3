@@ -29,10 +29,10 @@ public class VBO {
 	
 	public void render(int i, Graphics graphics) {
 		Entity entity = objects.get(i);
-		Physics.render(entity, graphics);
+		Physics.render2D(entity, graphics);
 	}
 	
 	public void renderAll(Graphics graphics) {
-		objects.forEach((entity) -> Physics.render(entity, graphics));
+		objects.forEach((entity) -> Physics.render2D(entity, graphics));
 	}
 }

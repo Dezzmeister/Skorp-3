@@ -16,8 +16,8 @@ import com.dezzy.skorp3.net.StringActor;
  * Directive actions will have one parameter, a String containing the received message (without the header). The code provided as an action
  * will act on the String appropriately, and may return something if need be. 
  * 
- * The InputStream sendMessage is shared across the main thread and the client/server sending thread.
- * Calls to send() should update sendMessage and the sending thread should react appropriately.
+ * The InputContainer input contains an InputStream which is updated whenever send() is called. SendToClient and SendToServer
+ * both have pointers (references) to this InputContainer, so when InputStream changes they can react appropriately and send a message.
  * 
  * One TCPManager should only ever have one TCPServer or TCPClient, never both.
  * 

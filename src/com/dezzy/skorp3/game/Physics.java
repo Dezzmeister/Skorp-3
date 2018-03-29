@@ -8,6 +8,7 @@ import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.CollisionHandler3D;
+import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.Renderer3D;
 import com.dezzy.skorp3.game3D.VBO3DList;
 
@@ -28,7 +29,7 @@ public final class Physics {
 	private static CollisionHandler collider = new CollisionHandler();
 	private static CollisionHandler3D collider3D = new CollisionHandler3D();
 	private static Renderer renderer = new Renderer();
-	private static Renderer3D renderer3D = new Renderer3D();
+	public static Renderer3D renderer3D = new Renderer3D();
 	
 	public static boolean hasCollided(Entity entity1, Entity entity2) {
 		return collider.hasCollided(entity1, entity2);
@@ -38,12 +39,8 @@ public final class Physics {
 		return collider3D.hasCollided(entity1,entity2);
 	}
 	
-	public static void render(Entity entity, Graphics graphics) {
+	public static void render2D(Entity entity, Graphics graphics) {
 		renderer.render(entity, graphics);
-	}
-	
-	public static void barycentricRaster(VBO3DList vboList, Graphics graphics, JPanel panel, MouseData mouseData) {
-		renderer3D.barycentricRaster(vboList, graphics, panel, mouseData);
 	}
 	
 	private Physics() {

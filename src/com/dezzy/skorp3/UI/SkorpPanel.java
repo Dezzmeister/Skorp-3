@@ -42,10 +42,14 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
 			
 			private static final long serialVersionUID = -2463995051870675710L;
+			
+			{
+				Physics.renderer3D.initializeBarycentricRenderer(Global.renderList, this, Global.mouseData, Global.data3D);
+			}
 
 			@Override
 			public void paintComponent(Graphics g) {
-				Physics.barycentricRaster(Global.renderList, g, this, Global.mouseData);
+				Physics.renderer3D.barycentricRaster(g);
 			}
 		};
 		
