@@ -42,11 +42,7 @@ public class AARectangle extends Entity3D {
 		height = _height;
 		plane = _plane;
 		color = _color;
-	}
-	
-	public AARectangle(double x, double y, double z, Color _color) {
-		super(x, y, z);
-		color = _color;
+		decompose();
 	}
 	
 	public AARectangle(double x, double y, double z, int _width, int _height, Plane _plane, Color _color) {
@@ -55,12 +51,30 @@ public class AARectangle extends Entity3D {
 		height = _height;
 		plane = _plane;
 		color = _color;
+		decompose();
 	}
 	
 	@Override
 	public String encode() {
 		
 		return null;
+	}
+	
+	@Override
+	public List<Triangle> getTriangles() {
+		transformAllGPU();
+		switch(plane) {
+		case XZ:
+			return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+					 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+		case XY:
+			return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+					 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+		case YZ:
+		default:
+			return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
+					 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+		}
 	}
 	
 	@Override
@@ -85,18 +99,21 @@ public class AARectangle extends Entity3D {
 		vertices.add(new Vertex(x + (width/2),y,z + (height/2)));
 		vertices.add(new Vertex(x - (width/2),y,z - (height/2)));
 		vertices.add(new Vertex(x + (width/2),y,z - (height/2)));
+		
 		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
-				 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+								     new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
 	}
 	
 	private List<Triangle> decomposeXY() {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
+		
 		vertices.add(new Vertex(x - (width/2),y + (height/2),z));
 		vertices.add(new Vertex(x + (width/2),y + (height/2),z));
 		vertices.add(new Vertex(x - (width/2),y - (height/2),z));
 		vertices.add(new Vertex(x + (width/2),y - (height/2),z));
+		
 		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
 									 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
 	}
@@ -105,11 +122,13 @@ public class AARectangle extends Entity3D {
 		double x = point.x;
 		double y = point.y;
 		double z = point.z;
+		
 		vertices.add(new Vertex(x,y + (width/2),z + (height/2)));
 		vertices.add(new Vertex(x,y + (width/2),z - (height/2)));
 		vertices.add(new Vertex(x,y - (width/2),z + (height/2)));
 		vertices.add(new Vertex(x,y - (width/2),z - (height/2)));
+		
 		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
-				 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+									 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
 	}
 }

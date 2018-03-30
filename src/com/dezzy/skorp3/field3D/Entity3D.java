@@ -138,6 +138,8 @@ public abstract class Entity3D extends Transformable implements Sendable {
 		}
 	}
 	
+	public abstract List<Triangle> getTriangles();
+	
 	/**
 	 * Decompose an Entity3D into its triangles.
 	 * 

@@ -37,10 +37,7 @@ public class BarycentricVBORenderer implements Renderer {
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0, panel.getWidth(), panel.getHeight());
 		
-		VBO3D vbo = new VBO3D("vbo");
-		for (VBO3D v : vboList) {
-			vbo.addAll(v);
-		}
+		VBO3D vbo = vboList.collapse();
 			
 		List<Triangle> triangles = vbo.getVBO();
 		int windowWidth = panel.getWidth();
@@ -144,7 +141,7 @@ public class BarycentricVBORenderer implements Renderer {
 			
 			int minX = (int) Math.max(0, Math.ceil(Math.min(v1.x, Math.min(v2.x, v3.x))));
 			int maxX = (int) Math.min(windowWidth - 1, Math.floor(Math.max(v1.x, Math.max(v2.x, v3.x))));
-			
+
 			int minY = (int) Math.max(0,  Math.ceil(Math.min(v1.y, Math.min(v2.y, v3.y))));
 			int maxY = (int) Math.min(img.getHeight() - 1, Math.floor(Math.max(v1.y, Math.max(v2.y, v3.y))));
 			

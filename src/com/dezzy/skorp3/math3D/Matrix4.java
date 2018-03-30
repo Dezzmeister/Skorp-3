@@ -3,7 +3,7 @@ package com.dezzy.skorp3.math3D;
 import java.util.List;
 
 /**
- * Represents a 4x4 matrix.
+ * Represents a 4x4 matrix. ESSENTIAL for the 3D code.
  * 
  * @author Dezzmeister
  *
@@ -56,6 +56,13 @@ public class Matrix4 {
                 );
 	}
 	
+	/**
+	 * A standard collapse method for Matrix4 Stacks. A Stack<Matrix4> should probably
+	 * use this method.
+	 * 
+	 * @param list List of Matrices to be collapsed
+	 * @return the Matrix that is the result of successive multiplications on the matrices in the list
+	 */
 	public static Matrix4 collapse(List<Matrix4> list) {
 		Matrix4 result = IDENTITY;
 		list.forEach((m) -> {

@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dezzy.skorp3.GPU.GPUKernel;
 import com.dezzy.skorp3.field3D.Entity3D;
 import com.dezzy.skorp3.game3D.Shape3D;
+import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 
 /**
@@ -40,6 +42,32 @@ public class Triangle extends Entity3D {
 	public String encode() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void transformAll() {
+		Matrix4 u = computeTransformationMatrix();
+		v1 = u.transform(v1);
+		v2 = u.transform(v2);
+		v3 = u.transform(v3);
+	}
+	
+	@Override
+	public void transformAllGPU() {
+    	Matrix4 u1 = computeTransformationMatrix();
+    	List<Vertex> vertices = new ArrayList<Vertex>();
+    	vertices.add(v1);
+    	vertices.add(v2);
+    	vertices.add(v3);
+    	vertices = GPUKernel.transformVertices(u1, vertices);
+    	v1 = vertices.get(0);
+    	v2 = vertices.get(1);
+    	v3 = vertices.get(2);
+    }
+	
+	@Override
+	public List<Triangle> getTriangles() {
+		return addTriangles(this);
 	}
 
 	@Override

@@ -44,8 +44,14 @@ public class AARectPrism extends Geometric3D {
 		AARectangle right = new AARectangle(x + (width/2),y,z,height,length,Plane.YZ,color);
 		
 		return Triangle.addTriangles(front.decompose(), back.decompose(),
-									    bottom.decompose(), top.decompose(),
-									    left.decompose(), right.decompose());
+									 bottom.decompose(), top.decompose(),
+									 left.decompose(), right.decompose());
+	}
+	
+	//TODO implement this
+	@Override
+	public List<Triangle> getTriangles() {
+		return null;
 	}
 
 	@Override

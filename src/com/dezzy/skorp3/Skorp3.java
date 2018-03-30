@@ -17,6 +17,7 @@ public class Skorp3 {
 	public static void main(String ... args) {
 		mainVBO.add(new AARectangle(0,50,-200,50,50,Plane.XZ,Color.MAGENTA));
 		mainVBO.add(new AARectangle(-200,0,200,100,40,Plane.XY,Color.GREEN));
+		mainVBO.add(new AARectangle(0,-1000,-2000,1000,1000,Plane.XZ,Color.RED));
 		
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();

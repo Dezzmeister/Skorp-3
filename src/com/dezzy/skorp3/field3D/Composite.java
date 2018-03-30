@@ -24,6 +24,11 @@ public class Composite extends Geometric3D {
 	public void add(Entity3D shape) {
 		vbo.add(shape);
 	}
+	
+	@Override
+	public List<Triangle> getTriangles() {
+		return vbo.getVBO();
+	}
 
 	@Override
 	public List<Triangle> decompose() {
