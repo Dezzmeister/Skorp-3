@@ -88,6 +88,7 @@ public abstract class Transformable implements Serializable {
      * Computes the transformation matrix from the stack and applies the transformation to all
      * vertices using the CPU.
      */
+    @Deprecated
     public void transformAll() {
 		Matrix4 u1 = computeTransformationMatrix();
 		for (Vertex v : vertices) {
@@ -99,6 +100,7 @@ public abstract class Transformable implements Serializable {
      * Computes the transformation matrix from the stack and applies the transformation to all
      * vertices using the graphics card.
      */
+    @Deprecated
     public void transformAllGPU() {
     	Matrix4 u1 = computeTransformationMatrix();
     	vertices = GPUKernel.transformVertices(u1, vertices);
@@ -108,6 +110,8 @@ public abstract class Transformable implements Serializable {
     protected List<Vertex> transformAll(List<Vertex> vertices) {
     	return GPUKernel.transformVertices(computeTransformationMatrix(), vertices);
     }
+    
+    public abstract void applyTransformations();
     
     /**
      * Update the internal state of the Transformable, signifying that a transformation has been applied and an

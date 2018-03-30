@@ -60,6 +60,7 @@ public class AARectangle extends Entity3D {
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<Triangle> getTriangles() {
 		transformAllGPU();
@@ -130,5 +131,11 @@ public class AARectangle extends Entity3D {
 		
 		return Triangle.addTriangles(new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color),
 									 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
+	}
+
+	@Override
+	public void applyTransformations() {
+		// TODO Auto-generated method stub
+		
 	}
 }

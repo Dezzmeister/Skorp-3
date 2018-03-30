@@ -40,4 +40,10 @@ public class Composite extends Geometric3D {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void applyTransformations() {
+		// TODO Auto-generated method stub
+		
+	}
 }

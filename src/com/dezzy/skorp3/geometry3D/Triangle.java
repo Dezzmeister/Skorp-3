@@ -109,4 +109,10 @@ public class Triangle extends Entity3D {
 		
 		return (z1 > 0) && (z2 > 0) && (z3 > 0);
 	}
+
+	@Override
+	public void applyTransformations() {
+		// TODO Auto-generated method stub
+		
+	}
 }
