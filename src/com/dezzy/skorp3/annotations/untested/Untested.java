@@ -1,4 +1,4 @@
-package com.dezzy.skorp3.test;
+package com.dezzy.skorp3.annotations.untested;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

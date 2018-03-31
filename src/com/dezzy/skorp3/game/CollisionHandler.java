@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dezzy.skorp3.annotations.untested.Untested;
 import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field.Geometric;
 import com.dezzy.skorp3.field.Line;
@@ -32,6 +33,7 @@ import com.dezzy.skorp3.field.Point;
  * @see CollisionHandler#hasCollided(Entity, Entity)
  */
 @SuppressWarnings("unused")
+@Untested
 class CollisionHandler {
 	private static Map<String, Method> methods = new HashMap<String, Method>();
 	

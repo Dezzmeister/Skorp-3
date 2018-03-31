@@ -1,6 +1,7 @@
 package com.dezzy.skorp3;
 
 import com.dezzy.skorp3.UI.MouseData;
+import com.dezzy.skorp3.annotations.Processors;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.game3D.VBO3DList;
@@ -19,10 +20,11 @@ public final class Global {
 	public static final Data3D data3D = new Data3D(true,90);
 	
 	static {
+		Processors.activate();
 		renderList.add(mainVBO);
 	}
 	
 	private Global() {
-		
+
 	}
 }
