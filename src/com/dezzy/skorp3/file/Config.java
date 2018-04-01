@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dezzy.skorp3.file.reflect.ConversionMethods;
+import com.dezzy.skorp3.log.Logger;
 
 /**
  * Class to load config files and store their contents in HashMaps. T is the value type, example:
@@ -33,6 +34,7 @@ public class Config<T> {
 		clazz = _clazz;
 		findConversionMethod();
 		readConfig(path);
+		Logger.log("Config created with "+path);
 	}
 	
 	private void findConversionMethod() {

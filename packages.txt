@@ -17,3 +17,4 @@ com.dezzy.skorp3.math3D.datastructures
 com.dezzy.skorp3.net
 com.dezzy.skorp3.net.tcp
 com.dezzy.skorp3.UI
+com.dezzy.skorp3.log

@@ -1,0 +1,5 @@
+Time in ms	Event
+
+1522545531599	Log created
+1522545531599	Config created with config/config.txt
+1522545531601	Config created with config/keyconfig.txt
