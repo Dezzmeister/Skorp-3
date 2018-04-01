@@ -12,18 +12,41 @@ import java.util.stream.Collectors;
 
 import com.dezzy.skorp3.file.Load;
 
+/**
+ * NOTE: This class is not related to the compile-time annotation processor interface, Processor.
+ * 
+ * This is the parent class for any Runtime Annotation Processor in the annotations package.
+ * 
+ * Rules for creating new Annotation Processors:
+ * -Create a separate package in com.dezzy.skorp3.annotations.
+ * -Create your annotation in this package and make sure that the retention policy is set to RUNTIME.
+ * -Create a new class, name it like "AnnotationameProcessor" and put it in your new package.
+ * -Extend RuntimeProcessor and implement process().
+ * -process() should use RuntimeProcessor's ifThenApply(), which looks through a list of all classes
+ * and checks if a specified predicate is true. (For example, if the class is marked by your annotation,
+ * print some message to Logger.)
+ * -Go to the Processors class and add the line, processAll(Annotationname.class).
+ * 
+ * It is also worth noting that when creating a new package, add it to the file "packages.txt"
+ * so that classes inside the package can be loaded.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public abstract class RuntimeProcessor {
-	protected static final List<Class<?>> LOADED_CLASSES;
-	
-	static {
-		LOADED_CLASSES = getAllClasses();
-	}
 	
 	public RuntimeProcessor() {
 		
 	}
 	
-	protected static List<Class<?>> getClassesForPackage(String packageName) {
+	/**
+	 * Searches a package for loaded classes and returns them in a list.
+	 * DOES NOT SEARCH SUB-PACKAGES.
+	 * 
+	 * @param packageName fully qualified package name
+	 * @return A list of Classes in the package
+	 */
+	static List<Class<?>> getClassesForPackage(String packageName) {
 		List<File> directories = new ArrayList<File>();
 		try {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -62,7 +85,7 @@ public abstract class RuntimeProcessor {
 	 * 
 	 * @return A list of all loaded classes in all packages specified by packages.txt
 	 */
-	protected static List<Class<?>> getAllClasses() {
+    static List<Class<?>> getAllClasses() {
 		List<String> packages = Load.load("packages.txt").collect(Collectors.toList());
 		List<Class<?>> classes = new ArrayList<Class<?>>();
 		
@@ -71,19 +94,22 @@ public abstract class RuntimeProcessor {
 	}
 	
 	/**
-	 * Iterates through a list of Classes returned by getAllClasses().
+	 * Iterates through a list of all Classes that have been loaded by the Main Thread's ClassLoader.
 	 * For each class, if the specified predicate is true, the specified action is performed.
 	 * 
 	 * @param predicate Condition to check for each Class
 	 * @param actor Void function to act upon Class if predicate returns true
 	 */
 	protected void ifThenApply(Predicate<? super Class<?>> predicate, Consumer<? super Class<?>> action) {
-		for (Class<?> c : getAllClasses()) {
+		for (Class<?> c : Processors.LOADED_CLASSES) {
 			if (predicate.test(c)) {
 				action.accept(c);
 			}
 		}
 	}
 	
+	/**
+	 * Process an annotation. Should make a call to ifThenApply().
+	 */
 	public abstract void process();
 }

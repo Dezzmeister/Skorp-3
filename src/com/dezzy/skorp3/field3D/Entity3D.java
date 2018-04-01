@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.dezzy.skorp3.annotations.untested.Untested;
 import com.dezzy.skorp3.field.Sendable;
 import com.dezzy.skorp3.game.Physics;
 import com.dezzy.skorp3.game.Shape;
