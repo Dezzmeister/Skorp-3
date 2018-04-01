@@ -24,6 +24,10 @@ public class Config<T> {
 	 */
 	private Method conversionMethod;
 	
+	static {
+		ConversionMethods.activate();
+	}
+	
 	/**
 	 * _clazz MUST be T's Class type. If you create a Config<Integer>, then _clazz must be Integer.class.
 	 * 
@@ -58,7 +62,7 @@ public class Config<T> {
 			T value = (T) conversionMethod.invoke(null, entryValueName);
 			entries.put(entryName, value);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	

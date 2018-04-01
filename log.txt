@@ -1,6 +1,6 @@
 Time in ms	Event
 
-1522549253023	Log created
-1522549253023	Config created with config/config.txt
-1522549253023	Config created with config/keyconfig.txt
-1522549253185	WARNING: com.dezzy.skorp3.annotations.Processors is untested!
+1522551696528	Log created
+1522551696528	Config created with config/config.txt
+1522551696531	Config created with config/keyconfig.txt
+1522551696825	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!

@@ -4,6 +4,13 @@ import java.util.List;
 
 import com.dezzy.skorp3.annotations.untested.Untested;
 
+/**
+ * All runtime annotation processors should be registered in this class
+ * using processAll.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public class Processors {
 	static final List<Class<?>> LOADED_CLASSES = RuntimeProcessor.getAllClasses();
 	

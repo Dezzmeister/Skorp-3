@@ -83,4 +83,6 @@ public final class ConversionMethods {
 	public static Map<String,Method> getConversionMethods() {
 		return conversions;
 	}
+	
+	public static void activate() {}
 }

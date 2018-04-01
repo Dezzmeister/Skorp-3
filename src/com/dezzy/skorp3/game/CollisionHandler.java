@@ -142,6 +142,7 @@ class CollisionHandler {
 		return y==(int)point.y() && pointHitRectangle(point, line.getBoundingBox());
 	}
 	
+	@Untested
 	private boolean lineHitRectangle(Line line, Geometric rect) {
 		return false;
 	}

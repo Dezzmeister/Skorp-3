@@ -3,8 +3,6 @@ package com.dezzy.skorp3.game3D.renderers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -21,13 +19,13 @@ public class JoesRenderer {
 	private VBO3DList vboList;
 	private JPanel panel;
 	private MouseData mouse;
-	private Data3D data3D;
+	//private Data3D data3D;
 	
 	public JoesRenderer(VBO3DList _vboList, JPanel _panel, MouseData _mouse, Data3D _data3D) {
 		vboList = _vboList;
 		panel = _panel;
 		mouse = _mouse;
-		data3D = _data3D;
+		//data3D = _data3D;
 	}
 	
 	public void render(Graphics g) {
@@ -78,7 +76,7 @@ public class JoesRenderer {
 			
 		transform = headingTransform.multiply(pitchTransform).multiply(rollTransform).multiply(panOutTransform);
 		
-		BufferedImage img = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		//BufferedImage img = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for (Triangle t : triangles) {
 			t.v1 = transform.transform(t.v1);

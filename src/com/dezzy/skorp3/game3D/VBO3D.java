@@ -16,13 +16,11 @@ public class VBO3D implements Serializable {
 	 */
 	private static final long serialVersionUID = 1126661781636952261L;
 	private Map<Entity3D,List<Triangle>> triangles;
-	private List<Entity3D> entities;
 	private String name;
 	
 	public VBO3D(String _name) {
 		name = _name;
 		triangles = new HashMap<Entity3D,List<Triangle>>();
-		entities = new ArrayList<Entity3D>();
 	}
 
 	public void add(Entity3D entity) {

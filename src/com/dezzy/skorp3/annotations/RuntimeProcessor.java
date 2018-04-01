@@ -57,7 +57,7 @@ public abstract class RuntimeProcessor {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-			System.err.println("Error loading Classes for com.dezzy.skorp3.annotations.UntestedProcessor");
+			System.err.println("Error loading Class URLs for com.dezzy.skorp3.annotations.UntestedProcessor");
 		}
 		
 		List<Class<?>> classes = new ArrayList<Class<?>>();
