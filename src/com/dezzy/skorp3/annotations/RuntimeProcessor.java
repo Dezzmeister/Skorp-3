@@ -13,7 +13,11 @@ import java.util.stream.Collectors;
 import com.dezzy.skorp3.file.Load;
 
 public abstract class RuntimeProcessor {
-	protected static final List<Class<?>> LOADED_CLASSES = getAllClasses();
+	protected static final List<Class<?>> LOADED_CLASSES;
+	
+	static {
+		LOADED_CLASSES = getAllClasses();
+	}
 	
 	public RuntimeProcessor() {
 		
@@ -61,7 +65,6 @@ public abstract class RuntimeProcessor {
 	protected static List<Class<?>> getAllClasses() {
 		List<String> packages = Load.load("packages.txt").collect(Collectors.toList());
 		List<Class<?>> classes = new ArrayList<Class<?>>();
-		System.out.println(packages.size());
 		
 		packages.forEach(s -> classes.addAll(getClassesForPackage(s)));
 		return classes;
@@ -75,7 +78,7 @@ public abstract class RuntimeProcessor {
 	 * @param actor Void function to act upon Class if predicate returns true
 	 */
 	protected void ifThenApply(Predicate<? super Class<?>> predicate, Consumer<? super Class<?>> action) {
-		for (Class<?> c : LOADED_CLASSES) {
+		for (Class<?> c : getAllClasses()) {
 			if (predicate.test(c)) {
 				action.accept(c);
 			}

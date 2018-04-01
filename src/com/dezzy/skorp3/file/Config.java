@@ -58,7 +58,7 @@ public class Config<T> {
 			T value = (T) conversionMethod.invoke(null, entryValueName);
 			entries.put(entryName, value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	

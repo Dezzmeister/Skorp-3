@@ -33,7 +33,6 @@ import com.dezzy.skorp3.field.Point;
  * @see CollisionHandler#hasCollided(Entity, Entity)
  */
 @SuppressWarnings("unused")
-@Untested
 class CollisionHandler {
 	private static Map<String, Method> methods = new HashMap<String, Method>();
 	

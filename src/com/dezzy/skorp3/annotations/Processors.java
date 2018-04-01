@@ -1,7 +1,5 @@
 package com.dezzy.skorp3.annotations;
 
-import java.lang.reflect.Method;
-
 import com.dezzy.skorp3.annotations.untested.Untested;
 
 public class Processors {
@@ -13,11 +11,10 @@ public class Processors {
 		for (Class<?> c : classes) {
 			try {
 				Class<?> processorClass = Class.forName(c.getName() + "Processor");
-				Method process = processorClass.getMethod("process");
-				Object processor = processorClass.getDeclaredConstructor().newInstance();
-				process.invoke(processor);
+				RuntimeProcessor processor = (RuntimeProcessor) processorClass.getDeclaredConstructor().newInstance();
+				processor.process();
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 				System.err.println("Error processing annotations in com.dezzy.skorp3.annotations.Processors.");
 			}
 		}
