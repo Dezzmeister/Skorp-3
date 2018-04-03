@@ -5,10 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dezzy.skorp3.GPU.GPUKernel;
+import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 
+/**
+ * Represents an object with a Matrix stack and the capability to transform in 3D space.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public abstract class Transformable implements Serializable {
 	/**
 	 * 
@@ -17,7 +24,7 @@ public abstract class Transformable implements Serializable {
 	private static final int STACK_MAX_SIZE = 20;
 	protected Stack<Matrix4> stack  = new Stack<Matrix4>(Matrix4::collapse,STACK_MAX_SIZE);
 	protected List<Vertex> vertices = new ArrayList<Vertex>();
-	protected boolean updated = false;
+	protected transient boolean updated = false;
 	
 	public void rotateX(double deg) {
 		double angle = Math.toRadians(deg);
@@ -112,6 +119,8 @@ public abstract class Transformable implements Serializable {
     }
     
     public abstract void applyTransformations();
+    
+    public abstract List<Triangle> getTransformedTriangles();
     
     /**
      * Update the internal state of the Transformable, signifying that a transformation has been applied and an

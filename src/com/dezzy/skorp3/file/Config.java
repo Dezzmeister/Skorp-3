@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.file.reflect.ConversionMethods;
 import com.dezzy.skorp3.log.Logger;
 
@@ -15,6 +16,7 @@ import com.dezzy.skorp3.log.Logger;
  *
  */
 //TODO Add methods that will reset the config file if it has been corrupted.
+@Urgency(1)
 public class Config<T> {
 	private Map<String,T> entries = new HashMap<String,T>();
 	private static Map<String, Method> conversions = ConversionMethods.getConversionMethods();
@@ -47,6 +49,7 @@ public class Config<T> {
 			conversionMethod = conversions.get(fullName);
 		} catch(Exception e) {
 			e.printStackTrace();
+			e.printStackTrace(Logger.log);
 		}
 	}
 	
@@ -63,6 +66,7 @@ public class Config<T> {
 			entries.put(entryName, value);
 		} catch (Exception e) {
 			e.printStackTrace();
+			e.printStackTrace(Logger.log);
 		}
 	}
 	
@@ -89,6 +93,7 @@ public class Config<T> {
 			return value;
 		} catch (Exception e) {
 			e.printStackTrace();
+			e.printStackTrace(Logger.log);
 			return null;
 		}
 	}

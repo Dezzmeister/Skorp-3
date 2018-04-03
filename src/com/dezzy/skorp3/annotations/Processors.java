@@ -3,6 +3,8 @@ package com.dezzy.skorp3.annotations;
 import java.util.List;
 
 import com.dezzy.skorp3.annotations.untested.Untested;
+import com.dezzy.skorp3.annotations.urgency.Urgency;
+import com.dezzy.skorp3.log.Logger;
 
 /**
  * All runtime annotation processors should be registered in this class
@@ -16,6 +18,7 @@ public class Processors {
 	
 	static {
 		processAll(Untested.class);
+		processAll(Urgency.class);
 	}
 	
 	public static void processAll(Class<?> ... classes) {
@@ -26,6 +29,7 @@ public class Processors {
 				processor.process();
 			} catch (Exception e) {
 				e.printStackTrace();
+				e.printStackTrace(Logger.log);
 				System.err.println("Error processing annotations in com.dezzy.skorp3.annotations.Processors.");
 			}
 		}

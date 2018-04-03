@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.dezzy.skorp3.UI.MouseData;
+import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.Renderer;
 import com.dezzy.skorp3.game3D.Renderer3D;
@@ -18,6 +19,7 @@ import com.dezzy.skorp3.geometry3D.Triangle;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 
+@Urgency(1)
 public class BarycentricVBORenderer implements Renderer {
 	private VBO3DList vboList;
 	private JPanel panel;
@@ -44,9 +46,14 @@ public class BarycentricVBORenderer implements Renderer {
 		int windowHeight = panel.getHeight();
 		
 		//TODO get the mouse out of here and transform vertices in the VBO
+		/*
 		double heading = Math.toRadians(Renderer3D.map(mouse.x(),0,panel.getWidth(),0,360)); //Y
 		double pitch = Math.toRadians(Renderer3D.map(mouse.y(),0,panel.getHeight(),0,360)); //X
 		double roll = Math.toRadians(0); //Z
+		*/
+		double heading = 0;
+		double pitch = 0;
+		double roll = 0;
 		
 		Matrix4 headingTransform;
 		Matrix4 pitchTransform;

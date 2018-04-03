@@ -33,7 +33,6 @@ public abstract class Entity3D extends Transformable implements Sendable {
 	protected Shape3D shape;
 	protected Vertex point;
 	protected Color color;
-	public transient boolean updated = false;
 	
 	private BiConsumer<Entity3D,Entity3D> collisionMethod;
 	

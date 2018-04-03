@@ -19,7 +19,7 @@ public class UntestedProcessor extends RuntimeProcessor {
 	
 	@Override
 	public void process() {
-		ifThenApply(c -> true, this::processClass);
+		applyAll(this::processClass);
 	}
 	
 	private void processClass(Class<?> clazz) {

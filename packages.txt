@@ -1,6 +1,7 @@
 com.dezzy.skorp3
 com.dezzy.skorp3.annotations
 com.dezzy.skorp3.annotations.untested
+com.dezzy.skorp3.annotations.urgency
 com.dezzy.skorp3.field
 com.dezzy.skorp3.field3D
 com.dezzy.skorp3.field3D.load

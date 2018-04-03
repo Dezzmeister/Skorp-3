@@ -11,7 +11,8 @@ public class Logger {
 		try {
 			log = new PrintStream(outputFile);
 		} catch(Exception e) {
-			
+			System.err.println("Log could not be created.");
+			e.printStackTrace();
 		}
 		log.println("Time in ms\tEvent");
 		log.println();
@@ -20,6 +21,14 @@ public class Logger {
 	
 	public static void log(Object ... objects) {
 		log.print(System.currentTimeMillis() + "\t");
+		for (Object o : objects) {
+			log.print(o);
+		}
+		log.println();
+	}
+	
+	public static void warn(Object ... objects) {
+		log.print(System.currentTimeMillis() + "\tWARNING: ");
 		for (Object o : objects) {
 			log.print(o);
 		}

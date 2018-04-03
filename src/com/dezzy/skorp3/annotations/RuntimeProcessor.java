@@ -109,6 +109,18 @@ public abstract class RuntimeProcessor {
 	}
 	
 	/**
+	 * Iterates through a list of all Classes that have been loaded by the Main Thread's ClassLoader
+	 * and performs the specified action on them.
+	 * 
+	 * @param action Class Consumer to be performed on each Class
+	 */
+	protected void applyAll(Consumer<? super Class<?>> action) {
+		for (Class<?> c : Processors.LOADED_CLASSES) {
+			action.accept(c);
+		}
+	}
+	
+	/**
 	 * Process an annotation. Should make a call to ifThenApply().
 	 */
 	public abstract void process();

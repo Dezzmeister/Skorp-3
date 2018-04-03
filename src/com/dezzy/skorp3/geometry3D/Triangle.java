@@ -112,7 +112,15 @@ public class Triangle extends Entity3D {
 
 	@Override
 	public void applyTransformations() {
-		// TODO Auto-generated method stub
-		
+		update();
+		Matrix4 u1 = stack.collapse();
+		v1 = u1.transform(v1);
+		v2 = u1.transform(v2);
+		v3=  u1.transform(v3);
+	}
+	
+	@Override
+	public List<Triangle> getTransformedTriangles() {
+		return addTriangles(this);
 	}
 }
