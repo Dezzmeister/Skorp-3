@@ -1,6 +1,6 @@
 Time in ms	Event
 
-1522551696528	Log created
-1522551696528	Config created with config/config.txt
-1522551696531	Config created with config/keyconfig.txt
-1522551696825	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!
+1522699781019	Log created
+1522699781019	Config created with config/config.txt
+1522699781022	Config created with config/keyconfig.txt
+1522699781394	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!

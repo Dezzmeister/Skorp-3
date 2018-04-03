@@ -9,12 +9,10 @@ import java.awt.Container;
 import javax.swing.JFrame;
 
 import com.dezzy.skorp3.UI.SkorpPanel;
-import com.dezzy.skorp3.annotations.untested.UntestedProcessor;
 import com.dezzy.skorp3.geometry3D.AARectangle;
 import com.dezzy.skorp3.geometry3D.Plane;
 
 public class Skorp3 {
-	static UntestedProcessor p = new UntestedProcessor();
 	public static void main(String ... args) {
 		mainVBO.add(new AARectangle(0,50,-200,50,50,Plane.XZ,Color.MAGENTA));
 		mainVBO.add(new AARectangle(-200,0,200,100,40,Plane.XY,Color.GREEN));

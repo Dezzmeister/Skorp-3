@@ -5,7 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class Load {
+public final class Load {
+	
+	private Load() {
+		
+	}
 
 	public static Stream<String> load(String path) {
 		try {
