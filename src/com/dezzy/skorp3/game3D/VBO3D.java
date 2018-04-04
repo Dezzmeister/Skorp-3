@@ -97,4 +97,22 @@ public class VBO3D implements Serializable, Transformable3D {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean needsUpdate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void applyTransformations() {
+		// TODO Auto-generated method stub
+		
+	}
 }

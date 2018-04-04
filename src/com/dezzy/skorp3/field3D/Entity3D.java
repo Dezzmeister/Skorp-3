@@ -99,10 +99,6 @@ public abstract class Entity3D extends Transformable implements Sendable {
 		return point;
 	}
 	
-	protected void update() {
-		updated = true;
-	}
-	
 	public void placeAt(double _x, double _y, double _z) {
 		point.x = _x;
 		point.y = _y;

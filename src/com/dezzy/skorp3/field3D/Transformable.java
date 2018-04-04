@@ -87,6 +87,10 @@ public abstract class Transformable implements Serializable, Transformable3D {
     	return GPUKernel.transformVertices(computeTransformationMatrix(), vertices);
     }
     
+    /**
+     * Collapse stack and apply collapsed matrix to vertices.
+     * Do not call this method directly, use apply() instead.
+     */
     public abstract void applyTransformations();
     
     public abstract List<Triangle> getTransformedTriangles();
@@ -95,7 +99,7 @@ public abstract class Transformable implements Serializable, Transformable3D {
      * Update the internal state of the Transformable, signifying that a transformation has been applied and an
      * update to a VBO is needed.
      */
-    protected void update() {
+    public void update() {
     	updated = true;
     }
     
