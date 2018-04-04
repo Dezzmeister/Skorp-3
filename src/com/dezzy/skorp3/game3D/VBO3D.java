@@ -71,7 +71,6 @@ public class VBO3D implements Serializable, Transformable3D {
 	@Override
 	public void rotateX(double deg) {
 		
-		
 	}
 
 	@Override
