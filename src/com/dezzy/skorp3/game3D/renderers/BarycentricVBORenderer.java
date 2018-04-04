@@ -46,15 +46,15 @@ public class BarycentricVBORenderer implements Renderer {
 		int windowHeight = panel.getHeight();
 		
 		//TODO get the mouse out of here and transform vertices in the VBO
-		/*
+		
 		double heading = Math.toRadians(Renderer3D.map(mouse.x(),0,panel.getWidth(),0,360)); //Y
 		double pitch = Math.toRadians(Renderer3D.map(mouse.y(),0,panel.getHeight(),0,360)); //X
 		double roll = Math.toRadians(0); //Z
+		/*
+		double heading = -30; //Y
+		double pitch = 40; //X
+		double roll = 0; //Z
 		*/
-		double heading = 0;
-		double pitch = 0;
-		double roll = 0;
-		
 		Matrix4 headingTransform;
 		Matrix4 pitchTransform;
 		Matrix4 rollTransform;

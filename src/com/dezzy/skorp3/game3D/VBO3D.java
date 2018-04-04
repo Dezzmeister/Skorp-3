@@ -2,15 +2,16 @@ package com.dezzy.skorp3.game3D;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dezzy.skorp3.field3D.Entity3D;
+import com.dezzy.skorp3.field3D.Transformable3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
 
-public class VBO3D implements Serializable {
+public class VBO3D implements Serializable, Transformable3D {
 	/**
 	 * 
 	 */
@@ -42,9 +43,16 @@ public class VBO3D implements Serializable {
 	}
 	
 	public List<Triangle> getVBO() {
-		Collection<List<Triangle>> temp = triangles.values();
 		List<Triangle> result = new ArrayList<>();
-		temp.forEach((l) -> result.addAll(l));
+		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			Entity3D e = entry.getKey();
+			if (e.needsUpdate()) {
+				entry.setValue(e.getTransformedTriangles());
+			}
+			result.addAll(entry.getValue());
+		}
+		
 		return result;
 	}
 	
@@ -58,5 +66,35 @@ public class VBO3D implements Serializable {
 	
 	public void addAll(VBO3D vbo) {
 		triangles.putAll(vbo.get());
+	}
+
+	@Override
+	public void rotateX(double deg) {
+		
+		
+	}
+
+	@Override
+	public void rotateY(double deg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rotateZ(double deg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void translate(double x, double y, double z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void scale(double x, double y, double z) {
+		// TODO Auto-generated method stub
+		
 	}
 }

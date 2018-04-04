@@ -133,9 +133,17 @@ public class AARectangle extends Entity3D {
 									 new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void applyTransformations() {
-		// TODO Auto-generated method stub
-		
+		update();
+		transformAllGPU();
+	}
+	
+	@Override
+	public List<Triangle> getTransformedTriangles() {
+		Triangle t1 = new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color);
+		Triangle t2 = new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color);
+		return Triangle.addTriangles(t1,t2);
 	}
 }

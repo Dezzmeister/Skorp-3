@@ -3,6 +3,7 @@ package com.dezzy.skorp3.field3D;
 import java.awt.Color;
 import java.util.List;
 
+import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.geometry3D.AARectangle;
 import com.dezzy.skorp3.geometry3D.Plane;
@@ -55,14 +56,23 @@ public class AARectPrism extends Geometric3D {
 	}
 
 	@Override
+	@Urgency(3)
 	public String encode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Urgency(1)
 	public void applyTransformations() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	@Urgency(1)
+	public List<Triangle> getTransformedTriangles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -70,4 +70,54 @@ public class Matrix4 {
 		});
 		return result;
 	}
+	
+	public static Matrix4 getXRotationMatrix(double deg) {
+		double angle = Math.toRadians(deg);
+		return new Matrix4(new double[] {
+				1, 0, 0, 0,
+				0, Math.cos(angle), -Math.sin(angle), 0,
+				0, Math.sin(angle), Math.cos(angle), 0,
+				0, 0, 0, 1
+		});
+	}
+	
+	public static Matrix4 getYRotationMatrix(double deg) {
+		double angle = Math.toRadians(deg);
+		
+		return new Matrix4(new double[] {
+				Math.cos(angle), 0, Math.sin(angle), 0,
+				0, 1, 0, 0,
+				-Math.sin(angle), 0, Math.cos(angle), 0,
+				0, 0, 0, 1
+		});
+	}
+	
+	public static Matrix4 getZRotationMatrix(double deg) {
+		double angle = Math.toRadians(deg);
+		
+		return new Matrix4(new double[] {
+				Math.cos(angle), -Math.sin(angle), 0, 0,
+				Math.sin(angle), Math.cos(angle), 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1
+		});
+	}
+	
+	public static Matrix4 getTranslationMatrix(double x, double y, double z) {
+		return new Matrix4(new double[] {
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				x, y, z, 1
+		});
+	}
+	
+	public static Matrix4 getScalingMatrix(double x, double y, double z) {
+		return new Matrix4(new double[] {
+				x, 0, 0, 0,
+				0, y, 0, 0,
+				0, 0, z, 0,
+				0, 0, 0, 1
+		});
+	}
 }

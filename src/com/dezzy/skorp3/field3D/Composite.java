@@ -2,6 +2,7 @@ package com.dezzy.skorp3.field3D;
 
 import java.util.List;
 
+import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.game3D.Shape3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.geometry3D.Triangle;
@@ -45,5 +46,12 @@ public class Composite extends Geometric3D {
 	public void applyTransformations() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	@Urgency(1)
+	public List<Triangle> getTransformedTriangles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
