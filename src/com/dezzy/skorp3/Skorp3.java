@@ -27,10 +27,12 @@ public class Skorp3 {
 		
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
-		
-		Global.VBO.add(new Triangle(0, 100, 200,
-								    30, 400, 120,
-								    122, 144, 900));
+		Triangle tralala = new Triangle(0, 100, 200,
+			    						30, 400, 120,
+			    						122, 144, 900);
+		Global.VBO.add(tralala);
+		tralala.scale(100,100,100);
+		tralala.apply();
 		
 		SkorpPanel renderPanel = SkorpPanel.createStandard();
 		

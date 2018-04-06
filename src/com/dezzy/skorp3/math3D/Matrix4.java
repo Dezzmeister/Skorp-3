@@ -70,7 +70,7 @@ public class Matrix4 {
 	}
 	
 	/**
-	 * A standard collapse method for Matrix4 Stacks. A Stack<Matrix4> should probably
+	 * A standard collapse method for Matrix4 Stacks. A Stack of Matrix4 should probably
 	 * use this method.
 	 * 
 	 * @param list List of Matrices to be collapsed
@@ -78,9 +78,9 @@ public class Matrix4 {
 	 */
 	public static Matrix4 collapse(List<Matrix4> list) {
 		Matrix4 result = IDENTITY;
-		list.forEach((m) -> {
-			result.multiply(m);
-		});
+		for (Matrix4 m : list) {
+			result = result.multiply(m);
+		}
 		return result;
 	}
 	

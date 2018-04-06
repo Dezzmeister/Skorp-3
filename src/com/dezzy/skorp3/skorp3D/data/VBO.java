@@ -40,6 +40,9 @@ public class VBO implements Collapsable<Triangle[]> {
 		Triangle[] result = new Triangle[triangleCount];
 		int startIndex = 0;
 		for (Entry<Entity,Triangle[]> entry : objects.entrySet()) {
+			if (entry.getKey().hasUpdated()) {
+				entry.setValue(entry.getKey().getTriangles());
+			}
 			System.arraycopy(entry.getValue(), 0, result, startIndex, entry.getValue().length);
 			startIndex += entry.getValue().length;
 		}
