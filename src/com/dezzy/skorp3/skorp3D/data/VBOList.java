@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dezzy.skorp3.game3D.Updateable;
-import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.math3D.datastructures.Collapsable;
 
-public class VBOList implements Collapsable<VBO3D>, Updateable {
-	private List<VBO3D> list = new ArrayList<VBO3D>();
+public class VBOList implements Collapsable<VBO>, Updateable {
+	private List<VBO> list = new ArrayList<VBO>();
 	private boolean updated = true;
 	
 	@Override
@@ -26,30 +25,30 @@ public class VBOList implements Collapsable<VBO3D>, Updateable {
 	}
 
 	@Override
-	public VBO3D collapse() {
-		VBO3D vbo = new VBO3D("vbo");
-		for (VBO3D v : list) {
+	public VBO collapse() {
+		VBO vbo = new VBO();
+		for (VBO v : list) {
 			vbo.addAll(v);
 		}
 		return vbo;
 	}
 	
-	public void add(VBO3D vbo) {
+	public void add(VBO vbo) {
 		update();
 		list.add(vbo);
 	}
 	
-	public VBO3D remove(int index) {
+	public VBO remove(int index) {
 		update();
 		return list.remove(index);
 	}
 	
-	public void remove(VBO3D vbo) {
+	public void remove(VBO vbo) {
 		update();
 		list.remove(vbo);
 	}
 	
-	public VBO3D set(int index, VBO3D vbo) {
+	public VBO set(int index, VBO vbo) {
 		update();
 		return list.set(index, vbo);
 	}

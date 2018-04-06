@@ -23,6 +23,8 @@ public abstract class Entity extends Transformable {
 	
 	private boolean updated = true;
 	
+	public int triangleCount;
+	
 	private Texture tex;
 	
 	protected Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse, 20);
