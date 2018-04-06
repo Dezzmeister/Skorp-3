@@ -1,6 +1,7 @@
 package com.dezzy.skorp3;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.JFrame;
@@ -27,12 +28,12 @@ public class Skorp3 {
 		
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
+		
 		Triangle tralala = new Triangle(0, 100, 200,
 			    						30, 400, 120,
-			    						122, 144, 900);
+			    						122, 144, 200,
+			    						Color.YELLOW);
 		Global.VBO.add(tralala);
-		tralala.scale(100,100,100);
-		tralala.apply();
 		
 		SkorpPanel renderPanel = SkorpPanel.createStandard();
 		

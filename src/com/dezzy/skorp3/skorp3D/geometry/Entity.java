@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.skorp3D.geometry;
 
+import java.awt.Color;
+
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 import com.dezzy.skorp3.skorp3D.graphic.Texture;
@@ -25,7 +27,7 @@ public abstract class Entity extends Transformable {
 	
 	public int triangleCount;
 	
-	private Texture tex;
+	private Color tex;
 	
 	protected Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse, 20);
 	
@@ -68,11 +70,11 @@ public abstract class Entity extends Transformable {
 		return false;
 	}
 	
-	public Texture texture() {
+	public Color texture() {
 		return tex;
 	}
 	
-	public void setTexture(Texture _texture) {
+	public void setTexture(Color _texture) {
 		tex = _texture;
 	}
 	
