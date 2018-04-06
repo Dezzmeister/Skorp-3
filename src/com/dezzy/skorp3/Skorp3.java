@@ -18,6 +18,10 @@ public class Skorp3 {
 		mainVBO.add(new AARectangle(-200,0,200,100,40,Plane.XY,Color.GREEN));
 		mainVBO.add(new AARectangle(0,-1000,-2000,1000,1000,Plane.XZ,Color.RED));
 		
+		mainVBO.rotateX(60);
+		mainVBO.scale(2,1,3);
+		mainVBO.applyTransformations();
+		
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
 		

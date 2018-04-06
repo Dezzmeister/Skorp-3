@@ -47,7 +47,7 @@ public class VBO3D implements Serializable, Transformable3D {
 		
 		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
 			Entity3D e = entry.getKey();
-			if (e.needsUpdate()) {
+			if (e.hasUpdated()) {
 				entry.setValue(e.getTransformedTriangles());
 			}
 			result.addAll(entry.getValue());
@@ -70,48 +70,55 @@ public class VBO3D implements Serializable, Transformable3D {
 
 	@Override
 	public void rotateX(double deg) {
-		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().rotateX(deg);
+		}
 	}
 
 	@Override
 	public void rotateY(double deg) {
-		// TODO Auto-generated method stub
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().rotateY(deg);
+		}
 		
 	}
 
 	@Override
 	public void rotateZ(double deg) {
-		// TODO Auto-generated method stub
-		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().rotateZ(deg);
+		}		
 	}
 
 	@Override
 	public void translate(double x, double y, double z) {
-		// TODO Auto-generated method stub
-		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().translate(x,y,z);
+		}
 	}
 
 	@Override
 	public void scale(double x, double y, double z) {
-		// TODO Auto-generated method stub
-		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().scale(x,y,z);
+		}		
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean needsUpdate() {
+	public boolean hasUpdated() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void applyTransformations() {
-		// TODO Auto-generated method stub
-		
+		for (Entry<Entity3D,List<Triangle>> entry : triangles.entrySet()) {
+			entry.getKey().apply();
+		}		
 	}
 }

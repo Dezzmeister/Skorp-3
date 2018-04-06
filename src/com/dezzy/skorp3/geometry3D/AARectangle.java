@@ -142,6 +142,7 @@ public class AARectangle extends Entity3D {
 	
 	@Override
 	public List<Triangle> getTransformedTriangles() {
+		System.out.println(vertices.get(0));
 		Triangle t1 = new Triangle(vertices.get(0),vertices.get(1),vertices.get(2),color);
 		Triangle t2 = new Triangle(vertices.get(2),vertices.get(3),vertices.get(1),color);
 		return Triangle.addTriangles(t1,t2);

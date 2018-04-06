@@ -57,7 +57,9 @@ public abstract class Transformable implements Serializable, Transformable3D {
 	}
     
     public Matrix4 computeTransformationMatrix() {
-    	return stack.collapse();
+    	Matrix4 u1 =  stack.collapse();
+    	stack.clear();
+    	return u1;
     }
     
     /**
@@ -107,7 +109,7 @@ public abstract class Transformable implements Serializable, Transformable3D {
      * If a transformation has been applied, this will change the update status and return true.
      * A VBO can adjust itself accordingly.
      */
-    public boolean needsUpdate() {
+    public boolean hasUpdated() {
     	boolean temp = updated;
     	updated = false;
     	return temp;

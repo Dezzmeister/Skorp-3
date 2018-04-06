@@ -56,6 +56,13 @@ public class Matrix4 {
                 );
 	}
 	
+	public Vertex[] transform(Vertex ... vertices) {
+		for (int i = 0; i < vertices.length; i++) {
+			vertices[i] = transform(vertices[i]);
+		}
+		return vertices;
+	}
+	
 	/**
 	 * A standard collapse method for Matrix4 Stacks. A Stack<Matrix4> should probably
 	 * use this method.

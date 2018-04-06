@@ -19,3 +19,7 @@ com.dezzy.skorp3.net
 com.dezzy.skorp3.net.tcp
 com.dezzy.skorp3.UI
 com.dezzy.skorp3.log
+com.dezzy.skorp3.skorp3D
+com.dezzy.skorp3.skorp3D.data
+com.dezzy.skorp3.skorp3D.render
+com.dezzy.skorp3.skorp3D.primitive
