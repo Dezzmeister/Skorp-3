@@ -2,9 +2,11 @@ package com.dezzy.skorp3.skorp3D.geometry;
 
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
+import com.dezzy.skorp3.skorp3D.graphic.Texture;
 import com.dezzy.skorp3.skorp3D.primitive.Transformable;
 import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
+@SuppressWarnings("unused")
 public abstract class Entity extends Transformable {
 	/**
 	 * Center x-value of this Entity.
@@ -20,6 +22,8 @@ public abstract class Entity extends Transformable {
 	private int z;
 	
 	private boolean updated = true;
+	
+	private Texture tex;
 	
 	protected Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse, 20);
 	
@@ -62,11 +66,23 @@ public abstract class Entity extends Transformable {
 		return false;
 	}
 	
+	public Texture texture() {
+		return tex;
+	}
+	
+	public void setTexture(Texture _texture) {
+		tex = _texture;
+	}
+	
+	protected Matrix4 getTransformationMatrix() {
+		return stack.collapse();
+	}
+	
 	/**
 	 * Returns an array of Triangles representing the shape.
-	 * These Triangles will not have been updated since the last call to apply().
+	 * These Triangles will not have been updated since the last call to <code>apply()</code>.
 	 * 
-	 * @return an array of Triangles since last call to apply()
+	 * @return an array of Triangles since last call to <code>apply()</code>
 	 * @see Transformable#apply()
 	 */
 	public abstract Triangle[] getTriangles();

@@ -2,6 +2,13 @@ package com.dezzy.skorp3.skorp3D.primitive;
 
 import com.dezzy.skorp3.game3D.Updateable;
 
+/**
+ * Superclass for com.dezzy.skorp3.skorp3D.geometry.Entity. Represents an object that can
+ * be transformed in 3D space.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public abstract class Transformable implements Updateable {
 	
 	/**
@@ -49,8 +56,8 @@ public abstract class Transformable implements Updateable {
 	 * be defined to update the shape accordingly.
 	 */
 	public void apply() {
-		update();
 		transform();
+		update();
 	}
 	
 	/**

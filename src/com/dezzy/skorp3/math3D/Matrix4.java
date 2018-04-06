@@ -2,6 +2,8 @@ package com.dezzy.skorp3.math3D;
 
 import java.util.List;
 
+import com.dezzy.skorp3.GPU.GPUKernel;
+
 /**
  * Represents a 4x4 matrix. ESSENTIAL for the 3D code.
  * 
@@ -61,6 +63,10 @@ public class Matrix4 {
 			vertices[i] = transform(vertices[i]);
 		}
 		return vertices;
+	}
+	
+	public Vertex[] transformGPU(Vertex ... vertices) {
+		return GPUKernel.transformVertices(this, vertices);
 	}
 	
 	/**

@@ -2,6 +2,13 @@ package com.dezzy.skorp3.UI;
 
 import com.dezzy.skorp3.game3D.Updateable;
 
+/**
+ * Pure data class, holds information about mouse coordinates obtained from a <code>SkorpPanel</code>. 
+ * Used in 3D rendering.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public class MouseData implements Updateable {
 	private int x;
 	private int y;
