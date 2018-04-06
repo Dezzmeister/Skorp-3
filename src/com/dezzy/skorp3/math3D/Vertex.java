@@ -19,4 +19,9 @@ public class Vertex extends Triple<Double> {
 					     ((v1.y-v2.y)*(v1.y-v2.y))+
 					     ((v1.z-v2.z)*(v1.z-v2.z)));
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + x + "," + y + "," + z + ")";
+	}
 }

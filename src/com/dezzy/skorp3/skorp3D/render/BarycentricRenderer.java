@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.render;
 
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
+import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
 public class BarycentricRenderer implements Renderer {
 	private GraphicsContainer container;
@@ -10,18 +11,18 @@ public class BarycentricRenderer implements Renderer {
 	}
 	
 	@Override
-	public void render() {
-		
+	public synchronized void render() {
+		Triangle[] triangles = container.collapse();
+		System.out.println(triangles[0]);
 	}
 
 	@Override
-	public boolean shouldRedraw() {
-		
-		return false;
+	public synchronized boolean shouldRedraw() {
+		return container.hasUpdated();
 	}
 
 	@Override
-	public GraphicsContainer getGraphicsContainer() {
+	public synchronized GraphicsContainer getGraphicsContainer() {
 		return container;
 	}
 

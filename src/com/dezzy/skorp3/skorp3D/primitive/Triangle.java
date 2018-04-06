@@ -38,4 +38,10 @@ public class Triangle extends Entity {
 		v3 = u1.transform(v3);
 	}
 	
+	@Override
+	public String toString() {
+		return v1.toString() + "\n" +
+			   v2.toString() + "\n" +
+			   v3.toString();
+	}
 }

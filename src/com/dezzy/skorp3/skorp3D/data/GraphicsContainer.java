@@ -7,14 +7,16 @@ import javax.swing.JPanel;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.log.Logger;
+import com.dezzy.skorp3.math3D.datastructures.Collapsable;
+import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
-public class GraphicsContainer {
-	public Graphics g;
-	public MouseData mouse;
+public class GraphicsContainer implements Collapsable<Triangle[]> {
+	public volatile Graphics g;
+	public volatile MouseData mouse;
 	public Data3D data3D;
 	public VBOList vboList;
 	public JPanel panel;
-	
+
 	public GraphicsContainer(Graphics _g, MouseData _mouse, Data3D _data, VBOList _vboList, JPanel _panel) {
 		g = _g;
 		mouse = _mouse;
@@ -27,12 +29,12 @@ public class GraphicsContainer {
 		Logger.warn("Creating a GraphicsContainer with default constructor! This could create null references.");
 	}
 	
-	public GraphicsContainer setGraphics(Graphics _g) {
+	public synchronized GraphicsContainer setGraphics(Graphics _g) {
 		g = _g;
 		return this;
 	}
 	
-	public GraphicsContainer setMouseData(MouseData _mouse) {
+	public synchronized GraphicsContainer setMouseData(MouseData _mouse) {
 		mouse = _mouse;
 		return this;
 	}
@@ -50,5 +52,15 @@ public class GraphicsContainer {
 	public GraphicsContainer setPanel(JPanel _panel) {
 		panel = _panel;
 		return this;
+	}
+
+	public boolean hasUpdated() {
+		return mouse.hasUpdated() ||
+			   vboList.hasUpdated();
+	}
+	
+	@Override
+	public synchronized Triangle[] collapse() {
+		return vboList.collapse().collapse();
 	}
 }
