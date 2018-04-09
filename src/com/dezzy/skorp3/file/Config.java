@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.file;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import com.dezzy.skorp3.log.Logger;
 @Urgency(1)
 public class Config<T> {
 	private Map<String,T> entries = new HashMap<String,T>();
-	private static Map<String, Method> conversions = ConversionMethods.getConversionMethods();
+	private static Map<String, Method> conversions = new HashMap<String,Method>();
 	private Class<T> clazz;
 	/**
 	 * The one conversion method to be used to convert from a String to T.
@@ -27,7 +28,15 @@ public class Config<T> {
 	private Method conversionMethod;
 	
 	static {
-		ConversionMethods.activate();
+		try {
+			for (Method method : Class.forName("com.dezzy.skorp3.file.reflect.ConversionMethods").getMethods()) {
+				if (Modifier.isStatic(method.getModifiers()) && method.getName().indexOf("parse")!=-1) {
+					conversions.put(method.getName(), method);
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -61,6 +70,7 @@ public class Config<T> {
 	public void formatAndStoreConfigEntry(String entry) {
 		String entryName = entry.substring(0,entry.indexOf("="));
 		String entryValueName = entry.substring(entry.indexOf("=")+1);
+		Logger.log("Received config entry "+entryValueName);
 		try {
 			T value = (T) conversionMethod.invoke(null, entryValueName);
 			entries.put(entryName, value);

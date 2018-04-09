@@ -1,42 +1,62 @@
 package com.dezzy.skorp3;
 
+import static com.dezzy.skorp3.Global.VBO;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.JFrame;
 
+import com.dezzy.skorp3.UI.MouseVBOTransformer;
+import com.dezzy.skorp3.math3D.Vertex;
+import com.dezzy.skorp3.skorp3D.primitive.Quad;
 import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {
 	public static void main(String ... args) {
-		/*
-		mainVBO.add(new AARectangle(0,50,-200,50,50,Plane.XZ,Color.MAGENTA));
-		mainVBO.add(new AARectangle(-200,0,200,100,40,Plane.XY,Color.GREEN));
-		mainVBO.add(new AARectangle(0,-1000,-2000,1000,1000,Plane.XZ,Color.RED));
-		
-		mainVBO.rotateX(60);
-		mainVBO.scale(2,1,3);
-		mainVBO.applyTransformations();
 		
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
 		
-		SkorpPanel renderPanel = SkorpPanel.create();
-		*/
+		VBO.add(new Triangle(new Vertex(100, 100, 100),
+	            new Vertex(-100, -100, 100),
+	            new Vertex(-100, 100, -100),
+	            Color.WHITE));
+		VBO.add(new Triangle(new Vertex(100, 100, 100),
+	            new Vertex(-100, -100, 100),
+	            new Vertex(100, -100, -100),
+	            Color.RED));
+		VBO.add(new Triangle(new Vertex(-100, 100, -100),
+	            new Vertex(100, -100, -100),
+	            new Vertex(100, 100, 100),
+	            Color.GREEN));
+		VBO.add(new Triangle(new Vertex(-100, 100, -100),
+	            new Vertex(100, -100, -100),
+	            new Vertex(-100, -100, 100),
+	            Color.BLUE));
 		
-		JFrame frame = new JFrame();
-		Container pane = frame.getContentPane();
+		VBO.add(new Quad(new Vertex(100,100,100),
+						 new Vertex(150,100,100),
+						 new Vertex(150,150,100),
+						 new Vertex(100,150,50),
+						 Color.ORANGE));
 		
-		Triangle tralala = new Triangle(0, 100, 200,
-			    						30, 400, 120,
-			    						122, 144, 200,
-			    						Color.YELLOW);
-		Global.VBO.add(tralala);
+		VBO.add(new Quad(new Vertex(100,100,400),
+				 new Vertex(200,100,400),
+				 new Vertex(200,200,400),
+				 new Vertex(100,200,400),
+				 Color.ORANGE));
 		
-		SkorpPanel renderPanel = SkorpPanel.createStandard();
+		VBO.apply();
 		
+		SkorpPanel renderPanel = SkorpPanel.createStandard(); 
+		
+		MouseVBOTransformer transformer = new MouseVBOTransformer(Global.mouseData, Global.VBO);
+		Thread thread = new Thread(transformer);
+		thread.start();
+		transformer.enable();
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		

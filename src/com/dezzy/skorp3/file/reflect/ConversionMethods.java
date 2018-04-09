@@ -7,15 +7,25 @@ import java.util.Map;
 
 /**
  * A class containing methods to convert a String to
+ * <p>
  * 	-Integer
+ * <p>
  * 	-Double
+ * <p>
  * 	-Character
+ * <p>
  * 	-Float
+ * <p>
  * 	-Short
+ * <p>
  * 	-Long
+ * <p>
  * 	-Boolean
+ * <p>
  * 	-Byte
+ * <p>
  *	-String (for easier reflection)
+ *<p>
  * ConversionMethods knows its own methods, and it should be used with reflection.
  * 
  * @author Dezzmeister
@@ -84,5 +94,7 @@ public final class ConversionMethods {
 		return conversions;
 	}
 	
-	public static void activate() {}
+	public static int activate() {
+		return 0;
+	}
 }

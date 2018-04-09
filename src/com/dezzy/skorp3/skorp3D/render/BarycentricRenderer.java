@@ -24,49 +24,14 @@ public class BarycentricRenderer implements Renderer {
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0, container.panel.getWidth(), container.panel.getHeight());
 		
-		double heading = Math.toRadians(0);
-		double pitch = Math.toRadians(0);
-		double roll = Math.toRadians(0);
-		
-		Matrix4 headingTransform;
-		Matrix4 pitchTransform;
-		Matrix4 rollTransform;
-		Matrix4 panOutTransform;
-		
-		Matrix4 transform;
-		
-		headingTransform = new Matrix4(new double[] {
-				Math.cos(heading), 0, -Math.sin(heading), 0,
-				0, 1, 0, 0,
-				Math.sin(heading), 0, Math.cos(heading), 0,
-				0, 0, 0, 1
-           });
-		pitchTransform = new Matrix4(new double[] {
-				1, 0, 0, 0,
-				0, Math.cos(pitch), Math.sin(pitch), 0,
-				0, -Math.sin(pitch), Math.cos(pitch), 0,
-				0, 0, 0, 1
-            });
-		rollTransform = new Matrix4(new double[] {
-				Math.cos(roll), -Math.sin(roll), 0, 0,
-				Math.sin(roll), Math.cos(roll), 0, 0,
-				0, 0, 1, 0,
-				0, 0, 0, 1
-            });
-
-		panOutTransform = new Matrix4(new double[] {
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, 0,
-				0, 0, -400, 1
-            });
-			
-		transform = headingTransform.multiply(pitchTransform).multiply(rollTransform).multiply(panOutTransform);
-		
-		 double fovAngle = Math.toRadians(container.data3D.fovAngle);
-	     double fov = Math.tan(fovAngle / 2) * 170;
+		double fovAngle = Math.toRadians(container.data3D.fovAngle);
+	    double fov = Math.tan(fovAngle / 2) * 170;
+	    
+	    Matrix4 transform = Matrix4.getPerspectiveMatrix(90, 1, -10, -1000);
+	    //Matrix4 transform = Matrix4.IDENTITY;
+	    //Matrix4 transform = Matrix4.getOrthographicMatrix(1000, 1000, -10, -1000);
 	     
-	     BufferedImage img = new BufferedImage(container.panel.getWidth(), container.panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	    BufferedImage img = new BufferedImage(container.panel.getWidth(), container.panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	        
 		double[] zBuffer = new double[(img.getWidth()+container.data3D.zBufferLimit()) * (img.getHeight()+container.data3D.zBufferLimit())];
 		for (int q = 0; q < zBuffer.length; q++) {
@@ -77,6 +42,10 @@ public class BarycentricRenderer implements Renderer {
 			Vertex v1 = transform.transform(t.v1);
 			Vertex v2 = transform.transform(t.v2);
 			Vertex v3 = transform.transform(t.v3);
+			
+			//v1.scale(1000);
+			//v2.scale(1000);
+			//v3.scale(1000);
 			
 			Vertex ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, v2.w - v1.w);
 
@@ -106,6 +75,10 @@ public class BarycentricRenderer implements Renderer {
 				v2.y = (v2.y / (-v2.z) * fov);
 				v3.x = (v3.x / (-v3.z) * fov);
 				v3.y = (v3.y / (-v3.z) * fov);
+
+				v1.z/=v1.w;
+				v2.z/=v2.w;
+				v3.z/=v3.w;
 			}
 			
 			//Translate to the center of the window

@@ -5,7 +5,6 @@ import java.awt.Color;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.geometry.Entity;
-import com.dezzy.skorp3.skorp3D.graphic.Texture;
 
 public class Triangle extends Entity {
 	public Vertex v1;
@@ -22,7 +21,7 @@ public class Triangle extends Entity {
 		v3 = _v3;
 	}
 	
-	public Triangle(Vertex _v1, Vertex _v2, Vertex _v3, Texture _texture) {
+	public Triangle(Vertex _v1, Vertex _v2, Vertex _v3, Color _texture) {
 		v1 = _v1;
 		v2 = _v2;
 		v3 = _v3;
@@ -54,5 +53,13 @@ public class Triangle extends Entity {
 		return v1.toString() + "\n" +
 			   v2.toString() + "\n" +
 			   v3.toString();
+	}
+
+	@Override
+	public void forceTransform(Matrix4 custom) {
+		v1 = custom.transform(v1);
+		v2 = custom.transform(v2);
+		v3 = custom.transform(v3);
+		update();
 	}
 }

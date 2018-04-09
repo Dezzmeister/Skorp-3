@@ -6,8 +6,6 @@ public class Renderers {
 	
 	public static final Renderer createAndStartBarycentricRenderer(GraphicsContainer container) {
 		BarycentricRenderer renderer = new BarycentricRenderer(container);
-		Thread renderThread = new Thread(renderer,"Skorp 3 Renderer");
-		renderThread.start();
 		return renderer;
 	}
 }

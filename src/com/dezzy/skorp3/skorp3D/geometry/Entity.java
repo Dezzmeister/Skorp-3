@@ -3,13 +3,12 @@ package com.dezzy.skorp3.skorp3D.geometry;
 import java.awt.Color;
 
 import com.dezzy.skorp3.math3D.Matrix4;
-import com.dezzy.skorp3.math3D.datastructures.Stack;
-import com.dezzy.skorp3.skorp3D.graphic.Texture;
+import com.dezzy.skorp3.skorp3D.primitive.MatrixTransformable;
 import com.dezzy.skorp3.skorp3D.primitive.Transformable;
 import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
 @SuppressWarnings("unused")
-public abstract class Entity extends Transformable {
+public abstract class Entity extends MatrixTransformable {
 	/**
 	 * Center x-value of this Entity.
 	 */
@@ -23,37 +22,24 @@ public abstract class Entity extends Transformable {
 	 */
 	private int z;
 	
+	/**
+	 * Internal state of the Entity. Do not modify directly, use <code>update()</code>.
+	 */
 	private boolean updated = true;
 	
+	/**
+	 * The number of triangles in the <code>Entity</code>. Should be maintained by the <code>Entity</code> itself.
+	 */
 	public int triangleCount;
 	
 	private Color tex;
 	
-	protected Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse, 20);
-	
-	@Override
-	public void rotateX(double deg) {
-		stack.push(Matrix4.getXRotationMatrix(deg));
+	protected Entity(Color _tex) {
+		tex = _tex;
 	}
 	
-	@Override
-	public void rotateY(double deg) {
-		stack.push(Matrix4.getYRotationMatrix(deg));
-	}
-	
-	@Override
-	public void rotateZ(double deg) {
-		stack.push(Matrix4.getZRotationMatrix(deg));
-	}
-	
-	@Override
-	public void translate(double x, double y, double z) {
-		stack.push(Matrix4.getTranslationMatrix(x,y,z));
-	}
-	
-	@Override
-	public void scale(double x, double y, double z) {
-		stack.push(Matrix4.getScalingMatrix(x, y, z));
+	protected Entity() {
+		
 	}
 	
 	@Override
@@ -76,10 +62,6 @@ public abstract class Entity extends Transformable {
 	
 	public void setTexture(Color _texture) {
 		tex = _texture;
-	}
-	
-	protected Matrix4 getTransformationMatrix() {
-		return stack.collapse();
 	}
 	
 	/**

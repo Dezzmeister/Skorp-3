@@ -48,6 +48,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 			@Override
 			public void paintComponent(Graphics g) {
 				container.setGraphics(g);
+				renderer.render();
 			}
 		};
 		

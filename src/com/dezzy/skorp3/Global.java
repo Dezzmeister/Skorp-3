@@ -16,10 +16,13 @@ import com.dezzy.skorp3.skorp3D.data.VBOList;
  *
  */
 public final class Global {
+	public static final int WIDTH = 1000;
+	public static final int HEIGHT = 1000;
+	
 	public static final VBO3D mainVBO = new VBO3D("main");
-	public static final MouseData mouseData = new MouseData();
+	public static final MouseData mouseData = new MouseData(WIDTH,HEIGHT);
 	public static final VBO3DList renderList = new VBO3DList();
-	public static final Data3D data3D = new Data3D(true,90);
+	public static final Data3D data3D = new Data3D(false,70);
 	
 	public static final VBO VBO = new VBO();
 	public static final VBOList VBOLIST = new VBOList();

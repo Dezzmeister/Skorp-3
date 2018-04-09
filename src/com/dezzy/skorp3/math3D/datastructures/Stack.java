@@ -19,14 +19,14 @@ public class Stack<T> implements Serializable, Collapsable<T> {
 	private List<T> stack;
 	private int maxSize = 20;
 	
-	private Collapser<T> collapser;
+	private StackCollapser<T> collapser;
 	
-	public Stack(Collapser<T> _collapser, int maxSize) {
+	public Stack(StackCollapser<T> _collapser, int maxSize) {
 		stack = new LinkedList<T>();
 		collapser = _collapser;
 	}
 	
-	public void defineCollapseLogic(Collapser<T> _collapser) {
+	public void defineCollapseLogic(StackCollapser<T> _collapser) {
 		collapser = _collapser;
 	}
 	
@@ -38,7 +38,7 @@ public class Stack<T> implements Serializable, Collapsable<T> {
 		return stack.remove(stack.size()-1);
 	}
 	
-	public Collapser<T> collapser() {
+	public StackCollapser<T> collapser() {
 		return collapser;
 	}
 	
@@ -47,7 +47,9 @@ public class Stack<T> implements Serializable, Collapsable<T> {
 	}
 	
 	public T collapse() {
-		return collapser.collapse(stack);
+		T t = collapser.collapse(this);
+		clear();
+		return t;
 	}
 	
 	public int size() {

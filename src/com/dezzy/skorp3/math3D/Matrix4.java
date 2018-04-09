@@ -3,6 +3,7 @@ package com.dezzy.skorp3.math3D;
 import java.util.List;
 
 import com.dezzy.skorp3.GPU.GPUKernel;
+import com.dezzy.skorp3.math3D.datastructures.Stack;
 
 /**
  * Represents a 4x4 matrix. ESSENTIAL for the 3D code.
@@ -84,6 +85,14 @@ public class Matrix4 {
 		return result;
 	}
 	
+	public static Matrix4 collapse(Stack<Matrix4> stack) {
+		if (stack.size()==0) {
+			return IDENTITY;
+		} else {
+			return stack.pop().multiply(collapse(stack));
+		}
+	}
+	
 	public static Matrix4 getXRotationMatrix(double deg) {
 		double angle = Math.toRadians(deg);
 		return new Matrix4(new double[] {
@@ -118,10 +127,10 @@ public class Matrix4 {
 	
 	public static Matrix4 getTranslationMatrix(double x, double y, double z) {
 		return new Matrix4(new double[] {
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, 0,
-				x, y, z, 1
+				1, 0, 0, x,
+				0, 1, 0, y,
+				0, 0, 1, z,
+				0, 0, 0, 1
 		});
 	}
 	
@@ -130,6 +139,40 @@ public class Matrix4 {
 				x, 0, 0, 0,
 				0, y, 0, 0,
 				0, 0, z, 0,
+				0, 0, 0, 1
+		});
+	}
+	
+	public static Matrix4 computeProjectionMatrix(double fov, double aspect, double nearDist, double farDist) {
+		double frustumDepth = farDist - nearDist;
+		double inverseDepth = 1/frustumDepth;
+		
+		return new Matrix4(new double[] {
+				-1, 0, 0, 0,
+				 0, 1/Math.tan(0.5*fov), 0, 0,
+				 0, 0, farDist * inverseDepth, 1,
+				 0, 0, (-farDist * nearDist) * inverseDepth, 0
+				
+		});
+	}
+	
+	public static Matrix4 getPerspectiveMatrix(double fovAngle, double aspect, double nearZ, double farZ) {
+		double cotfov = 1/(Math.tan(Math.toRadians(fovAngle)/2));
+		double farminusnear = farZ-nearZ;
+		
+		return new Matrix4(new double[] {
+				cotfov, 0, 0, 0,
+				0, cotfov, 0, 0,
+				0, 0, -((farZ+nearZ)/farminusnear), -((2*farZ*nearZ)/farminusnear),
+				0, 0, -1, 0
+		});
+	}
+	
+	public static Matrix4 getOrthographicMatrix(double width, double height, double nearZ, double farZ) {
+		return new Matrix4(new double[] {
+				1/width, 0, 0, 0,
+				0, 1/height, 0, 0,
+				0, 0, -(2/(farZ-nearZ)), -((farZ+nearZ)/(farZ-nearZ)),
 				0, 0, 0, 1
 		});
 	}

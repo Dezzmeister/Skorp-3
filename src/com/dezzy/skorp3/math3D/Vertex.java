@@ -14,6 +14,13 @@ public class Vertex extends Triple<Double> {
 		w = _w;
 	}
 	
+	public void scale(double factor) {
+		x*=factor;
+		y*=factor;
+		z*=factor;
+		w*=factor;
+	}
+	
 	public static double distance(Vertex v1, Vertex v2) {
 		return Math.sqrt(((v1.x-v2.x)*(v1.x-v2.x))+
 					     ((v1.y-v2.y)*(v1.y-v2.y))+
