@@ -27,8 +27,8 @@ public class BarycentricRenderer implements Renderer {
 		double fovAngle = Math.toRadians(container.data3D.fovAngle);
 	    double fov = Math.tan(fovAngle / 2) * 170;
 	    
-	    Matrix4 transform = Matrix4.getPerspectiveMatrix(90, 1, -10, -1000);
-	    //Matrix4 transform = Matrix4.IDENTITY;
+	    //Matrix4 transform = Matrix4.getPerspectiveMatrix(90, 1, -10, -1000);
+	    Matrix4 transform = Matrix4.IDENTITY;
 	    //Matrix4 transform = Matrix4.getOrthographicMatrix(1000, 1000, -10, -1000);
 	     
 	    BufferedImage img = new BufferedImage(container.panel.getWidth(), container.panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -42,10 +42,22 @@ public class BarycentricRenderer implements Renderer {
 			Vertex v1 = transform.transform(t.v1);
 			Vertex v2 = transform.transform(t.v2);
 			Vertex v3 = transform.transform(t.v3);
+			/*
+			v1.x/=v1.w;
+			v2.x/=v2.w;
+			v3.x/=v3.w;
+			v1.y/=v1.w;
+			v2.y/=v2.w;
+			v3.y/=v3.w;
 			
-			//v1.scale(1000);
-			//v2.scale(1000);
-			//v3.scale(1000);
+			v1.z/=v1.w;
+			v2.z/=v2.w;
+			v3.z/=v3.w;
+			
+			v1.scale(1000);
+			v2.scale(1000);
+			v3.scale(1000);
+			*/
 			
 			Vertex ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, v2.w - v1.w);
 

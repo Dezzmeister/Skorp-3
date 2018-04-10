@@ -3,7 +3,7 @@ package com.dezzy.skorp3.math3D;
 import com.dezzy.skorp3.game.Triple;
 
 public class Vertex extends Triple<Double> {
-	public double w;
+	public double w = 1;
 	
 	public Vertex(double _x, double _y, double _z) {
 		super(_x, _y, _z);
