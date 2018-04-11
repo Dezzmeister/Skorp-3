@@ -143,27 +143,14 @@ public class Matrix4 {
 		});
 	}
 	
-	public static Matrix4 computeProjectionMatrix(double fov, double aspect, double nearDist, double farDist) {
-		double frustumDepth = farDist - nearDist;
-		double inverseDepth = 1/frustumDepth;
+	public static Matrix4 getPerspectiveMatrix(double fovY, double aspect, double nearZ, double farZ) {
+		fovY = Math.toRadians(fovY);
+		double f = 1.0/Math.tan(fovY/2.0);
 		
 		return new Matrix4(new double[] {
-				-1, 0, 0, 0,
-				 0, 1/Math.tan(0.5*fov), 0, 0,
-				 0, 0, farDist * inverseDepth, 1,
-				 0, 0, (-farDist * nearDist) * inverseDepth, 0
-				
-		});
-	}
-	
-	public static Matrix4 getPerspectiveMatrix(double fovAngle, double aspect, double nearZ, double farZ) {
-		double cotfov = 1/(Math.tan(Math.toRadians(fovAngle)/2));
-		double farminusnear = farZ-nearZ;
-		
-		return new Matrix4(new double[] {
-				cotfov, 0, 0, 0,
-				0, cotfov, 0, 0,
-				0, 0, -((farZ+nearZ)/farminusnear), -((2*farZ*nearZ)/farminusnear),
+				f/aspect, 0, 0, 0,
+				0, f, 0, 0,
+				0, 0, (nearZ + farZ)/(nearZ - farZ), (2 * farZ * nearZ)/(nearZ - farZ),
 				0, 0, -1, 0
 		});
 	}

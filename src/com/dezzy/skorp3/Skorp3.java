@@ -49,7 +49,7 @@ public class Skorp3 {
 				 new Vertex(100,200,400),
 				 Color.ORANGE));
 		
-		VBO.translate(0,-0,-500);
+		//VBO.translate(0,-0,-500);
 		VBO.apply();
 		
 		SkorpPanel renderPanel = SkorpPanel.createStandard(); 

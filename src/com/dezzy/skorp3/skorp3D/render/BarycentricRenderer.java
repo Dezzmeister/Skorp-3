@@ -19,45 +19,36 @@ public class BarycentricRenderer implements Renderer {
 	@Override
 	public synchronized void render() {
 		Triangle[] triangles = container.collapse();
-		if (container.g != null) {
 		Graphics2D g2 = (Graphics2D) container.g;
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0,  0, container.panel.getWidth(), container.panel.getHeight());
 		
 		double fovAngle = Math.toRadians(container.data3D.fovAngle);
 	    double fov = Math.tan(fovAngle / 2) * 170;
-	    
-	    //Matrix4 transform = Matrix4.getPerspectiveMatrix(90, 1, -10, -1000);
-	    Matrix4 transform = Matrix4.IDENTITY;
+	    int nearPlane = -10;
+	    int farPlane = -1000;
+	    Matrix4 transform = Matrix4.getPerspectiveMatrix(60, 1, nearPlane, farPlane);
+	    //Matrix4 transform = Matrix4.IDENTITY;
 	    //Matrix4 transform = Matrix4.getOrthographicMatrix(1000, 1000, -10, -1000);
 	     
 	    BufferedImage img = new BufferedImage(container.panel.getWidth(), container.panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	        
 		double[] zBuffer = new double[(img.getWidth()+container.data3D.zBufferLimit()) * (img.getHeight()+container.data3D.zBufferLimit())];
 		for (int q = 0; q < zBuffer.length; q++) {
-			zBuffer[q] = Double.NEGATIVE_INFINITY;
+			zBuffer[q] = farPlane;
 		}
 		
 		for (Triangle t : triangles) {
 			Vertex v1 = transform.transform(t.v1);
 			Vertex v2 = transform.transform(t.v2);
 			Vertex v3 = transform.transform(t.v3);
-			/*
-			v1.x/=v1.w;
-			v2.x/=v2.w;
-			v3.x/=v3.w;
-			v1.y/=v1.w;
-			v2.y/=v2.w;
-			v3.y/=v3.w;
-			
-			v1.z/=v1.w;
-			v2.z/=v2.w;
-			v3.z/=v3.w;
-			
+
+			v1.perspectiveDivide();
+			v2.perspectiveDivide();
+			v3.perspectiveDivide();
 			v1.scale(1000);
 			v2.scale(1000);
 			v3.scale(1000);
-			*/
 			
 			Vertex ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, v2.w - v1.w);
 
@@ -138,7 +129,6 @@ public class BarycentricRenderer implements Renderer {
 			}
 		}
 		g2.drawImage(img,  0,  0, null);
-		}
 		
 	}
 	

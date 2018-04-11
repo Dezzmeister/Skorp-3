@@ -14,6 +14,12 @@ public class Vertex extends Triple<Double> {
 		w = _w;
 	}
 	
+	public void perspectiveDivide() {
+		x/=w;
+		y/=w;
+		z/=w;
+	}
+	
 	public void scale(double factor) {
 		x*=factor;
 		y*=factor;
