@@ -8,38 +8,38 @@ import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 
-public class RaycastGraphicsContainer {
+public class RaytraceGraphicsContainer {
 	public volatile Graphics g;
 	public volatile WorldMap map;
 	public volatile MouseData mouse;
 	public volatile JPanel panel;
 	
-	public RaycastGraphicsContainer(WorldMap _map, MouseData _mouseData, JPanel _panel) {
+	public RaytraceGraphicsContainer(WorldMap _map, MouseData _mouseData, JPanel _panel) {
 		map = _map;
 		mouse = _mouseData;
 		panel = _panel;
 	}
 	
-	public RaycastGraphicsContainer() {
+	public RaytraceGraphicsContainer() {
 		Logger.warn("RaycastGraphicsContainer created with default constructor! This could cause null reference problems!");
 	}
 	
-	public RaycastGraphicsContainer setGraphics(Graphics graphics) {
+	public RaytraceGraphicsContainer setGraphics(Graphics graphics) {
 		g = graphics;
 		return this;
 	}
 	
-	public RaycastGraphicsContainer setPanel(JPanel _panel) {
+	public RaytraceGraphicsContainer setPanel(JPanel _panel) {
 		panel = _panel;
 		return this;
 	}
 	
-	public RaycastGraphicsContainer setWorldMap(WorldMap _map) {
+	public RaytraceGraphicsContainer setWorldMap(WorldMap _map) {
 		map = _map;
 		return this;
 	}
 	
-	public RaycastGraphicsContainer setMouseData(MouseData _mouse) {
+	public RaytraceGraphicsContainer setMouseData(MouseData _mouse) {
 		mouse = _mouse;
 		return this;
 	}

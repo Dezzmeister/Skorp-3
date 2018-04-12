@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class Raycaster implements RaycastRenderer {
-	private RaycastGraphicsContainer container;
+public class Raytracer implements RaytraceRenderer {
+	private RaytraceGraphicsContainer container;
 	
+	public Raytracer(RaytraceGraphicsContainer _container) {
+		container = _container;
+	}
 	
 	@Override
 	public void render() {
@@ -25,7 +28,7 @@ public class Raycaster implements RaycastRenderer {
 	}
 
 	@Override
-	public RaycastGraphicsContainer getGraphicsContainer() {
+	public RaytraceGraphicsContainer getGraphicsContainer() {
 		return container;
 	}
 	
