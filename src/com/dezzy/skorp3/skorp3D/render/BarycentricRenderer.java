@@ -27,9 +27,9 @@ public class BarycentricRenderer implements Renderer {
 	    double fov = Math.tan(fovAngle / 2) * 170;
 	    int nearPlane = -10;
 	    int farPlane = -1000;
-	    Matrix4 transform = Matrix4.getPerspectiveMatrix(60, 1, nearPlane, farPlane);
+	    //Matrix4 transform = Matrix4.getPerspectiveMatrix(60, 1, nearPlane, farPlane);
 	    //Matrix4 transform = Matrix4.IDENTITY;
-	    //Matrix4 transform = Matrix4.getOrthographicMatrix(1000, 1000, -10, -1000);
+	    Matrix4 transform = Matrix4.getOrthographicMatrix(1000, 1000, nearPlane, farPlane);
 	     
 	    BufferedImage img = new BufferedImage(container.panel.getWidth(), container.panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	        
@@ -42,13 +42,15 @@ public class BarycentricRenderer implements Renderer {
 			Vertex v1 = transform.transform(t.v1);
 			Vertex v2 = transform.transform(t.v2);
 			Vertex v3 = transform.transform(t.v3);
-
+			/*
 			v1.perspectiveDivide();
 			v2.perspectiveDivide();
 			v3.perspectiveDivide();
+			*/
 			v1.scale(1000);
 			v2.scale(1000);
 			v3.scale(1000);
+			
 			
 			Vertex ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z, v2.w - v1.w);
 
@@ -116,7 +118,7 @@ public class BarycentricRenderer implements Renderer {
 					if (b1 >= 0 && b1 <= 1 && b2 >= 0 && b2 <= 1 && b3 >= 0 && b3 <= 1) {
 						double depth = b1 * v1.z + b2 * v2.z + b3 * v3.z;
 						int zIndex = y * img.getWidth() + x;
-						if (zIndex < zBuffer.length && zBuffer[zIndex] < depth) {
+						if (zIndex < zBuffer.length && zBuffer[zIndex] < depth && depth < 0) {
 							try { //Works for now, but should really be fixed soon
 								img.setRGB(x, y, getShade(t.texture(), angleCos).getRGB());
 							} catch (Exception e) {

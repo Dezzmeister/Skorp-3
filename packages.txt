@@ -24,3 +24,5 @@ com.dezzy.skorp3.skorp3D.data
 com.dezzy.skorp3.skorp3D.render
 com.dezzy.skorp3.skorp3D.primitive
 com.dezzy.skorp3.skorp3D.graphic
+com.dezzy.skorp3.skorp3D.raycast
+com.dezzy.skorp3.skorp3D.raycast.core

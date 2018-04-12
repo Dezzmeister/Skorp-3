@@ -20,6 +20,7 @@ public class Skorp3 {
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
 		
+		/*
 		VBO.add(new Triangle(new Vertex(100, 100, 100),
 	            new Vertex(-100, -100, 100),
 	            new Vertex(-100, 100, -100),
@@ -36,20 +37,19 @@ public class Skorp3 {
 	            new Vertex(100, -100, -100),
 	            new Vertex(-100, -100, 100),
 	            Color.BLUE));
-		
-		VBO.add(new Quad(new Vertex(100,100,100),
-						 new Vertex(150,100,100),
-						 new Vertex(150,150,100),
-						 new Vertex(100,150,50),
+		*/
+		VBO.add(new Quad(new Vertex(100,100,-100),
+						 new Vertex(150,100,-100),
+						 new Vertex(150,150,-100),
+						 new Vertex(100,150,-50),
 						 Color.ORANGE));
 		
-		VBO.add(new Quad(new Vertex(100,100,400),
-				 new Vertex(200,100,400),
-				 new Vertex(200,200,400),
-				 new Vertex(100,200,400),
+		VBO.add(new Quad(new Vertex(100,100,-400),
+				 new Vertex(200,100,-400),
+				 new Vertex(200,200,-400),
+				 new Vertex(100,200,-400),
 				 Color.ORANGE));
 		
-		//VBO.translate(0,-0,-500);
 		VBO.apply();
 		
 		SkorpPanel renderPanel = SkorpPanel.createStandard(); 
