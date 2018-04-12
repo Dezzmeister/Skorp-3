@@ -1,10 +1,14 @@
 package com.dezzy.skorp3.skorp3D.render;
 
-import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
-
+/**
+ * Details the requirements of a class that can be used to render a scene.
+ * 
+ * @author Dezzmeister
+ *
+ */
 public interface Renderer extends Runnable {
 	/**
-	 * Code that will draw to a Graphics object in a GraphicsContainer.
+	 * Code that will draw to a Graphics object.
 	 */
 	public void render();
 	
@@ -21,11 +25,9 @@ public interface Renderer extends Runnable {
 	}
 	
 	/**
-	 * Should assess inputs and return true if a frame needs to be redrawn.
+	 * Assesses inputs and return true if a frame needs to be redrawn.
 	 * 
 	 * @return true if frame should be redrawn
 	 */
 	public boolean shouldRedraw();
-	
-	public GraphicsContainer getGraphicsContainer();
 }

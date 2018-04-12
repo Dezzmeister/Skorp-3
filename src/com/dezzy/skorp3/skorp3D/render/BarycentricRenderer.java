@@ -9,7 +9,7 @@ import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
-public class BarycentricRenderer implements Renderer {
+public class BarycentricRenderer implements TrueRenderer {
 	private GraphicsContainer container;
 	
 	public BarycentricRenderer(GraphicsContainer _container) {

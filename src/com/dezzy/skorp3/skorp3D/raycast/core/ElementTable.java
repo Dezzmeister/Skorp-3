@@ -5,9 +5,23 @@ import java.util.List;
 
 import com.dezzy.skorp3.log.Logger;
 
+/**
+ * A table of Elements with unique IDs and names. Used when defining WorldMaps.
+ * <p>
+ * If defining a WorldMap with a 2D array of ints or names, and ElementTable is used to map
+ * the names to specific elements. 
+ * 
+ * @author Dezzmeister
+ *
+ */
 public class ElementTable {
 	private List<Element> elements = new ArrayList<Element>();
 	
+	/**
+	 * Adds a unique Element to the ElementTable. Ensures that an element with existing ID and name is not already present.
+	 * 
+	 * @param element Element to be added
+	 */
 	public void add(Element element) {
 		for (Element e : elements) {
 			if (element.id() == e.id() || element.name().equals(e.name())) {
@@ -18,6 +32,13 @@ public class ElementTable {
 		elements.add(element);
 	}
 	
+	/**
+	 * Returns an Element with the specified ID. If an Element with this ID is
+	 * not found, returns Element.NONE.
+	 * 
+	 * @param id int ID of the Element
+	 * @return an Element with this ID or ID -1
+	 */
 	public Element getByID(int id) {
 		for (Element e : elements) {
 			if (e.id() == id) {
@@ -27,6 +48,13 @@ public class ElementTable {
 		return Element.NONE;
 	}
 	
+	/**
+	 * Returns an Element with the specified name. If an Element with this name
+	 * is not found, returns Element.NONE.
+	 * 
+	 * @param name String name of the Element
+	 * @return and Element with this name or name "null"
+	 */
 	public Element getByName(String name) {
 		for (Element e : elements) {
 			if (e.name().equals(name)) {

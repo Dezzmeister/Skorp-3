@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.datastructures.Collapsable;
-import com.dezzy.skorp3.math3D.datastructures.Stack;
 import com.dezzy.skorp3.skorp3D.geometry.Entity;
 import com.dezzy.skorp3.skorp3D.primitive.MatrixTransformable;
 import com.dezzy.skorp3.skorp3D.primitive.Triangle;
@@ -18,7 +17,6 @@ public class VBO extends MatrixTransformable implements Collapsable<Triangle[]> 
 	 * collapsing VBO.
 	 */
 	private int triangleCount = 0;
-	private Stack<Matrix4> stack = new Stack<Matrix4>(Matrix4::collapse, 20);
 	
 	public int triangleCount() {
 		return triangleCount;

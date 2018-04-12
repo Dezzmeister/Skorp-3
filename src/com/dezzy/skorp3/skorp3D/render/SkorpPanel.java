@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
+import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
+import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 
@@ -34,13 +36,12 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 			
 			private static final long serialVersionUID = -2463995051870675710L;
 			private final GraphicsContainer container = new GraphicsContainer();
-			@SuppressWarnings("unused")
-			private Renderer renderer;
+			private TrueRenderer renderer;
 			
 			{
 				container.setPanel(this)
-						 .setData3D(Global.data3D)
-						 .setVBOList(Global.VBOLIST)
+						 .setData3D(Global.True3D.data3D)
+						 .setVBOList(Global.True3D.VBOLIST)
 						 .setMouseData(Global.mouseData);
 				renderer = Renderers.createAndStartBarycentricRenderer(container);
 			}
@@ -49,6 +50,20 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 			public void paintComponent(Graphics g) {
 				container.setGraphics(g);
 				renderer.render();
+			}
+		};
+		
+		return panel;
+	}
+	
+	public static SkorpPanel createStandardRaycast() {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
+			private static final long serialVersionUID = -7595491200924341805L;
+			private final RaycastGraphicsContainer container = new RaycastGraphicsContainer();
+			private RaycastRenderer renderer;
+			
+			{
+				
 			}
 		};
 		

@@ -1,6 +1,6 @@
 package com.dezzy.skorp3;
 
-import static com.dezzy.skorp3.Global.VBO;
+import static com.dezzy.skorp3.Global.True3D.VBO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import com.dezzy.skorp3.UI.MouseVBOTransformer;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.primitive.Quad;
-import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {
@@ -54,7 +53,7 @@ public class Skorp3 {
 		
 		SkorpPanel renderPanel = SkorpPanel.createStandard(); 
 		
-		MouseVBOTransformer transformer = new MouseVBOTransformer(Global.mouseData, Global.VBO);
+		MouseVBOTransformer transformer = new MouseVBOTransformer(Global.mouseData, Global.True3D.VBO);
 		Thread thread = new Thread(transformer);
 		thread.start();
 		transformer.enable();

@@ -17,6 +17,7 @@ import com.dezzy.skorp3.game.Physics;
  *
  */
 //TODO add support for mouse clicks
+@Deprecated
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 	private MouseData mouseData;
 	/**
@@ -44,7 +45,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 			private static final long serialVersionUID = -2463995051870675710L;
 			
 			{
-				Physics.renderer3D.initializeBarycentricRenderer(Global.renderList, this, Global.mouseData, Global.data3D);
+				Physics.renderer3D.initializeBarycentricRenderer(Global.True3D.renderList, this, Global.mouseData, Global.True3D.data3D);
 			}
 
 			@Override
