@@ -2,17 +2,29 @@ package com.dezzy.skorp3.skorp3D.raycast.core;
 
 import java.awt.Color;
 
+import com.dezzy.skorp3.annotations.urgency.Urgency;
+
 /**
- * Represents an element of a world map. In the game, this is seen as a block of space.
+ * Represents an element of a world map. In the game, this is seen as a colored block.
+ * <p>
+ * Elements have an ID, a name, and a Color.
+ * <p>
+ * IDs -1 and 0 and names <code>"null"</code> and <code>"space"</code> are reserved.
  * 
  * @author Dezzmeister
  *
  */
+//TODO: Add textures
+@Urgency(4)
 public class Element {
 	/**
 	 * Represents a null or error element. Visible in game as a pink box.
 	 */
 	public static final Element NONE = new Element(-1,"null",Color.PINK, false);
+	/**
+	 * Represents an empty space.
+	 */
+	public static final Element SPACE = new Element(0,"space",Color.PINK,true);
 	
 	private int id = 0;
 	

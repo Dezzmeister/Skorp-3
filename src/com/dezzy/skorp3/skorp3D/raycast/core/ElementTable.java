@@ -17,6 +17,11 @@ import com.dezzy.skorp3.log.Logger;
 public class ElementTable {
 	private List<Element> elements = new ArrayList<Element>();
 	
+	{
+		add(Element.NONE);
+		add(Element.SPACE);
+	}
+	
 	/**
 	 * Adds a unique Element to the ElementTable. Ensures that an element with existing ID and name is not already present.
 	 * 

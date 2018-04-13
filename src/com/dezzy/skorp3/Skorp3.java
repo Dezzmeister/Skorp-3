@@ -15,7 +15,10 @@ import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {
 	public static void main(String ... args) {
-		
+		raycast();
+	}
+	
+	public static void true3D() {
 		JFrame frame = new JFrame();
 		Container pane = frame.getContentPane();
 		
@@ -57,6 +60,19 @@ public class Skorp3 {
 		Thread thread = new Thread(transformer);
 		thread.start();
 		transformer.enable();
+		
+		pane.add(renderPanel, BorderLayout.CENTER);
+		
+		frame.setSize(1000,1000);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public static void raycast() {
+		JFrame frame = new JFrame();
+		Container pane = frame.getContentPane();
+		
+		SkorpPanel renderPanel = SkorpPanel.createStandardRaycast();
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		

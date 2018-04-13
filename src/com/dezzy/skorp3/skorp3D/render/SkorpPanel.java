@@ -8,10 +8,9 @@ import javax.swing.JPanel;
 
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.MouseData;
-import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
-import com.dezzy.skorp3.skorp3D.raycast.render.RaytraceGraphicsContainer;
-import com.dezzy.skorp3.skorp3D.raycast.render.RaytraceRenderer;
+import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
+import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 
@@ -28,11 +27,10 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 	}
 	
 	/**
-	 * Creates a True3D SkorpPanel using Global objects.
+	 * Creates a SkorpPanel using Global objects.
 	 * 
 	 * @return new SkorpPanel
 	 */
-	@Urgency(4)
 	public static SkorpPanel createStandard() {
 		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
 			
@@ -51,36 +49,31 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 			@Override
 			public void paintComponent(Graphics g) {
 				container.setGraphics(g);
-				renderer.render(); //TODO: Get this on its own Thread
+				renderer.render();
 			}
 		};
 		
 		return panel;
 	}
 	
-	/**
-	 * Creates a Raytrace SkorpPanel using Global Objects.
-	 * 
-	 * @return new SkorpPanel
-	 */
-	@Urgency(4)
 	public static SkorpPanel createStandardRaycast() {
 		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
 			private static final long serialVersionUID = -7595491200924341805L;
-			private final RaytraceGraphicsContainer container = new RaytraceGraphicsContainer();
-			private RaytraceRenderer renderer;
+			private final RaycastGraphicsContainer container = new RaycastGraphicsContainer();
+			private RaycastRenderer renderer;
 			
 			{
-				container.setPanel(this)
-						 .setMouseData(Global.mouseData)
-						 .setWorldMap(Global.Raycast.mainMap);
-				renderer = Renderers.createAndStartRaytracer(container);
+				container.setMouseData(Global.mouseData)
+						 .setPanel(this)
+						 .setWorldMap(Global.Raycast.mainMap)
+						 .setCamera(Global.Raycast.camera);
+				
+				renderer = Renderers.createAndStartRaycaster(container);
 			}
 			
-			@Override
 			public void paintComponent(Graphics g) {
 				container.setGraphics(g);
-				renderer.render(); //TODO: Get this on its own Thread
+				renderer.render();
 			}
 		};
 		
