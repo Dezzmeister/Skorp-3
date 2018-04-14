@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
@@ -11,7 +12,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 public class RaycastGraphicsContainer {
 	public volatile Graphics g;
 	public volatile WorldMap map;
-	public volatile MouseData mouse;
+	public volatile Mouse mouse;
 	public volatile JPanel panel;
 	public volatile Camera camera;
 	
@@ -40,7 +41,7 @@ public class RaycastGraphicsContainer {
 		return this;
 	}
 	
-	public RaycastGraphicsContainer setMouseData(MouseData _mouse) {
+	public RaycastGraphicsContainer setMouseData(Mouse _mouse) {
 		mouse = _mouse;
 		return this;
 	}

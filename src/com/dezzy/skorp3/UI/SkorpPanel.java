@@ -19,7 +19,7 @@ import com.dezzy.skorp3.game.Physics;
 //TODO add support for mouse clicks
 @Deprecated
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
-	private MouseData mouseData;
+	private Mouse mouseData;
 	/**
 	 * 
 	 */
@@ -29,7 +29,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 		addMouseMotionListener(this);
 	}
 	
-	public SkorpPanel(MouseData data) {
+	public SkorpPanel(Mouse data) {
 		super();
 		mouseData = data;
 	}

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer;
 
@@ -19,8 +20,8 @@ public class Renderer3D {
 		return (mapped + min2);
 	}
 	
-	public void initializeBarycentricRenderer(VBO3DList vboList, JPanel panel, MouseData mouse, Data3D data3D) {
-		bRenderer = new BarycentricVBORenderer(vboList,panel,mouse,data3D);
+	public void initializeBarycentricRenderer(VBO3DList vboList, JPanel panel, Mouse mousedata, Data3D data3D) {
+		bRenderer = new BarycentricVBORenderer(vboList,panel,mousedata,data3D);
 	}
 	
 	public void barycentricRaster(Graphics g) {

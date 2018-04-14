@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.game3D.Data3D;
@@ -23,13 +24,13 @@ import com.dezzy.skorp3.math3D.Vertex;
 public class BarycentricVBORenderer implements Renderer {
 	private VBO3DList vboList;
 	private JPanel panel;
-	private MouseData mouse;
+	private Mouse mouse;
 	private Data3D data3D;
 	
-	public BarycentricVBORenderer(VBO3DList _vboList, JPanel _panel, MouseData _mouseData, Data3D _data3D) {
+	public BarycentricVBORenderer(VBO3DList _vboList, JPanel _panel, Mouse mousedata, Data3D _data3D) {
 		vboList = _vboList;
 		panel = _panel;
-		mouse = _mouseData;
+		mouse = mousedata;
 		data3D = _data3D;
 	}
 	

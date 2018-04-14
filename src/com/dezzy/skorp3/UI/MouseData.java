@@ -2,8 +2,6 @@ package com.dezzy.skorp3.UI;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dezzy.skorp3.game3D.Updateable;
-
 /**
  * Pure data class, holds information about mouse coordinates obtained from a <code>SkorpPanel</code>. 
  * Used in 3D rendering.
@@ -11,7 +9,7 @@ import com.dezzy.skorp3.game3D.Updateable;
  * @author Dezzmeister
  *
  */
-public class MouseData implements Updateable {
+public class MouseData implements Mouse {
 	private AtomicInteger x = new AtomicInteger(0);
 	private AtomicInteger y = new AtomicInteger(0);
 	
@@ -56,38 +54,18 @@ public class MouseData implements Updateable {
 		y.set(_y);
 	}
 	
-	/**
-	 * Returns the previous x position of the mouse.
-	 * 
-	 * @return previous x
-	 */
 	public int px() {
 		return px.get();
 	}
 	
-	/**
-	 * Returns the previous y position of the mouse.
-	 * 
-	 * @return previous y
-	 */
 	public int py() {
 		return py.get();
 	}
 	
-	/**
-	 * Returns the change in mouse X position since the last movement.
-	 * 
-	 * @return delta X
-	 */
 	public int dx() {
 		return x()-px();
 	}
 	
-	/**
-	 * The change in mouse Y position since the last movement.
-	 * 
-	 * @return delta Y
-	 */
 	public int dy() {
 		return y()-py();
 	}

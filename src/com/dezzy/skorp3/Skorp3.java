@@ -1,6 +1,8 @@
 package com.dezzy.skorp3;
 
 import static com.dezzy.skorp3.Global.True3D.VBO;
+import static com.dezzy.skorp3.Global.frame;
+import static com.dezzy.skorp3.Global.pane;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,10 +20,7 @@ public class Skorp3 {
 		raycast();
 	}
 	
-	public static void true3D() {
-		JFrame frame = new JFrame();
-		Container pane = frame.getContentPane();
-		
+	public static void true3D() {		
 		/*
 		VBO.add(new Triangle(new Vertex(100, 100, 100),
 	            new Vertex(-100, -100, 100),
@@ -54,7 +53,7 @@ public class Skorp3 {
 		
 		VBO.apply();
 		
-		SkorpPanel renderPanel = SkorpPanel.createStandard(); 
+		SkorpPanel renderPanel = SkorpPanel.createStandard(pane); 
 		
 		MouseVBOTransformer transformer = new MouseVBOTransformer(Global.mouseData, Global.True3D.VBO);
 		Thread thread = new Thread(transformer);
@@ -68,13 +67,11 @@ public class Skorp3 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public static void raycast() {
-		JFrame frame = new JFrame();
-		Container pane = frame.getContentPane();
-		
-		SkorpPanel renderPanel = SkorpPanel.createStandardRaycast();
+	public static void raycast() {		
+		SkorpPanel renderPanel = SkorpPanel.createStandardRaycast(pane);
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
+		
 		
 		frame.setSize(1000,1000);
 		frame.setVisible(true);

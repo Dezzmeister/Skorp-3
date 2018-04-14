@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.skorp3D.render;
 
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -7,7 +8,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import com.dezzy.skorp3.Global;
-import com.dezzy.skorp3.UI.MouseData;
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
@@ -16,14 +17,16 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 
 	private static final long serialVersionUID = 118236244530832266L;
 	
-	private MouseData mouseData;
+	private Mouse mouseData;
+	private Container pane;
 	
 	{
 		addMouseMotionListener(this);
 	}
 	
-	public SkorpPanel(MouseData data) {
+	public SkorpPanel(Mouse data, Container _pane) {
 		mouseData = data;
+		pane = _pane;
 	}
 	
 	/**
@@ -31,8 +34,8 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 	 * 
 	 * @return new SkorpPanel
 	 */
-	public static SkorpPanel createStandard() {
-		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
+	public static SkorpPanel createStandard(Container pane) {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane) {
 			
 			private static final long serialVersionUID = -2463995051870675710L;
 			private final GraphicsContainer container = new GraphicsContainer();
@@ -56,8 +59,8 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 		return panel;
 	}
 	
-	public static SkorpPanel createStandardRaycast() {
-		SkorpPanel panel = new SkorpPanel(Global.mouseData) {
+	public static SkorpPanel createStandardRaycast(Container pane) {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane) {
 			private static final long serialVersionUID = -7595491200924341805L;
 			private final RaycastGraphicsContainer container = new RaycastGraphicsContainer();
 			private RaycastRenderer renderer;
@@ -93,7 +96,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener {
 	}
 	
 	private void updateMouseData(MouseEvent e) {
-		mouseData.x(e.getX());
-		mouseData.y(e.getY());
+		mouseData.x((int) e.getX());
+		mouseData.y((int) e.getY());
 	}
 }

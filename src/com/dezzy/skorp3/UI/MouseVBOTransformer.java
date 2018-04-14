@@ -3,11 +3,11 @@ package com.dezzy.skorp3.UI;
 import com.dezzy.skorp3.skorp3D.data.VBO;
 
 public class MouseVBOTransformer implements Runnable {
-	private volatile MouseData mouse;
+	private volatile Mouse mouse;
 	private volatile VBO vbo;
 	private volatile boolean enabled = true;
 	
-	public MouseVBOTransformer(MouseData _mouse, VBO _vbo) {
+	public MouseVBOTransformer(Mouse _mouse, VBO _vbo) {
 		mouse = _mouse;
 		vbo = _vbo;
 	}

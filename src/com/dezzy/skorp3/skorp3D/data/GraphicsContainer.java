@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import com.dezzy.skorp3.UI.MouseData;
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.math3D.datastructures.Collapsable;
@@ -12,12 +12,12 @@ import com.dezzy.skorp3.skorp3D.primitive.Triangle;
 
 public class GraphicsContainer implements Collapsable<Triangle[]> {
 	public volatile Graphics g;
-	public volatile MouseData mouse;
+	public volatile Mouse mouse;
 	public Data3D data3D;
 	public VBOList vboList;
 	public JPanel panel;
 
-	public GraphicsContainer(Graphics _g, MouseData _mouse, Data3D _data, VBOList _vboList, JPanel _panel) {
+	public GraphicsContainer(Graphics _g, Mouse _mouse, Data3D _data, VBOList _vboList, JPanel _panel) {
 		g = _g;
 		mouse = _mouse;
 		data3D = _data;
@@ -34,7 +34,7 @@ public class GraphicsContainer implements Collapsable<Triangle[]> {
 		return this;
 	}
 	
-	public synchronized GraphicsContainer setMouseData(MouseData _mouse) {
+	public synchronized GraphicsContainer setMouseData(Mouse _mouse) {
 		mouse = _mouse;
 		return this;
 	}

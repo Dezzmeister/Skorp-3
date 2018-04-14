@@ -1,8 +1,16 @@
 package com.dezzy.skorp3;
 
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 
-import com.dezzy.skorp3.UI.MouseData;
+import javax.swing.JFrame;
+
+import com.dezzy.skorp3.UI.Mouse;
+import com.dezzy.skorp3.UI.MouseRobot;
 import com.dezzy.skorp3.annotations.Processors;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.VBO3D;
@@ -27,13 +35,20 @@ public final class Global {
 	public static final int HEIGHT = 1000;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
-	public static final MouseData mouseData = new MouseData(WIDTH,HEIGHT);
+	
+	public static final JFrame frame = new JFrame();
+	public static final Container pane = frame.getContentPane();
+	public static final Mouse mouseData = new MouseRobot(WIDTH,HEIGHT,pane);
 	
 	static {
 		Processors.activate();
 		True3D.renderList.add(mainVBO);
 		
 		True3D.VBOLIST.add(True3D.VBO);
+		
+		BufferedImage cursorImg = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0,0), "blank cursor");
+		pane.setCursor(blankCursor);
 	}
 	
 	private Global() {

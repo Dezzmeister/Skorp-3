@@ -1,7 +1,7 @@
 Time in ms	Event
 
-1523652709694	Log created
-1523652709694	Received config entry Dezzy
+1523675823691	Log created
+1523675823691	Received config entry Dezzy
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -17,11 +17,10 @@ java.lang.NullPointerException
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1378)
 	at com.dezzy.skorp3.annotations.RuntimeProcessor.getAllClasses(RuntimeProcessor.java:92)
 	at com.dezzy.skorp3.annotations.Processors.<clinit>(Processors.java:17)
-	at com.dezzy.skorp3.Global.<clinit>(Global.java:33)
-	at com.dezzy.skorp3.skorp3D.render.SkorpPanel.createStandardRaycast(SkorpPanel.java:60)
-	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:75)
-	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:18)
-1523652709697	Received config entry 10221
+	at com.dezzy.skorp3.Global.<clinit>(Global.java:44)
+	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:71)
+	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:20)
+1523675823693	Received config entry 10221
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -37,11 +36,10 @@ java.lang.NullPointerException
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1378)
 	at com.dezzy.skorp3.annotations.RuntimeProcessor.getAllClasses(RuntimeProcessor.java:92)
 	at com.dezzy.skorp3.annotations.Processors.<clinit>(Processors.java:17)
-	at com.dezzy.skorp3.Global.<clinit>(Global.java:33)
-	at com.dezzy.skorp3.skorp3D.render.SkorpPanel.createStandardRaycast(SkorpPanel.java:60)
-	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:75)
-	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:18)
-1523652709699	Received config entry 10.0.0.9
+	at com.dezzy.skorp3.Global.<clinit>(Global.java:44)
+	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:71)
+	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:20)
+1523675823696	Received config entry 10.0.0.9
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -57,12 +55,11 @@ java.lang.NullPointerException
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1378)
 	at com.dezzy.skorp3.annotations.RuntimeProcessor.getAllClasses(RuntimeProcessor.java:92)
 	at com.dezzy.skorp3.annotations.Processors.<clinit>(Processors.java:17)
-	at com.dezzy.skorp3.Global.<clinit>(Global.java:33)
-	at com.dezzy.skorp3.skorp3D.render.SkorpPanel.createStandardRaycast(SkorpPanel.java:60)
-	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:75)
-	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:18)
-1523652709702	Config created with config/config.txt
-1523652709702	Received config entry t
+	at com.dezzy.skorp3.Global.<clinit>(Global.java:44)
+	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:71)
+	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:20)
+1523675823697	Config created with config/config.txt
+1523675823698	Received config entry t
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -78,11 +75,10 @@ java.lang.NullPointerException
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1378)
 	at com.dezzy.skorp3.annotations.RuntimeProcessor.getAllClasses(RuntimeProcessor.java:92)
 	at com.dezzy.skorp3.annotations.Processors.<clinit>(Processors.java:17)
-	at com.dezzy.skorp3.Global.<clinit>(Global.java:33)
-	at com.dezzy.skorp3.skorp3D.render.SkorpPanel.createStandardRaycast(SkorpPanel.java:60)
-	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:75)
-	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:18)
-1523652709704	Received config entry i
+	at com.dezzy.skorp3.Global.<clinit>(Global.java:44)
+	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:71)
+	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:20)
+1523675823702	Received config entry i
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -98,17 +94,16 @@ java.lang.NullPointerException
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1378)
 	at com.dezzy.skorp3.annotations.RuntimeProcessor.getAllClasses(RuntimeProcessor.java:92)
 	at com.dezzy.skorp3.annotations.Processors.<clinit>(Processors.java:17)
-	at com.dezzy.skorp3.Global.<clinit>(Global.java:33)
-	at com.dezzy.skorp3.skorp3D.render.SkorpPanel.createStandardRaycast(SkorpPanel.java:60)
-	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:75)
-	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:18)
-1523652709706	Config created with config/keyconfig.txt
-1523652709910	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!
-1523652709916	WARNING: encode in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and SHOULD be fixed/completed soon!
-1523652709917	WARNING: applyTransformations in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
-1523652709917	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
-1523652709917	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.Composite is important and NEEDS to be fixed/completed now!
-1523652709917	WARNING: com.dezzy.skorp3.file.Config is important and NEEDS to be fixed/completed now!
-1523652709917	WARNING: com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer is important and NEEDS to be fixed/completed now!
-1523652709917	WARNING: com.dezzy.skorp3.skorp3D.raycast.core.Element should be fixed/completed soon!
-1523652709918	WARNING: RaycastGraphicsContainer created with default constructor! This could cause null reference problems!
+	at com.dezzy.skorp3.Global.<clinit>(Global.java:44)
+	at com.dezzy.skorp3.Skorp3.raycast(Skorp3.java:71)
+	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:20)
+1523675823704	Config created with config/keyconfig.txt
+1523675823910	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!
+1523675823922	WARNING: encode in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and SHOULD be fixed/completed soon!
+1523675823922	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
+1523675823922	WARNING: applyTransformations in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
+1523675823922	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.Composite is important and NEEDS to be fixed/completed now!
+1523675823923	WARNING: com.dezzy.skorp3.file.Config is important and NEEDS to be fixed/completed now!
+1523675823923	WARNING: com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer is important and NEEDS to be fixed/completed now!
+1523675823924	WARNING: com.dezzy.skorp3.skorp3D.raycast.core.Element should be fixed/completed soon!
+1523675823943	WARNING: RaycastGraphicsContainer created with default constructor! This could cause null reference problems!
