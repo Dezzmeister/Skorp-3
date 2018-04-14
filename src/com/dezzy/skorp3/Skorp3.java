@@ -1,12 +1,11 @@
 package com.dezzy.skorp3;
 
-import static com.dezzy.skorp3.Global.True3D.VBO;
 import static com.dezzy.skorp3.Global.frame;
 import static com.dezzy.skorp3.Global.pane;
+import static com.dezzy.skorp3.Global.True3D.VBO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 
 import javax.swing.JFrame;
 

@@ -1,7 +1,10 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
+import static com.dezzy.skorp3.Global.keyboard;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
@@ -123,7 +126,11 @@ public class Raycaster implements RaycastRenderer {
 
 	@Override
 	public boolean shouldRedraw() {
-		return container.hasUpdated();
+		return container.hasUpdated() ||
+			   keyboard.keys['W'] ||
+			   keyboard.keys['S'] ||
+			   keyboard.keys[KeyEvent.VK_UP] ||
+			   keyboard.keys[KeyEvent.VK_DOWN];
 	}
 
 	@Override
