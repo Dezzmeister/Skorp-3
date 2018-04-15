@@ -22,7 +22,6 @@ import com.dezzy.skorp3.skorp3D.raycast.core.ElementTable;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
-import com.dezzy.skorp3.skorp3D.raycast.render.Keyboard;
 
 /**
  * Global should be used to hold global variables/objects that will be used throughout Skorp.
@@ -32,7 +31,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Keyboard;
  *
  */
 public final class Global {
-	public static final int WIDTH = 1000;
+	public static final int WIDTH = 1800;
 	public static final int HEIGHT = 1000;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
@@ -40,8 +39,9 @@ public final class Global {
 	public static final JFrame frame = new JFrame();
 	public static final Container pane = frame.getContentPane();
 	public static final Mouse mouseData = new MouseRobot(WIDTH,HEIGHT,pane);
+	public static final boolean[] keys = new boolean[256];
 	
-	public static final Keyboard keyboard = new Keyboard();
+	//public static final Keyboard keyboard = new Keyboard();
 	
 	static {
 		Processors.activate();
@@ -52,7 +52,7 @@ public final class Global {
 		BufferedImage cursorImg = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0,0), "blank cursor");
 		pane.setCursor(blankCursor);
-		frame.addKeyListener(keyboard);
+		//frame.addKeyListener(keyboard);
 	}
 	
 	private Global() {

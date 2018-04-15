@@ -1,11 +1,15 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 
 public class Camera {
 	public Vector pos;
 	public Vector dir;
 	public Vector plane;
+	
+	private double moveSpeed = 0.1;
+	private double rotSpeed = 0.005;
 	
 	public Camera setPos(Vector _pos) {
 		pos = _pos;
@@ -22,10 +26,33 @@ public class Camera {
 		return this;
 	}
 	
-	public void rotateLeft(double rotSpeed) {
+	public double getRotationSpeed() {
+		return rotSpeed;
+	}
+	
+	public void setRotationSpeed(double speed) {
+		rotSpeed = speed;
+	}
+	
+	public double getMoveSpeed() {
+		return moveSpeed;
+	}
+	
+	public void setMoveSpeed(double speed) {
+		moveSpeed = speed;
+	}
+	
+	/**
+	 * Rotates the camera left by a factor of the camera's internal rotation speed.
+	 * 
+	 * @param factor multiplied by the rotation speed, product used to rotate left
+	 */
+	public void rotateLeft(double factor) {
+		double speed = factor * this.rotSpeed;
+		
 		double oldDirX = dir.x;
-		double cr = Math.cos(rotSpeed);
-		double sr = Math.sin(rotSpeed);
+		double cr = Math.cos(speed);
+		double sr = Math.sin(speed);
 		dir.x = dir.x * cr - dir.y * sr;
 	    dir.y = oldDirX * sr + dir.y * cr;
 	    double oldPlaneX = plane.x;
@@ -33,14 +60,32 @@ public class Camera {
 	    plane.y = oldPlaneX * sr + plane.y * cr;
 	}
 	
-	public void rotateRight(double rotSpeed) {
+	/**
+	 * Rotates the camera right by a factor of the camera's internal rotation speed.
+	 * 
+	 * @param factor multiplied by the rotation speed, product used to rotate right
+	 */
+	public void rotateRight(double factor) {
+		double speed = factor * this.rotSpeed;
+		
 		double oldDirX = dir.x;
-	    double cr = Math.cos(-rotSpeed);
-	    double sr = Math.sin(-rotSpeed);
+	    double cr = Math.cos(-speed);
+	    double sr = Math.sin(-speed);
 	    dir.x = dir.x * cr - dir.y * sr;
 	    dir.y = oldDirX * sr + dir.y * cr;
 	    double oldPlaneX = plane.x;
 	    plane.x = plane.x * cr - plane.y * sr;
 	    plane.y = oldPlaneX * sr + plane.y * cr;
+	}
+	
+	public void moveForward(WorldMap map, double factor) {
+		double speed = factor * moveSpeed;
+		
+		if (map.get((int)(pos.x + dir.x * speed), (int)pos.y).id() == 0) pos.x += dir.x * speed;
+		if (map.get((int)pos.x,(int)(pos.y + dir.y * speed)).id() == 0) pos.y += dir.y * speed;
+	}
+	
+	public void moveBackward(WorldMap map) {
+		
 	}
 }

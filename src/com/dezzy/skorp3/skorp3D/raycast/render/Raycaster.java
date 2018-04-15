@@ -1,7 +1,5 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
-import static com.dezzy.skorp3.Global.keyboard;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -10,9 +8,22 @@ import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
+	private int WIDTH, HEIGHT;
+	private double aspect = 1;
 	
-	public Raycaster(RaycastGraphicsContainer _container) {
+	public Raycaster(RaycastGraphicsContainer _container, int width, int height) {
 		container = _container;
+		WIDTH = width;
+		HEIGHT = height;
+		aspect = WIDTH/(double)HEIGHT;
+		/*
+		forwardMover = new MoveForwardAction(container.map,container.camera);
+		
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("W"), "moveForward");
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("UP"), "moveForward");
+		container.panel.getActionMap().put("moveForward", forwardMover);
+		container.pane.requestFocus();
+		*/
 	}
 	
 	@Override
@@ -23,17 +34,15 @@ public class Raycaster implements RaycastRenderer {
 		g2.setBackground(Color.BLACK);
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
 	    
-	    final int HEIGHT = container.panel.getHeight();
-	    final int WIDTH = container.panel.getWidth();
-	    
-	    final double MOVESPEED = 60.0;
-	    final double ROTSPEED = 0.005;
-	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
-	    	container.camera.rotateLeft(Math.abs(container.mouse.dx()) * ROTSPEED);
+	    	container.camera.rotateLeft(Math.abs(container.mouse.dx()));
 	    } else if (container.mouse.dx() > 0) {
-	    	container.camera.rotateRight(container.mouse.dx() * ROTSPEED);
+	    	container.camera.rotateRight(container.mouse.dx());
+	    }
+
+	    if (container.keys[KeyEvent.VK_W]) {
+	    	container.camera.moveForward(container.map,1);
 	    }
 	    
 	    Vector pos = container.camera.pos;
@@ -41,7 +50,7 @@ public class Raycaster implements RaycastRenderer {
 	    Vector plane = container.camera.plane;
 	    
 	    for (int x = 0; x < WIDTH; x++) {
-	    	double camX = 2 * x / (double)WIDTH - 1.0;
+	    	double camX = 2 * x/(double)WIDTH - 1.0;
 	        double rposx = pos.x;
 	        double rposy = pos.y;
 	        double rdirx = dir.x + plane.x * camX;
@@ -53,8 +62,8 @@ public class Raycaster implements RaycastRenderer {
 	        double sideDistX;
 	        double sideDistY;
 	        
-	        double deltaDistX = Math.sqrt(1 + (rdiry * rdiry) / (rdirx * rdirx));
-	        double deltaDistY = Math.sqrt(1 + (rdirx * rdirx) / (rdiry * rdiry));
+	        double deltaDistX = Math.sqrt(1 + (rdiry * rdiry)/(rdirx * rdirx));
+	        double deltaDistY = Math.sqrt(1 + (rdirx * rdirx)/(rdiry * rdiry));
 	        double perpWallDist;
 	        
 	        int stepX;
@@ -97,18 +106,18 @@ public class Raycaster implements RaycastRenderer {
 	        }
 	          
 	        if (!side) {
-	        	perpWallDist = (mapX - rposx + (1 - stepX) / 2) / rdirx;
+	        	perpWallDist = (mapX - rposx + (1 - stepX)/2)/rdirx;
 	        } else {
-	        	perpWallDist = (mapY - rposy + (1 - stepY) / 2) / rdiry;
+	        	perpWallDist = (mapY - rposy + (1 - stepY)/2)/rdiry;
 	        }
 	          
-	        int lineHeight = (int)(HEIGHT / perpWallDist);
+	        int lineHeight = (int)(HEIGHT/perpWallDist);
 	          
-	        int drawStart = -lineHeight / 2 + HEIGHT / 2;
+	        int drawStart = -lineHeight/2 + HEIGHT/2;
 	        if (drawStart < 0) {
 	        	  drawStart = 0;
 	        }
-	        int drawEnd = lineHeight / 2 + HEIGHT / 2;
+	        int drawEnd = lineHeight/2 + HEIGHT/2;
 	        if (drawEnd >= HEIGHT) {
 	        	  drawEnd = HEIGHT -1;
 	        }
@@ -118,7 +127,13 @@ public class Raycaster implements RaycastRenderer {
 	        if (side) {
 	              col = new Color(col.getRed()/2,col.getGreen()/2,col.getBlue()/2);
 	        }
-	      
+	        
+	        //Scale the line based on aspect ratio
+	        int yDiff = (lineHeight/2);
+	        yDiff *= aspect;
+	        drawStart = (HEIGHT/2) - yDiff;
+	        drawEnd = (HEIGHT/2) + yDiff;
+	        
 	        g2.setColor(col);
 	        g2.drawLine(x, drawStart, x, drawEnd);
 	    }
@@ -126,11 +141,7 @@ public class Raycaster implements RaycastRenderer {
 
 	@Override
 	public boolean shouldRedraw() {
-		return container.hasUpdated() ||
-			   keyboard.keys['W'] ||
-			   keyboard.keys['S'] ||
-			   keyboard.keys[KeyEvent.VK_UP] ||
-			   keyboard.keys[KeyEvent.VK_DOWN];
+		return container.hasUpdated();
 	}
 
 	@Override
@@ -138,4 +149,9 @@ public class Raycaster implements RaycastRenderer {
 		return container;
 	}
 	
+	public void updateDimensions(int width, int height) {
+		WIDTH = width;
+		HEIGHT = height;
+		aspect = WIDTH/(double)HEIGHT;
+	}
 }

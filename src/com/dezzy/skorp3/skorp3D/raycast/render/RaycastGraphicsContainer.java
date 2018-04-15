@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
+import java.awt.Container;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -15,11 +16,14 @@ public class RaycastGraphicsContainer {
 	public volatile Mouse mouse;
 	public volatile JPanel panel;
 	public volatile Camera camera;
+	public volatile Container pane;
+	public volatile boolean[] keys;
 	
-	public RaycastGraphicsContainer(WorldMap _map, MouseData _mouseData, JPanel _panel) {
+	public RaycastGraphicsContainer(WorldMap _map, MouseData _mouseData, JPanel _panel, Container _pane) {
 		map = _map;
 		mouse = _mouseData;
 		panel = _panel;
+		pane = _pane;
 	}
 	
 	public RaycastGraphicsContainer() {
@@ -48,6 +52,16 @@ public class RaycastGraphicsContainer {
 	
 	public RaycastGraphicsContainer setCamera(Camera _camera) {
 		camera = _camera;
+		return this;
+	}
+	
+	public RaycastGraphicsContainer setContainer(Container _pane) {
+		pane = _pane;
+		return this;
+	}
+	
+	public RaycastGraphicsContainer setKeys(boolean[] _keys) {
+		keys = _keys;
 		return this;
 	}
 	

@@ -61,18 +61,18 @@ public class Skorp3 {
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		
-		frame.setSize(1000,1000);
+		frame.setSize(Global.WIDTH,Global.HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public static void raycast() {		
-		SkorpPanel renderPanel = SkorpPanel.createStandardRaycast(pane);
+		SkorpPanel renderPanel = SkorpPanel.createStandardRaycast(pane,Global.WIDTH,Global.HEIGHT);
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
+		//renderPanel.requestFocus();
 		
-		
-		frame.setSize(1000,1000);
+		frame.setSize(Global.WIDTH,Global.HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
