@@ -22,6 +22,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.ElementTable;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
+import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 /**
  * Global should be used to hold global variables/objects that will be used throughout Skorp.
@@ -76,11 +77,19 @@ public final class Global {
 		
 		static {
 			ElementTable table = new ElementTable();
+			Texture fat = new Texture("assets/raycast/textures/fat.png",64);
+			Texture dimensions = new Texture("assets/raycast/textures/256.png",256);
+			Texture sixteen = new Texture("assets/raycast/textures/16.png",16);
+			Texture thousand = new Texture("assets/raycast/textures/1024.png",1024);
+			
 			table.add(new Element(1,"border",Color.ORANGE,false));
-			table.add(new Element(2,"green",Color.GREEN,true));
+			table.add(new Element(2,"green",Color.GREEN,true).setFrontTexture(fat).setSideTexture(fat));
 			table.add(new Element(3,"red",Color.RED,true));
 			table.add(new Element(4,"magenta",Color.MAGENTA,true));
 			table.add(new Element(5,"gold",Color.YELLOW,false));
+			table.add(new Element(6,"lol",Color.BLACK,false).applyTexture(dimensions));
+			table.add(new Element(7,"16",Color.BLACK,false).applyTexture(sixteen));
+			table.add(new Element(8,"1024",Color.BLACK,false).applyTexture(thousand));
 			
 			int[][] map = {
 				{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -97,11 +106,11 @@ public final class Global {
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+				{1,4,4,4,4,4,4,4,4,0,0,0,0,0,7,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+				{1,4,0,0,0,0,5,0,4,0,0,0,0,0,8,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},

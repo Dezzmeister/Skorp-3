@@ -38,6 +38,9 @@ public class Element {
 	//private Texture frontTexture = new Texture("assets/raycast/textures/wall.png",64);
 	//private Texture sideTexture = frontTexture.darken();
 	
+	/**
+	 * Both textures must be the same size.
+	 */
 	private Texture frontTexture = new Texture("assets/raycast/textures/front.png",64);
 	private Texture sideTexture = new Texture("assets/raycast/textures/side.png",64);
 	
@@ -54,13 +57,41 @@ public class Element {
 		changeable = _changeable;
 	}
 	
+	/**
+	 * Sets the front texture of the Element and sets the side texture to a 
+	 * darkened version of the supplied texture. If setting a custom side texture,
+	 * call this first.
+	 * 
+	 * @param _texture Texture to be set to front texture
+	 * @return this Element
+	 */
 	public Element setFrontTexture(Texture _texture) {
 		frontTexture = _texture;
+		sideTexture = frontTexture.darken();
 		return this;
 	}
 	
+	/**
+	 * Sets the side texture of the Element. Defaults to a darkened version
+	 * of the front texture.
+	 * <p>
+	 * ALWAYS CALL AFTER <code>setFrontTexture()</code>
+	 * 
+	 * @param _texture Texture to be set to side texture
+	 * @return this Element
+	 */
 	public Element setSideTexture(Texture _texture) {
-		sideTexture = _texture;
+		if (_texture.SIZE == frontTexture.SIZE) {
+			sideTexture = _texture;
+		} else {
+			sideTexture = frontTexture.darken();
+		}
+		return this;
+	}
+	
+	public Element applyTexture(Texture _texture) {
+		frontTexture = _texture;
+		sideTexture = frontTexture.darken();
 		return this;
 	}
 	

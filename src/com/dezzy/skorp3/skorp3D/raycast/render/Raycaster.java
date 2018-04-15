@@ -191,12 +191,12 @@ public class Raycaster implements RaycastRenderer {
 	        }
 	        
 	        for (int y = drawStart; y < drawEnd; y++) {
-	        	int texY = (((y*2 - HEIGHT + lineHeight) << 6)/lineHeight)/2;
+	        	int texY = (((y*2 - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight)/2;
 	        	int color;
 	        	if (!side) {
-	        		color = element.frontTexture().pixels[texX + (texY * element.frontTexture().SIZE)];
+	        		color = element.frontTexture().pixels[(int) (texX + (texY * element.frontTexture().SIZE))];
 	        	} else {
-	        		color = (element.sideTexture().pixels[texX + (texY * element.sideTexture().SIZE)]);
+	        		color = (element.sideTexture().pixels[(int) (texX + (texY * element.sideTexture().SIZE))]);
 	        	}
 	        	img.setRGB(x, y, color);
 	        }

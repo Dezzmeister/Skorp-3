@@ -38,13 +38,10 @@ public class Texture {
 	}
 	
 	public Texture darken() {
-		int dark = 20;
 		int[] pix = new int[SIZE * SIZE];
 		
 		for (int i = 0; i < pixels.length; i++) {
 			Color c = new Color(pixels[i]);
-			//c = new Color(c.getRed()-dark,c.getGreen()-dark,c.getBlue()-dark);
-			//pix[i] = c.
 			pix[i] = c.darker().getRGB();
 		}
 		
