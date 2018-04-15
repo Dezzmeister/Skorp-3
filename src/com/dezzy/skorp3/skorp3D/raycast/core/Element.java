@@ -3,6 +3,7 @@ package com.dezzy.skorp3.skorp3D.raycast.core;
 import java.awt.Color;
 
 import com.dezzy.skorp3.annotations.urgency.Urgency;
+import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 /**
  * Represents an element of a world map. In the game, this is seen as a colored block.
@@ -34,6 +35,12 @@ public class Element {
 	
 	private boolean changeable = false;
 	
+	//private Texture frontTexture = new Texture("assets/raycast/textures/wall.png",64);
+	//private Texture sideTexture = frontTexture.darken();
+	
+	private Texture frontTexture = new Texture("assets/raycast/textures/front.png",64);
+	private Texture sideTexture = new Texture("assets/raycast/textures/side.png",64);
+	
 	public Element(int _id, String _name, Color _color) {
 		id = _id;
 		name = _name;
@@ -45,6 +52,16 @@ public class Element {
 		name = _name;
 		color = _color;
 		changeable = _changeable;
+	}
+	
+	public Element setFrontTexture(Texture _texture) {
+		frontTexture = _texture;
+		return this;
+	}
+	
+	public Element setSideTexture(Texture _texture) {
+		sideTexture = _texture;
+		return this;
 	}
 	
 	/**
@@ -79,6 +96,14 @@ public class Element {
 	
 	public Color color() {
 		return color;
+	}
+	
+	public Texture frontTexture() {
+		return frontTexture;
+	}
+	
+	public Texture sideTexture() {
+		return sideTexture;
 	}
 	
 	public void color(Color _color) {

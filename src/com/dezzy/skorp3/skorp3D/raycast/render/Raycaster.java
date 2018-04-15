@@ -3,6 +3,7 @@ package com.dezzy.skorp3.skorp3D.raycast.render;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.KeyStroke;
 
@@ -36,9 +37,10 @@ public class Raycaster implements RaycastRenderer {
 		g2.setColor(FLOOR);
 		g2.fillRect(0, HEIGHT/2, WIDTH, HEIGHT/2);
 		
-		//Sick looking floor
-		/**
-		int iterations = 20;
+		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		
+		//Sick-looking floor
+		int iterations = 15;
 		int startblue = 89;
 		int endblue = 46;
 		int bluestep = (startblue - endblue)/iterations;
@@ -48,7 +50,7 @@ public class Raycaster implements RaycastRenderer {
 		int greenstep = (startgreen - endgreen)/iterations;
 		
 		int b = 0;
-		for (int i = HEIGHT; i > HEIGHT/2; i -= ((HEIGHT/2)/iterations)) {
+		for (int i = HEIGHT; i > ((HEIGHT/2) + ((HEIGHT/2)/iterations)); i -= ((HEIGHT/2)/iterations)) {
 			//89 45 0
 			//to
 			//46 23 0
@@ -57,7 +59,7 @@ public class Raycaster implements RaycastRenderer {
 			g2.fillRect(0, i - ((HEIGHT/2)/iterations), WIDTH, (HEIGHT/2)/iterations);
 			b++;
 		}
-		**/
+		
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -68,6 +70,10 @@ public class Raycaster implements RaycastRenderer {
 	    
 	    //Move
 	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    
+	    if (!container.keys['W'] && !container.keys[KeyEvent.VK_UP] && !container.keys['S'] && !container.keys[KeyEvent.VK_DOWN]) {
+	    	sprintfactor = 0;
+	    }
 	    
 	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
 	    	container.camera.moveForward(container.map,sprintfactor);
@@ -156,6 +162,26 @@ public class Raycaster implements RaycastRenderer {
 	        	  drawEnd = HEIGHT -1;
 	        }
 	        
+	      //Scale the line based on aspect ratio
+	        int yDiff = (lineHeight/2);
+	        yDiff *= aspect;
+	        //drawStart = (HEIGHT/2) - yDiff;
+	        //drawEnd = (HEIGHT/2) + yDiff;
+	        //lineHeight = drawEnd - drawStart;
+	        
+	        //Texturing
+	        double wallX;
+	        if (side) {
+	        	wallX = (pos.x + ((mapY - pos.y + (1 - stepY)/2)/rdiry) * rdirx);
+	        } else {
+	        	wallX = (pos.y + ((mapX - pos.x + (1 - stepX)/2)/rdirx) * rdiry);
+	        }
+	        
+	        wallX -= Math.floor(wallX);
+	        
+	        int texX = (int)(wallX * element.frontTexture().SIZE);
+	        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
+	        
 	        double alpha = 0;
 	        
 	        if (perpWallDist > container.camera.fogDistance) {
@@ -164,21 +190,29 @@ public class Raycaster implements RaycastRenderer {
 	        	alpha = (perpWallDist/container.camera.fogDistance) * 255;
 	        }
 	        
+	        for (int y = drawStart; y < drawEnd; y++) {
+	        	int texY = (((y*2 - HEIGHT + lineHeight) << 6)/lineHeight)/2;
+	        	int color;
+	        	if (!side) {
+	        		color = element.frontTexture().pixels[texX + (texY * element.frontTexture().SIZE)];
+	        	} else {
+	        		color = (element.sideTexture().pixels[texX + (texY * element.sideTexture().SIZE)]);
+	        	}
+	        	img.setRGB(x, y, color);
+	        }
+	        
+	        /*
 	        Color col = element.color();
 	          
 	        if (side) {
 	              col = new Color(col.getRed()/2,col.getGreen()/2,col.getBlue()/2);
-	        }	        
-	        
-	        //Scale the line based on aspect ratio
-	        int yDiff = (lineHeight/2);
-	        yDiff *= aspect;
-	        drawStart = (HEIGHT/2) - yDiff;
-	        drawEnd = (HEIGHT/2) + yDiff;
+	        }
 	        
 	        g2.setColor(col);
 	        g2.drawLine(x, drawStart, x, drawEnd);
+	        */
 	    }
+	    g2.drawImage(img,  0,  0, null);
 	}
 
 	@Override
