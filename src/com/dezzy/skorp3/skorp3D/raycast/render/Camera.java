@@ -11,6 +11,8 @@ public class Camera {
 	private double moveSpeed = 0.035;
 	private double rotSpeed = 0.005;
 	
+	public double fogDistance = 10;
+	
 	public Camera setPos(Vector _pos) {
 		pos = _pos;
 		return this;

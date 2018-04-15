@@ -36,6 +36,8 @@ public class Raycaster implements RaycastRenderer {
 		g2.setColor(FLOOR);
 		g2.fillRect(0, HEIGHT/2, WIDTH, HEIGHT/2);
 		
+		//Sick looking floor
+		/**
 		int iterations = 20;
 		int startblue = 89;
 		int endblue = 46;
@@ -55,6 +57,7 @@ public class Raycaster implements RaycastRenderer {
 			g2.fillRect(0, i - ((HEIGHT/2)/iterations), WIDTH, (HEIGHT/2)/iterations);
 			b++;
 		}
+		**/
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -140,6 +143,7 @@ public class Raycaster implements RaycastRenderer {
 	        } else {
 	        	perpWallDist = (mapY - rposy + (1 - stepY)/2)/rdiry;
 	        }
+	        //System.out.println(perpWallDist);
 	          
 	        int lineHeight = (int)(HEIGHT/perpWallDist);
 	          
@@ -151,7 +155,15 @@ public class Raycaster implements RaycastRenderer {
 	        if (drawEnd >= HEIGHT) {
 	        	  drawEnd = HEIGHT -1;
 	        }
-	          
+	        
+	        double alpha = 0;
+	        
+	        if (perpWallDist > container.camera.fogDistance) {
+	        	alpha = 255;
+	        } else {
+	        	alpha = (perpWallDist/container.camera.fogDistance) * 255;
+	        }
+	        
 	        Color col = element.color();
 	          
 	        if (side) {
