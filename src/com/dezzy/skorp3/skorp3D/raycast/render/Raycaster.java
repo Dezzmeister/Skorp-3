@@ -6,13 +6,17 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import com.dezzy.skorp3.skorp3D.raycast.actions.KeyHub;
 import com.dezzy.skorp3.skorp3D.raycast.actions.MoveAction;
 import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardAction;
+import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardReleasedAction;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
 	private MoveAction forwardMover;
+	private MoveAction forwardStopper;
+	private KeyHub hub = new KeyHub();
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
 	
@@ -22,11 +26,17 @@ public class Raycaster implements RaycastRenderer {
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
 		
-		forwardMover = new MoveForwardAction(container);
+		forwardMover = new MoveForwardAction(container,hub);
+		forwardStopper = new MoveForwardReleasedAction(container,hub);
 		
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("W"), "moveForward");
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("UP"), "moveForward");
-		container.panel.getActionMap().put("moveForward", forwardMover);
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
+		//container.panel.getActionMap().put("moveForward", forwardMover);
+		
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
+		//container.panel.getActionMap().put("stopMovingForward", forwardStopper);
+		
 	}
 	
 	@Override
@@ -42,7 +52,7 @@ public class Raycaster implements RaycastRenderer {
 	    	container.camera.rotateRight(container.mouse.dx());
 	    }
 
-	    if (container.keys[KeyEvent.VK_W]) {
+	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
 	    	container.camera.moveForward(container.map,1);
 	    }
 	    

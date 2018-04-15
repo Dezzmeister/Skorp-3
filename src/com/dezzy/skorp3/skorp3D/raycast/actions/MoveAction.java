@@ -11,10 +11,12 @@ public abstract class MoveAction extends AbstractAction {
 	private static final long serialVersionUID = 9209465263115949897L;
 	
 	protected RaycastGraphicsContainer container;
+	protected KeyHub hub;
 	protected double moveFactor = 1;
 	
-	public MoveAction(RaycastGraphicsContainer _container) {
+	public MoveAction(RaycastGraphicsContainer _container, KeyHub _hub) {
 		container = _container;
+		hub = _hub;
 	}
 	
 	public void setFactor(double factor) {

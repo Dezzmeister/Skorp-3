@@ -6,15 +6,15 @@ import static com.dezzy.skorp3.Global.True3D.VBO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
-import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 import com.dezzy.skorp3.UI.MouseVBOTransformer;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.primitive.Quad;
-import com.dezzy.skorp3.skorp3D.raycast.actions.MoveAction;
-import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardAction;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {
@@ -74,6 +74,28 @@ public class Skorp3 {
 		
 		pane.add(renderPanel, BorderLayout.CENTER);
 		//renderPanel.requestFocus();
+		Timer timer = new Timer(0, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				long beginTime;
+				long timeDiff;
+				int sleepTime;
+				int fps = 1000 / 100;
+				
+				beginTime = System.nanoTime() / 1000000;
+				
+				renderPanel.repaint();
+				
+				timeDiff = System.nanoTime() / 1000000 - beginTime;
+
+		        sleepTime = fps - (int) (timeDiff);
+
+		        if (sleepTime > 0) {
+		        	((Timer)e.getSource()).setDelay(sleepTime);
+		        }
+			}
+		});
+		timer.start();
 		
 		frame.setSize(Global.WIDTH,Global.HEIGHT);
 		frame.setVisible(true);

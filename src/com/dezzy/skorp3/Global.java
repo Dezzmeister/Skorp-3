@@ -31,7 +31,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
  *
  */
 public final class Global {
-	public static final int WIDTH = 1800;
+	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 1000;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
@@ -72,7 +72,7 @@ public final class Global {
 		public static Camera camera = new Camera()
 								      .setPos(new Vector(22,12))
 								      .setDir(new Vector(-1,0))
-								      .setPlane(new Vector(0,0.66));
+								      .setPlane(new Vector(0,0.5));
 		
 		static {
 			ElementTable table = new ElementTable();

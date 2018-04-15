@@ -26,7 +26,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 	
 	{
 		addMouseMotionListener(this);
-		//addKeyListener(this);
+		addKeyListener(this);
 		//requestFocusInWindow();
 	}
 	
@@ -102,7 +102,6 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		updateMouseData(e);
-		repaint();
 	}
 	
 	private void updateMouseData(MouseEvent e) {
@@ -115,8 +114,6 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 		if (arg0.getKeyCode() < 256) {
 			keys[arg0.getKeyCode()] = true;
 		}
-		System.out.println(arg0.getKeyCode());
-		repaint();
 	}
 
 	@Override
@@ -124,7 +121,6 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 		if (arg0.getKeyCode() < 256) {
 			keys[arg0.getKeyCode()] = false;
 		}
-		repaint();
 	}
 
 	@Override
