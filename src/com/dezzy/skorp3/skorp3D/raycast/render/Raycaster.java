@@ -6,19 +6,14 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import com.dezzy.skorp3.skorp3D.raycast.actions.KeyHub;
-import com.dezzy.skorp3.skorp3D.raycast.actions.MoveAction;
-import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardAction;
-import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardReleasedAction;
+import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
-	private MoveAction forwardMover;
-	private MoveAction forwardStopper;
-	private KeyHub hub = new KeyHub();
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
+	private static final Color FLOOR = new Color(89,45,0);
 	
 	public Raycaster(RaycastGraphicsContainer _container, int width, int height) {
 		container = _container;
@@ -26,17 +21,11 @@ public class Raycaster implements RaycastRenderer {
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
 		
-		forwardMover = new MoveForwardAction(container,hub);
-		forwardStopper = new MoveForwardReleasedAction(container,hub);
-		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
-		//container.panel.getActionMap().put("moveForward", forwardMover);
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
-		//container.panel.getActionMap().put("stopMovingForward", forwardStopper);
-		
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");		
 	}
 	
 	@Override
@@ -44,6 +33,28 @@ public class Raycaster implements RaycastRenderer {
 		Graphics2D g2 = (Graphics2D) container.g;
 		g2.setBackground(Color.BLACK);
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
+		g2.setColor(FLOOR);
+		g2.fillRect(0, HEIGHT/2, WIDTH, HEIGHT/2);
+		
+		int iterations = 20;
+		int startblue = 89;
+		int endblue = 46;
+		int bluestep = (startblue - endblue)/iterations;
+		
+		int startgreen = 45;
+		int endgreen = 23;
+		int greenstep = (startgreen - endgreen)/iterations;
+		
+		int b = 0;
+		for (int i = HEIGHT; i > HEIGHT/2; i -= ((HEIGHT/2)/iterations)) {
+			//89 45 0
+			//to
+			//46 23 0
+			
+			g2.setColor(new Color(startblue - (b * bluestep),startgreen - (b * greenstep),0));
+			g2.fillRect(0, i - ((HEIGHT/2)/iterations), WIDTH, (HEIGHT/2)/iterations);
+			b++;
+		}
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -51,9 +62,15 @@ public class Raycaster implements RaycastRenderer {
 	    } else if (container.mouse.dx() > 0) {
 	    	container.camera.rotateRight(container.mouse.dx());
 	    }
-
+	    
+	    //Move
+	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    
 	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
-	    	container.camera.moveForward(container.map,1);
+	    	container.camera.moveForward(container.map,sprintfactor);
+	    }
+	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
+	    	container.camera.moveBackward(container.map,sprintfactor);
 	    }
 	    
 	    Vector pos = container.camera.pos;
@@ -61,6 +78,8 @@ public class Raycaster implements RaycastRenderer {
 	    Vector plane = container.camera.plane;
 	    
 	    for (int x = 0; x < WIDTH; x++) {
+	    	Element element = null;
+	    	
 	    	double camX = 2 * x/(double)WIDTH - 1.0;
 	        double rposx = pos.x;
 	        double rposy = pos.y;
@@ -110,8 +129,8 @@ public class Raycaster implements RaycastRenderer {
 	        		mapY += stepY;
 	        		side = true;
 	        	}
-	            
-	        	if (container.map.get(mapX,mapY).id() > 0) {
+	            element = container.map.get(mapX, mapY);
+	        	if (element.id() > 0) {
 	        		hit = true;
 	        	}
 	        }
@@ -133,11 +152,11 @@ public class Raycaster implements RaycastRenderer {
 	        	  drawEnd = HEIGHT -1;
 	        }
 	          
-	        Color col = container.map.get(mapX, mapY).color();
+	        Color col = element.color();
 	          
 	        if (side) {
 	              col = new Color(col.getRed()/2,col.getGreen()/2,col.getBlue()/2);
-	        }
+	        }	        
 	        
 	        //Scale the line based on aspect ratio
 	        int yDiff = (lineHeight/2);
