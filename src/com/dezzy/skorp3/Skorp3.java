@@ -8,10 +8,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.UI.MouseVBOTransformer;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.primitive.Quad;
+import com.dezzy.skorp3.skorp3D.raycast.actions.MoveAction;
+import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardAction;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {

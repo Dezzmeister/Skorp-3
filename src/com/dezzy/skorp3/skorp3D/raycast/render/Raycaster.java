@@ -4,10 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
+import javax.swing.KeyStroke;
+
+import com.dezzy.skorp3.skorp3D.raycast.actions.MoveAction;
+import com.dezzy.skorp3.skorp3D.raycast.actions.MoveForwardAction;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
+	private MoveAction forwardMover;
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
 	
@@ -16,21 +21,17 @@ public class Raycaster implements RaycastRenderer {
 		WIDTH = width;
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
-		/*
-		forwardMover = new MoveForwardAction(container.map,container.camera);
+		
+		forwardMover = new MoveForwardAction(container);
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("UP"), "moveForward");
 		container.panel.getActionMap().put("moveForward", forwardMover);
-		container.pane.requestFocus();
-		*/
 	}
 	
 	@Override
 	public void render() {
 		Graphics2D g2 = (Graphics2D) container.g;
-		//g2.setColor(Color.BLACK);
-		//g2.fillRect(0,  0, container.panel.getWidth(), container.panel.getHeight());
 		g2.setBackground(Color.BLACK);
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
 	    

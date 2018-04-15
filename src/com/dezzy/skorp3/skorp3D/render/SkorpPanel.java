@@ -45,8 +45,8 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane, new boolean[256]) {
 			
 			private static final long serialVersionUID = -2463995051870675710L;
-			private final GraphicsContainer container = new GraphicsContainer();
 			private TrueRenderer renderer;
+			private GraphicsContainer container = new GraphicsContainer();
 			
 			{
 				container.setPanel(this)
@@ -70,8 +70,8 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 	public static SkorpPanel createStandardRaycast(Container pane, int width, int height) {
 		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane, new boolean[256]) {
 			private static final long serialVersionUID = -7595491200924341805L;
-			private final RaycastGraphicsContainer container = new RaycastGraphicsContainer();
 			private RaycastRenderer renderer;
+			private RaycastGraphicsContainer container = new RaycastGraphicsContainer();
 			
 			{
 				container.setMouseData(Global.mouseData)
