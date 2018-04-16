@@ -1,7 +1,11 @@
 package com.dezzy.skorp3.skorp3D.raycast.core;
 
+import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+
 public class WorldMap {
 	private Element[][] map;
+	private Texture floorTexture = new Texture("assets/raycast/textures/floortiles.png",512).darken();
+	private Texture ceilingTexture = new Texture("assets/raycast/textures/plaster.png",512);
 	
 	public WorldMap(Element[][] worldMap) {
 		map = worldMap;
@@ -56,5 +60,30 @@ public class WorldMap {
 	
 	public boolean set(int x, int y, Element element) {
 		return get(x,y).tryChange(element);
+	}
+	
+	/**
+	 * Sets the floor texture to a slightly darkened version of the <code>Texture</code>
+	 * provided.
+	 * 
+	 * @param _texture Texture to be set to floor texture
+	 * @return this WorldMap
+	 */
+	public WorldMap setFloorTexture(Texture _texture) {
+		floorTexture = _texture.darken();
+		return this;
+	}
+	
+	public WorldMap setCeilingTexture(Texture _texture) {
+		ceilingTexture = _texture;
+		return this;
+	}
+	
+	public Texture floorTexture() {
+		return floorTexture;
+	}
+	
+	public Texture ceilingTexture() {
+		return ceilingTexture;
 	}
 }

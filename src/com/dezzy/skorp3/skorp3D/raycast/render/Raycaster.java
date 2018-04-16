@@ -15,6 +15,9 @@ public class Raycaster implements RaycastRenderer {
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
 	private static final Color FLOOR = new Color(89,45,0);
+	/**
+	 * Meant for static floors (without texturing).
+	 */
 	private BufferedImage floor;
 	
 	public Raycaster(RaycastGraphicsContainer _container, int width, int height) {
@@ -22,7 +25,7 @@ public class Raycaster implements RaycastRenderer {
 		WIDTH = width;
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
-		makeFloor();
+		//makeFloor();
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
@@ -65,7 +68,7 @@ public class Raycaster implements RaycastRenderer {
 		g2.setBackground(Color.BLACK);
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
 		
-		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);		
+		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);		
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -155,8 +158,7 @@ public class Raycaster implements RaycastRenderer {
 	        } else {
 	        	perpWallDist = (mapY - rposy + (1 - stepY)/2)/rdiry;
 	        }
-	        //System.out.println(perpWallDist);
-	          
+	        
 	        int lineHeight = (int)(HEIGHT/perpWallDist);
 	          
 	        int drawStart = -lineHeight/2 + HEIGHT/2;
@@ -168,7 +170,7 @@ public class Raycaster implements RaycastRenderer {
 	        	  drawEnd = HEIGHT -1;
 	        }
 	        
-	      //Scale the line based on aspect ratio
+	        //Scale the line based on aspect ratio
 	        int yDiff = (lineHeight/2);
 	        yDiff *= aspect;
 	        //drawStart = (HEIGHT/2) - yDiff;
@@ -207,18 +209,58 @@ public class Raycaster implements RaycastRenderer {
 	        	img.setRGB(x, y, color);
 	        }
 	        
-	        /*
-	        Color col = element.color();
-	          
-	        if (side) {
-	              col = new Color(col.getRed()/2,col.getGreen()/2,col.getBlue()/2);
+	        //Floor casting
+	        double floorXWall;
+	        double floorYWall;
+	        
+	        if (!side && rdirx > 0) {
+	        	floorXWall = mapX;
+	        	floorYWall = mapY + wallX;
+	        } else if (!side && rdirx < 0) {
+	        	floorXWall = mapX + 1.0;
+	        	floorYWall = mapY + wallX;
+	        } else if(side && rdiry > 0) {
+	        	floorXWall = mapX + wallX;
+	        	floorYWall = mapY;
+	        } else {
+	        	floorXWall = mapX + wallX;
+	        	floorYWall = mapY + 1.0;
 	        }
 	        
-	        g2.setColor(col);
-	        g2.drawLine(x, drawStart, x, drawEnd);
-	        */
+	        double distWall;
+	        double distPlayer;
+	        double currentDist;
+	        
+	        distWall = perpWallDist;
+	        distPlayer = 0.0;
+	        
+	        if (drawEnd < 0) drawEnd = HEIGHT;
+	        
+	        Texture floortex = container.map.floorTexture();
+	        Texture ceilingtex = container.map.ceilingTexture();
+	        
+	        for (int y = drawEnd + 1; y < HEIGHT; y++) {
+	        	currentDist = HEIGHT/((2.0 * y) - HEIGHT);
+	        	
+	        	double weight = (currentDist - distPlayer)/(distWall - distPlayer);
+	        	
+	        	double currentFloorX = weight * floorXWall + (1.0 - weight) * pos.x;
+	        	double currentFloorY = weight * floorYWall + (1.0 - weight) * pos.y;
+	        	
+	        	int floorTexX;
+	        	int floorTexY;
+	        	floorTexX = (int)(currentFloorX * floortex.SIZE) % floortex.SIZE;
+	        	floorTexY = (int)(currentFloorY * floortex.SIZE) % floortex.SIZE;
+	        	
+	        	int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
+	        	int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
+	        	
+	        	img.setRGB(x, y, color);
+	        	img.setRGB(x, HEIGHT - y, ceilColor);
+	        }
+	        
 	    }
-	    g2.drawImage(floor, 0, 0, null);
+	    //g2.drawImage(floor, 0, 0, null);
 	    g2.drawImage(img,  0,  0, null);
 	}
 
