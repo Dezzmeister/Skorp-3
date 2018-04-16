@@ -41,8 +41,8 @@ public class Element {
 	/**
 	 * Both textures must be the same size.
 	 */
-	private Texture frontTexture = new Texture("assets/raycast/textures/front.png",64);
-	private Texture sideTexture = new Texture("assets/raycast/textures/side.png",64);
+	private Texture frontTexture = new Texture("assets/raycast/textures/wall.png",16);
+	private Texture sideTexture = frontTexture.darken();
 	
 	public Element(int _id, String _name, Color _color) {
 		id = _id;

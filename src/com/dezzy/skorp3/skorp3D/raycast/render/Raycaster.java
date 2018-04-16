@@ -15,12 +15,14 @@ public class Raycaster implements RaycastRenderer {
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
 	private static final Color FLOOR = new Color(89,45,0);
+	private BufferedImage floor;
 	
 	public Raycaster(RaycastGraphicsContainer _container, int width, int height) {
 		container = _container;
 		WIDTH = width;
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
+		makeFloor();
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
@@ -29,37 +31,41 @@ public class Raycaster implements RaycastRenderer {
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");		
 	}
 	
-	@Override
-	public void render() {
-		Graphics2D g2 = (Graphics2D) container.g;
-		g2.setBackground(Color.BLACK);
-		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
-		g2.setColor(FLOOR);
-		g2.fillRect(0, HEIGHT/2, WIDTH, HEIGHT/2);
-		
-		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+	public void makeFloor() {
+		floor = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = floor.createGraphics();
 		
 		//Sick-looking floor
-		int iterations = 15;
+		int iterations = 16;
 		int startblue = 89;
-		int endblue = 46;
+		int endblue = 45;
 		int bluestep = (startblue - endblue)/iterations;
-		
-		int startgreen = 45;
+				
+		int startgreen = 46;
 		int endgreen = 23;
 		int greenstep = (startgreen - endgreen)/iterations;
-		
+				
 		int b = 0;
 		for (int i = HEIGHT; i > ((HEIGHT/2) + ((HEIGHT/2)/iterations)); i -= ((HEIGHT/2)/iterations)) {
 			//89 45 0
 			//to
 			//46 23 0
-			
+					
 			g2.setColor(new Color(startblue - (b * bluestep),startgreen - (b * greenstep),0));
 			g2.fillRect(0, i - ((HEIGHT/2)/iterations), WIDTH, (HEIGHT/2)/iterations);
 			b++;
 		}
 		
+		g2.dispose();
+	}
+	
+	@Override
+	public void render() {
+		Graphics2D g2 = (Graphics2D) container.g;
+		g2.setBackground(Color.BLACK);
+		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
+		
+		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);		
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -212,6 +218,7 @@ public class Raycaster implements RaycastRenderer {
 	        g2.drawLine(x, drawStart, x, drawEnd);
 	        */
 	    }
+	    g2.drawImage(floor, 0, 0, null);
 	    g2.drawImage(img,  0,  0, null);
 	}
 

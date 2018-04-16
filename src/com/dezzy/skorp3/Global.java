@@ -31,6 +31,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
  * @author Dezzmeister
  *
  */
+@SuppressWarnings("unused")
 public final class Global {
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 1000;
@@ -77,19 +78,18 @@ public final class Global {
 		
 		static {
 			ElementTable table = new ElementTable();
-			Texture fat = new Texture("assets/raycast/textures/fat.png",64);
-			Texture dimensions = new Texture("assets/raycast/textures/256.png",256);
-			Texture sixteen = new Texture("assets/raycast/textures/16.png",16);
-			Texture thousand = new Texture("assets/raycast/textures/1024.png",1024);
 			
-			table.add(new Element(1,"border",Color.ORANGE,false));
-			table.add(new Element(2,"green",Color.GREEN,true).setFrontTexture(fat).setSideTexture(fat));
-			table.add(new Element(3,"red",Color.RED,true));
-			table.add(new Element(4,"magenta",Color.MAGENTA,true));
-			table.add(new Element(5,"gold",Color.YELLOW,false));
-			table.add(new Element(6,"lol",Color.BLACK,false).applyTexture(dimensions));
-			table.add(new Element(7,"16",Color.BLACK,false).applyTexture(sixteen));
-			table.add(new Element(8,"1024",Color.BLACK,false).applyTexture(thousand));
+			Texture nicebricks = new Texture("assets/raycast/textures/nicebricks.png",256);
+			Texture darkbricks = new Texture("assets/raycast/textures/darkbricks.png",512);
+			Texture tiles = new Texture("assets/raycast/textures/tiles.png",512);
+			Texture metal = new Texture("assets/raycast/textures/metal.png",512);
+			Texture wood = new Texture("assets/raycast/textures/wood.png",512);
+			
+			table.add(new Element(1,"border",Color.ORANGE,false).applyTexture(darkbricks));
+			table.add(new Element(2,"green",Color.GREEN,true).applyTexture(nicebricks));
+			table.add(new Element(3,"red",Color.RED,true).applyTexture(wood));
+			table.add(new Element(4,"magenta",Color.MAGENTA,true).applyTexture(metal));
+			table.add(new Element(5,"gold",Color.YELLOW,false).applyTexture(tiles));
 			
 			int[][] map = {
 				{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -106,11 +106,11 @@ public final class Global {
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,1},
 				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,4,4,4,4,4,4,4,4,0,0,0,0,0,7,0,0,0,0,0,0,0,0,1},
+				{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+				{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-				{1,4,0,0,0,0,5,0,4,0,0,0,0,0,8,0,0,0,0,0,0,0,0,1},
+				{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 				{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},

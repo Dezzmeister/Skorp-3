@@ -75,6 +75,8 @@ public class Skorp3 {
 		pane.add(renderPanel, BorderLayout.CENTER);
 		//renderPanel.requestFocus();
 		Timer timer = new Timer(0, new AbstractAction() {
+			private static final long serialVersionUID = -3111030517304106245L;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				long beginTime;
