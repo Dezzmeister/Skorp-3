@@ -6,6 +6,8 @@ import static com.dezzy.skorp3.Global.True3D.VBO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -82,7 +84,7 @@ public class Skorp3 {
 				long beginTime;
 				long timeDiff;
 				int sleepTime;
-				int fps = 1000 / 30;
+				int fps = 1000 / 60;
 				
 				beginTime = System.nanoTime() / 1000000;
 				
@@ -91,7 +93,7 @@ public class Skorp3 {
 				timeDiff = System.nanoTime() / 1000000 - beginTime;
 
 		        sleepTime = fps - (int) (timeDiff);
-
+		        
 		        if (sleepTime > 0) {
 		        	((Timer)e.getSource()).setDelay(sleepTime);
 		        }
@@ -99,6 +101,7 @@ public class Skorp3 {
 		});
 		timer.start();
 		
+		frame.pack();
 		frame.setSize(Global.WIDTH,Global.HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
