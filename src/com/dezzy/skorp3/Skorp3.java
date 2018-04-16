@@ -82,7 +82,7 @@ public class Skorp3 {
 				long beginTime;
 				long timeDiff;
 				int sleepTime;
-				int fps = 1000 / 100;
+				int fps = 1000 / 30;
 				
 				beginTime = System.nanoTime() / 1000000;
 				

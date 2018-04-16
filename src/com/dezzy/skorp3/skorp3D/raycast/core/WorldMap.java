@@ -4,8 +4,8 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 public class WorldMap {
 	private Element[][] map;
-	private Texture floorTexture = new Texture("assets/raycast/textures/floortiles.png",512).darken();
-	private Texture ceilingTexture = new Texture("assets/raycast/textures/plaster.png",512);
+	private Texture floorTexture = new Texture("assets/raycast/textures/hardwood.png",512).darken();
+	private Texture ceilingTexture = new Texture("assets/raycast/textures/floortiles.png",512);
 	
 	public WorldMap(Element[][] worldMap) {
 		map = worldMap;

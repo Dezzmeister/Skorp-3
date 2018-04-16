@@ -8,7 +8,7 @@ public class Camera {
 	public Vector dir;
 	public Vector plane;
 	
-	private double moveSpeed = 0.035;
+	private double moveSpeed = 0.055;
 	private double rotSpeed = 0.005;
 	
 	public double fogDistance = 10;
