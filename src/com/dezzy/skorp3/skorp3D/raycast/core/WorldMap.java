@@ -86,4 +86,64 @@ public class WorldMap {
 	public Texture ceilingTexture() {
 		return ceilingTexture;
 	}
+	
+	public int[][] getIDArray() {
+		int[][] result = new int[width()][height()];
+		for (int x = 0; x < width(); x++) {
+			for (int y = 0; y < width(); y++) {
+				result[x][y] = map[x][y].id();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns a 4D array containing every element's front and side texture pixels. The first coordinate is the x value,
+	 * the second coordinate is the y value, the third coordinate is either 0 or 1, (corresponding to either front or side array), and
+	 * the array at that index is the texture's pixels.
+	 * <p>
+	 * Example:
+	 * <code>int i = getTextureArrays()[20][44][1][450];</code>
+	 * <code>[20][44]</code> is the Element at x position 20, y position 44. <code>[1]</code> specifies the side texture,
+	 * and <code>[450]</code> specifies the 450th pixel in this texture.
+	 * <p>
+	 * This is used in the <code>GPURaycaster</code>, which cannot process reference variables like the standard <code>Raycaster</code> can.
+	 * 
+	 * @return An array containing every element's front and side texture pixels
+	 */
+	public int[][][][] getTextureArrays() {
+		int[][][][] result = new int[width()][height()][2][];
+		
+		for (int x = 0; x < width(); x++) {
+			for (int y = 0; y < width(); y++) {
+				result[x][y][0] = map[x][y].frontTexture().pixels;
+				result[x][y][1] = map[x][y].sideTexture().pixels;
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Returns a 3D array containing every element's texture sizes. The first two coordinates represent the x and y coordinate of the Element on the map,
+	 * and the third coordinate is either 0 for front texture or 1 for side texture.
+	 * <p>
+	 * Example:
+	 * <code>int i = getTextureSizeMap()[14][35][0];</code>
+	 * <code>i</code> now holds the size of the front texture of the <code>Element</code> located at x = 14, y = 35.
+	 * 
+	 * @return A map of all the texture sizes
+	 */
+	public int[][][] getTextureSizeMap() {
+		int[][][] result = new int[width()][height()][2];
+		
+		for (int x = 0; x < width(); x++) {
+			for (int y = 0; y < height(); y++) {
+				result[x][y][0] = map[x][y].frontTexture().SIZE;
+				result[x][y][1] = map[x][y].sideTexture().SIZE;
+			}
+		}
+		
+		return result;
+	}
 }

@@ -83,15 +83,23 @@ public class Camera {
 	public void moveForward(WorldMap map, double factor) {
 		double speed = factor * moveSpeed;
 		
-		if (map.get((int)(pos.x + dir.x * speed), (int)pos.y).id() == 0) pos.x += dir.x * speed;
-		if (map.get((int)pos.x,(int)(pos.y + dir.y * speed)).id() == 0) pos.y += dir.y * speed;
+		if (map.get((int)(pos.x + dir.x * speed), (int)pos.y).id() == 0) {
+			pos.x += dir.x * speed;
+		}
+		if (map.get((int)pos.x,(int)(pos.y + dir.y * speed)).id() == 0) {
+			pos.y += dir.y * speed;
+		}
 	}
 	
 	public void moveBackward(WorldMap map, double factor) {
 		double speed = factor * moveSpeed;
 		
-		if (map.get((int)(pos.x - dir.x * speed),(int)pos.y).id() == 0) pos.x -= dir.x * speed;
-	    if (map.get((int)pos.x,(int)(pos.y - dir.y * speed)).id() == 0) pos.y -= dir.y * speed;
+		if (map.get((int)(pos.x - dir.x * speed),(int)pos.y).id() == 0) {
+			pos.x -= dir.x * speed;
+		}
+	    if (map.get((int)pos.x,(int)(pos.y - dir.y * speed)).id() == 0) {
+	    	pos.y -= dir.y * speed;
+	    }
 	}
 	
 	public void moveLeft(WorldMap map, double factor) {
