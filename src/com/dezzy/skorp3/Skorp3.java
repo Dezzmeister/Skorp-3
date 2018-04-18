@@ -102,7 +102,7 @@ public class Skorp3 {
 		timer.start();
 		
 		frame.pack();
-		frame.setSize(Global.WIDTH,Global.HEIGHT);
+		frame.setSize(Global.SCREENWIDTH,Global.SCREENHEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

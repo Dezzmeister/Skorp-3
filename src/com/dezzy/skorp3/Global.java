@@ -35,6 +35,8 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 public final class Global {
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 500;
+	public static final int SCREENWIDTH = 1000;
+	public static final int SCREENHEIGHT = 1000;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
 	

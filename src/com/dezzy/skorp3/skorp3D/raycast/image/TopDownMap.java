@@ -28,6 +28,7 @@ public class TopDownMap {
 				Element element = _world.get(x, y);
 				int[] smallpix = element.frontTexture().smallpixels;
 				BufferedImage img = new BufferedImage(Texture.SCALESIZE,Texture.SCALESIZE,BufferedImage.TYPE_INT_RGB);
+				//TODO finish this
 			}
 		}
 	}

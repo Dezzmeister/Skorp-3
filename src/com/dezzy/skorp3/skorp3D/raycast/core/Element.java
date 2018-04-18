@@ -35,9 +35,6 @@ public class Element {
 	
 	private boolean changeable = false;
 	
-	//private Texture frontTexture = new Texture("assets/raycast/textures/wall.png",64);
-	//private Texture sideTexture = frontTexture.darken();
-	
 	/**
 	 * Both textures must be the same size.
 	 */

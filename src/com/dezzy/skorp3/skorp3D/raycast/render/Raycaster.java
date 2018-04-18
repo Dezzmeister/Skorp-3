@@ -212,12 +212,7 @@ public class Raycaster implements RaycastRenderer {
 	        	floorYWall = mapY + 1.0;
 	        }
 	        
-	        double distWall;
-	        double distPlayer;
 	        double currentDist;
-	        
-	        distWall = perpWallDist;
-	        distPlayer = 0.0;
 	        
 	        if (drawEnd < 0) drawEnd = HEIGHT;
 	        
@@ -227,7 +222,7 @@ public class Raycaster implements RaycastRenderer {
 	        for (int y = drawEnd + 1; y < HEIGHT; y++) {
 	        	currentDist = HEIGHT/((2.0 * y) - HEIGHT);
 	        	
-	        	double weight = (currentDist - distPlayer)/(distWall - distPlayer);
+	        	double weight = (currentDist)/(perpWallDist);
 	        	
 	        	double currentFloorX = weight * floorXWall + (1.0 - weight) * pos.x;
 	        	double currentFloorY = weight * floorYWall + (1.0 - weight) * pos.y;
