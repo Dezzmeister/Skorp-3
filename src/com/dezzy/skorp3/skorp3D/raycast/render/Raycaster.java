@@ -4,17 +4,22 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import javax.swing.KeyStroke;
 
+import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
 	private int WIDTH, HEIGHT;
 	private double aspect = 1;
 	private static final Color FLOOR = new Color(89,45,0);
+	private double[] zbuf;
+	private Sprite[] sprites;
 	/**
 	 * Meant for static floors (without texturing).
 	 */
@@ -25,7 +30,8 @@ public class Raycaster implements RaycastRenderer {
 		WIDTH = width;
 		HEIGHT = height;
 		aspect = WIDTH/(double)HEIGHT;
-		//makeFloor();
+		zbuf = new double[WIDTH];
+		sprites = container.map.getSprites();
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
@@ -161,11 +167,11 @@ public class Raycaster implements RaycastRenderer {
 	        
 	        int lineHeight = (int)(HEIGHT/perpWallDist);
 	          
-	        int drawStart = -lineHeight/2 + HEIGHT/2;
+	        int drawStart = -(lineHeight >> 1) + (HEIGHT >> 1);
 	        if (drawStart < 0) {
 	        	  drawStart = 0;
 	        }
-	        int drawEnd = lineHeight/2 + HEIGHT/2;
+	        int drawEnd = (lineHeight >> 1) + (HEIGHT >> 1);
 	        if (drawEnd >= HEIGHT) {
 	        	  drawEnd = HEIGHT -1;
 	        }
@@ -184,7 +190,7 @@ public class Raycaster implements RaycastRenderer {
 	        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
 	        
 	        for (int y = drawStart; y < drawEnd; y++) {
-	        	int texY = (((y*2 - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight)/2;
+	        	int texY = ((((y << 1) - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight) >> 1;
 	        	int color;
 	        	if (!side) {
 	        		color = element.frontTexture().pixels[(int) (texX + (texY * element.frontTexture().SIZE))];
@@ -193,6 +199,8 @@ public class Raycaster implements RaycastRenderer {
 	        	}
 	        	img.setRGB(x, y, color);
 	        }
+	        
+	        zbuf[x] = perpWallDist;
 	        
 	        //Floor casting
 	        double floorXWall;
@@ -239,8 +247,64 @@ public class Raycaster implements RaycastRenderer {
 	        }
 	        
 	    }
+	    
+	    //Draw sprites
+	    for (int i = 0; i < sprites.length; i++) {
+	    	sprites[i].order = i;
+	    	sprites[i].distance = ((pos.x - sprites[i].x) * (pos.x - sprites[i].x) + (pos.y - sprites[i].y) * (pos.y - sprites[i].y));
+	    }
+	    Arrays.sort(sprites);
+	    
+	    for (int i = 0; i < sprites.length; i++) {
+	    	double spriteX = sprites[sprites[i].order].x - pos.x;
+	    	double spriteY = sprites[sprites[i].order].y - pos.y;
+	    	
+	    	double invDet = 1.0 / (plane.x * dir.y - dir.x * plane.y);
+	    	double transformX = invDet * (dir.y * spriteX - dir.x * spriteY);
+	    	double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY);
+	    	
+	    	int spriteScreenX = (int)((WIDTH >> 1) * (1 + transformX / transformY));
+	    	
+	    	int spriteHeight = Math.abs((int)(HEIGHT / transformY));
+	    	int drawStartY = -(spriteHeight >> 1) + (HEIGHT >> 1);
+	    	if (drawStartY < 0) {
+	    		drawStartY = 0;
+	    	}
+	    	int drawEndY = (spriteHeight >> 1) + (HEIGHT >> 1);
+	    	if (drawEndY >= HEIGHT) {
+	    		drawEndY = HEIGHT - 1;
+	    	}
+	    	
+	    	int spriteWidth = Math.abs((int)(HEIGHT / transformY));
+	    	int drawStartX = -(spriteWidth >> 1) + spriteScreenX;
+	    	if (drawStartX < 0) {
+	    		drawStartX = 0;
+	    	}
+	    	int drawEndX = (spriteWidth >> 1) + spriteScreenX;
+	    	if (drawEndX >= WIDTH) {
+	    		drawEndX = WIDTH - 1;
+	    	}
+	    	
+	    	
+	    	int texWidth = sprites[i].texture.SIZE;
+	    	int texHeight = texWidth;
+	    	for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
+	    		int texX = (int)(((stripe - ((-spriteWidth >> 1) + spriteScreenX)) << 8) * texWidth / spriteWidth) >> 8;
+	    		if (transformY > 0 && stripe > 0 && stripe < WIDTH && transformY < zbuf[stripe]) {
+	    			for (int y = drawStartY; y < drawEndY; y++) {
+	    				int d = (y << 8) - (HEIGHT << 7)  + (spriteHeight << 7);
+	    				int texY = ((d * texHeight)/spriteHeight) >> 8;
+	    				int	color = sprites[sprites[i].order].pixels[texX + texWidth * texY];
+	    				if ((color & 0x00FFFFFF)!=0) {
+	    					img.setRGB(stripe, y, color);
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	    
 	    //g2.drawImage(floor, 0, 0, null);
-	    g2.drawImage(img,  0,  0, null);
+	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 
 	@Override

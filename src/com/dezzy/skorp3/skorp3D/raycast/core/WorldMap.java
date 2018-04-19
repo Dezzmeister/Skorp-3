@@ -1,14 +1,26 @@
 package com.dezzy.skorp3.skorp3D.raycast.core;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import com.dezzy.skorp3.game.Pair;
+import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
+import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 public class WorldMap {
 	private Element[][] map;
 	private Texture floorTexture = new Texture("assets/raycast/textures/hardwood.png",512).darken();
 	private Texture ceilingTexture = new Texture("assets/raycast/textures/floortiles.png",512);
+	public List<Sprite> spriteMap = new ArrayList<Sprite>();
+	
+	private int startX = 1;
+	private int startY = 1;
 	
 	public WorldMap(Element[][] worldMap) {
 		map = worldMap;
+		
 	}
 	
 	public WorldMap(int[][] idMap, ElementTable governingTable) {
@@ -31,6 +43,28 @@ public class WorldMap {
 	
 	public Element get(int x, int y) {
 		return map[x][y];
+	}
+	
+	public int spriteCount() {
+		return spriteMap.size();
+	}
+	
+	public void addSprite(Sprite _sprite) {
+		spriteMap.add(_sprite);
+	}
+	
+	public void actOn(Sprite target, Consumer<Sprite> actor) {
+		for (Sprite s : spriteMap) {
+			if (s == target) {
+				actor.accept(s);
+			}
+		}
+	}
+	
+	public Sprite[] getSprites() {
+		Sprite[] result = new Sprite[spriteMap.size()];
+		spriteMap.toArray(result);
+		return result;
 	}
 	
 	/**
@@ -145,5 +179,27 @@ public class WorldMap {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Set's the player's intended starting position in this WorldMap.
+	 * 
+	 * @param _x starting x
+	 * @param _y starting y
+	 */
+	public void startAt(int _x, int _y) {
+		startX = _x;
+		startY = _y;
+	}
+	
+	/**
+	 * Changes a Camera's position vector to match the intended starting
+	 * position of this WorldMap.
+	 * 
+	 * @param _camera camera to be changed
+	 */
+	public void applyStartPos(Camera _camera) {
+		_camera.pos.x = startX;
+		_camera.pos.y = startY;
 	}
 }

@@ -21,6 +21,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.ElementTable;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
+import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
@@ -33,16 +34,28 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
  */
 @SuppressWarnings("unused")
 public final class Global {
+	/**
+	 * X resolution of the rendered image
+	 */
 	public static final int WIDTH = 500;
+	/**
+	 * Y resolution of the rendered image
+	 */
 	public static final int HEIGHT = 500;
+	/**
+	 * X resolution of the displayed image
+	 */
 	public static final int SCREENWIDTH = 1000;
+	/**
+	 * Y resolution of the displayed image
+	 */
 	public static final int SCREENHEIGHT = 1000;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
 	
 	public static final JFrame frame = new JFrame();
 	public static final Container pane = frame.getContentPane();
-	public static final Mouse mouseData = new MouseRobot(WIDTH,HEIGHT,pane);
+	public static final Mouse mouseData = new MouseRobot(SCREENWIDTH,SCREENHEIGHT,pane);
 	public static final boolean[] keys = new boolean[256];
 	
 	//public static final Keyboard keyboard = new Keyboard();
@@ -74,7 +87,7 @@ public final class Global {
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector(23,12))
+								      .setPos(new Vector(5,5))
 								      .setDir(new Vector(-0.75,0))
 								      .setPlane(new Vector(0,0.5));
 		
@@ -92,7 +105,7 @@ public final class Global {
 			table.add(new Element(3,"red",Color.RED,true).applyTexture(wood));
 			table.add(new Element(4,"magenta",Color.MAGENTA,true).applyTexture(metal));
 			table.add(new Element(5,"gold",Color.YELLOW,false).applyTexture(tiles));
-			
+			/**
 			int[][] map = {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 					{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,0,1},
@@ -146,8 +159,28 @@ public final class Global {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 
 			};
+			**/
+			int[][] testroom = {
+					{1,1,1,1,1,1,1,1,1,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,1,1,1,1,0,0,0,0,1},
+					{1,0,0,0,0,0,0,0,0,1},
+					{1,1,1,1,1,1,1,1,1,1}
+			};
 			
-			mainMap = new WorldMap(map,table);
+			Sprite test = new Sprite("assets/raycast/sprites/test.png",16).at(5, 5);
+			Sprite render2 = new Sprite("assets/raycast/sprites/render2.png",256).at(7.5, 7.5);
+			
+			mainMap = new WorldMap(testroom,table);
+			mainMap.startAt(2, 2);
+			mainMap.applyStartPos(camera);
+			mainMap.addSprite(test);
+			mainMap.addSprite(render2);
 		}
 	}
 }
