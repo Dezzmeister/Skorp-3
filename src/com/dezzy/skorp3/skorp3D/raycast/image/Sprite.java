@@ -1,5 +1,6 @@
 package com.dezzy.skorp3.skorp3D.raycast.image;
 
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 public final class Sprite implements Comparable<Sprite>, Cloneable {
@@ -11,6 +12,7 @@ public final class Sprite implements Comparable<Sprite>, Cloneable {
 	public double y;
 	
 	public Texture texture;
+	public Vector dir;
 	
 	public int[] pixels;
 	
@@ -26,6 +28,11 @@ public final class Sprite implements Comparable<Sprite>, Cloneable {
 	public Sprite at(double _x, double _y) {
 		x = _x;
 		y = _y;
+		return this;
+	}
+	
+	public Sprite lookingAt(Vector _dir) {
+		dir = _dir;
 		return this;
 	}
 
@@ -45,6 +52,7 @@ public final class Sprite implements Comparable<Sprite>, Cloneable {
 		s.y = y;
 		s.pixels = pixels;
 		s.texture = texture;
+		s.dir = dir;
 		return s;
 	}
 }

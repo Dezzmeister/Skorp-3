@@ -176,6 +176,7 @@ public final class Global {
 			Sprite test = new Sprite("assets/raycast/sprites/test.png",16).at(5, 5);
 			Sprite render2 = new Sprite("assets/raycast/sprites/render2.png",256).at(7.5, 7.5);
 			Sprite angrydude = new Sprite("assets/raycast/sprites/angrydude.png",64).at(8.5, 1.5);
+			Sprite weirdThing = new Sprite("assets/raycast/sprites/weirdthing.png",64).at(3, 2);
 			
 			mainMap = new WorldMap(testroom,table);
 			mainMap.startAt(2, 2);
@@ -183,6 +184,7 @@ public final class Global {
 			mainMap.addSprite(test);
 			mainMap.addSprite(render2);
 			mainMap.addSprite(angrydude);
+			mainMap.addSprite(weirdThing);
 		}
 	}
 }
