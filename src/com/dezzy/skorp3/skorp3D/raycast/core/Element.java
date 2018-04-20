@@ -3,6 +3,7 @@ package com.dezzy.skorp3.skorp3D.raycast.core;
 import java.awt.Color;
 
 import com.dezzy.skorp3.annotations.urgency.Urgency;
+import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 /**
@@ -34,6 +35,10 @@ public class Element {
 	private Color color;
 	
 	private boolean changeable = false;
+	
+	private boolean thin = false;
+	
+	public Orientation orientation = Orientation.NOT_THIN;
 	
 	/**
 	 * Both textures must be the same size.
@@ -136,5 +141,21 @@ public class Element {
 	
 	public void color(Color _color) {
 		color = _color;
+	}
+	
+	public Element makeThin(Orientation facing) {
+		thin = true;
+		if (facing == Orientation.NOT_THIN) {
+			System.out.println("Cannot make an Element thin and pass Orientation.NOT_THIN! Defaulting to Orientation.XPLANE.");
+			Logger.warn("Cannot make an Element thin and pass in Orientation.NOT_THIN! Defaulting to Orientation.XPLANE.");
+			orientation = Orientation.XPLANE;
+		} else {
+			orientation = facing;
+		}
+		return this;
+	}
+	
+	public boolean isThin() {
+		return thin;
 	}
 }

@@ -141,7 +141,7 @@ public class Raycaster implements RaycastRenderer {
 	        	stepY = 1;
 	        	sideDistY = (mapY + 1.0 - rposy) * deltaDistY;
 	        }
-	          
+	        
 	        //DDA
 	        while (!hit) {
 	        	if (sideDistX < sideDistY) {
@@ -286,8 +286,8 @@ public class Raycaster implements RaycastRenderer {
 	    	}
 	    	
 	    	
-	    	int texWidth = sprites[i].texture.SIZE;
-	    	int texHeight = texWidth;
+	    	int texWidth = sprites[i].width();
+	    	int texHeight = sprites[i].height();
 	    	for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
 	    		int texX = (int)(((stripe - ((-spriteWidth >> 1) + spriteScreenX)) << 8) * texWidth / spriteWidth) >> 8;
 	    		if (transformY > 0 && stripe > 0 && stripe < WIDTH && transformY < zbuf[stripe]) {
@@ -295,7 +295,7 @@ public class Raycaster implements RaycastRenderer {
 	    				int d = (y << 8) - (HEIGHT << 7)  + (spriteHeight << 7);
 	    				int texY = ((d * texHeight)/spriteHeight) >> 8;
 	    				int	color = sprites[sprites[i].order].pixels[texX + texWidth * texY];
-	    				if ((color & 0x00FFFFFF)!=0) {
+	    				if ((color & ~sprites[i].alpha) != 0) {
 	    					img.setRGB(stripe, y, color);
 	    				}
 	    			}
