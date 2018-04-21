@@ -8,7 +8,6 @@ public class Vector {
 	public Vector(double _x, double _y) {
 		x = _x;
 		y = _y;
-		updateLength();
 	}
 	
 	public Vector add(Vector v) {
@@ -21,6 +20,10 @@ public class Vector {
 	
 	public Vector subtract(Vector v) {
 		return new Vector(x - v.x, y - v.y);
+	}
+	
+	public static double distance(Vector _v0, Vector _v1) {
+		return Math.sqrt(((_v0.x - _v1.x) * (_v0.x - _v1.x)) + ((_v0.y - _v1.y) * (_v0.y - _v1.y)));
 	}
 	
 	@Override

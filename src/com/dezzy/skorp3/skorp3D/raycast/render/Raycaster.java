@@ -11,6 +11,7 @@ import javax.swing.KeyStroke;
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
+import com.dezzy.skorp3.skorp3D.raycast.core.RaycastContainer;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 
@@ -157,12 +158,6 @@ public class Raycaster implements RaycastRenderer {
 	        		side = true;
 	        	}
 	            element = container.map.get(mapX, mapY);
-	            if (element.isThin()) {
-	        		if (rayHitSegment(new Line(pos.x,pos.y,pos.x+sideDistX+deltaDistX,pos.y+sideDistY+deltaDistY),element.segment) != null) {
-	        			System.out.println("joj");
-	        			hit = true;
-	        		}
-	        	}
 	        	if (element != Element.SPACE) {
 	        		hit = true;
 	        	}
@@ -351,7 +346,7 @@ public class Raycaster implements RaycastRenderer {
 	}
 
 	@Override
-	public RaycastGraphicsContainer getGraphicsContainer() {
+	public RaycastContainer getGraphicsContainer() {
 		return container;
 	}
 	

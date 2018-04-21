@@ -30,3 +30,5 @@ com.dezzy.skorp3.skorp3D.raycast.render
 com.dezzy.skorp3.skorp3D.raycast.UI
 com.dezzy.skorp3.skorp3D.raycast.actions
 com.dezzy.skorp3.skorp3D.raycast.render.gpu
+com.dezzy.skorp3.skorp3D.raycast2
+com.dezzy.skorp3.skorp3D.raycast2.core

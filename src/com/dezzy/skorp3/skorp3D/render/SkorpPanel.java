@@ -92,6 +92,11 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 		
 		return panel;
 	}
+	
+	public static SkorpPanel createStandardRaycast2(Container pane, int width, int height) {
+		
+		return null;
+	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
