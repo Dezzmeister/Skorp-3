@@ -5,7 +5,7 @@ public class RaycastMap {
 	public final int WIDTH;
 	public final int HEIGHT;
 	
-	public RaycastMap(Wall[] _walls, int _width, int _height) {
+	public RaycastMap(int _width, int _height, Wall ... _walls) {
 		walls = _walls;
 		WIDTH = _width;
 		HEIGHT = _height;

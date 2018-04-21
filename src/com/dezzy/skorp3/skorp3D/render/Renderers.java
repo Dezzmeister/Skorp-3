@@ -4,6 +4,8 @@ import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
+import com.dezzy.skorp3.skorp3D.raycast2.Raycaster2;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 
 public class Renderers {
 	
@@ -14,6 +16,11 @@ public class Renderers {
 	
 	public static final RaycastRenderer createAndStartRaycaster(RaycastGraphicsContainer container, int width, int height) {
 		RaycastRenderer renderer = new Raycaster(container, width, height);
+		return renderer;
+	}
+	
+	public static final RaycastRenderer createAndStartRaycaster2(RaycastContainer2 container, int width, int height) {
+		RaycastRenderer renderer = new Raycaster2(container, width, height);
 		return renderer;
 	}
 }

@@ -16,6 +16,13 @@ public class Wall {
 		updateLength();
 	}
 	
+	public Wall(double x1, double y1, double x2, double y2, Color _color) {
+		v0 = new Vector(x1,y1);
+		v1 = new Vector(x2,y2);
+		color = _color;
+		updateLength();
+	}
+	
 	public Wall(Vector _v0, Vector _v1) {
 		v0 = _v0;
 		v1 = _v1;

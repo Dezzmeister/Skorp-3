@@ -89,6 +89,7 @@ public class Raycaster2 implements RaycastRenderer {
 	    		Vector hit = rayHitSegment(ray,l);
 	    		if (hit != null) {
 	    			double distance = Vector.distance(pos, hit);
+	    			double angle = Math.atan2(pos.y-hit.y, pos.x-hit.x);
 	    			if (distance < zbuf[x]) {
 	    				zbuf[x] = distance;
 	    				int lineHeight = (int) (HEIGHT/distance);
@@ -101,6 +102,7 @@ public class Raycaster2 implements RaycastRenderer {
 	    		}
 	    	}
 	    }
+	    resetZBuffer();
 	}
 	
 	public static Vector rayHitSegment(Wall ray, Wall seg) {

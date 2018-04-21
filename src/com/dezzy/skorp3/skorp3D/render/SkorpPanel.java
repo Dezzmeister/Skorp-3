@@ -14,6 +14,7 @@ import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener, KeyListener {
 
@@ -84,6 +85,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 				renderer = Renderers.createAndStartRaycaster(container, width, height);
 			}
 			
+			@Override
 			public void paintComponent(Graphics g) {
 				container.setGraphics(g);
 				renderer.render();
@@ -94,8 +96,31 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 	}
 	
 	public static SkorpPanel createStandardRaycast2(Container pane, int width, int height) {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane, new boolean[256]) {
+			private static final long serialVersionUID = 3165379405927119577L;
+			private RaycastRenderer renderer;
+			private RaycastContainer2 container = new RaycastContainer2();
+			
+			{
+				container.setMouseData(Global.mouseData)
+						 .setPanel(this)
+						 .setWorldMap(Global.Raycast2.map)
+						 .setCamera(Global.Raycast.camera)
+						 .setContainer(pane)
+						 .setKeys(keys);
+				
+				renderer = Renderers.createAndStartRaycaster2(container, width, height);
+			}
+			
+			@Override
+			public void paintComponent(Graphics g) {
+				container.setGraphics(g);
+				renderer.render();
+			}
+			
+		};
 		
-		return null;
+		return panel;
 	}
 
 	@Override

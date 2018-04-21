@@ -26,6 +26,8 @@ import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
 /**
  * Global should be used to hold global variables/objects that will be used throughout Skorp.
@@ -86,10 +88,18 @@ public final class Global {
 		public static final VBOList VBOLIST = new VBOList();
 	}
 	
+	public static class Raycast2 {
+		public static RaycastMap map = new RaycastMap(10,10,
+									   		new Wall(0,0,10,0,Color.ORANGE));
+									   		//new Wall(0,0,0,10,Color.GREEN),
+									   		//new Wall(10,0,10,10,Color.RED),
+									   		//new Wall(0,10,10,10,Color.BLUE));
+	}
+	
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector(5,5))
+								      .setPos(new Vector(1,1))
 								      .setDir(new Vector(-0.75,0))
 								      .setPlane(new Vector(0,0.5));
 		
