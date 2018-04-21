@@ -103,6 +103,6 @@ public class Camera {
 	}
 	
 	public void moveLeft(WorldMap map, double factor) {
-		//if (map.get((int)pos.x, y).id() == 0)
+		
 	}
 }

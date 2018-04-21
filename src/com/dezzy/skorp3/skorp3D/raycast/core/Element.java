@@ -2,7 +2,7 @@ package com.dezzy.skorp3.skorp3D.raycast.core;
 
 import java.awt.Color;
 
-import com.dezzy.skorp3.annotations.urgency.Urgency;
+import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
@@ -16,9 +16,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
  * @author Dezzmeister
  *
  */
-//TODO: Add textures
-@Urgency(4)
-public class Element {
+public class Element implements Cloneable {
 	/**
 	 * Represents a null or error element. Visible in game as a pink box.
 	 */
@@ -39,6 +37,8 @@ public class Element {
 	private boolean thin = false;
 	
 	public Orientation orientation = Orientation.NOT_THIN;
+	
+	public Line segment;
 	
 	/**
 	 * Both textures must be the same size.
@@ -143,7 +143,7 @@ public class Element {
 		color = _color;
 	}
 	
-	public Element makeThin(Orientation facing) {
+	public Element makeThin(Orientation facing, Line _segment) {
 		thin = true;
 		if (facing == Orientation.NOT_THIN) {
 			System.out.println("Cannot make an Element thin and pass Orientation.NOT_THIN! Defaulting to Orientation.XPLANE.");
@@ -152,10 +152,21 @@ public class Element {
 		} else {
 			orientation = facing;
 		}
+		segment = _segment;
 		return this;
 	}
 	
 	public boolean isThin() {
 		return thin;
+	}
+	
+	@Override
+	public Element clone() {
+		Element element = new Element(id, name, color, changeable);
+		element.setFrontTexture(frontTexture);
+		element.setSideTexture(sideTexture);
+		element.makeThin(orientation,segment);
+		
+		return element;
 	}
 }

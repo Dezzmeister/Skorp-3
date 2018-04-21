@@ -9,6 +9,7 @@ import com.dezzy.skorp3.field.Entity;
 import com.dezzy.skorp3.field.Geometric;
 import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.field.Point;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 
 /**
  * Private boolean methods here check for collisions between different shapes. If you want to add a new shape and write methods for collision,

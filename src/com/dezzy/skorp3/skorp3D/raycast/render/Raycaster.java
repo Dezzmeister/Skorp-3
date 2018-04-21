@@ -9,6 +9,7 @@ import java.util.Arrays;
 import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.Global;
+import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
@@ -37,7 +38,7 @@ public class Raycaster implements RaycastRenderer {
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");		
+		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
 	public void makeFloor() {
@@ -96,6 +97,9 @@ public class Raycaster implements RaycastRenderer {
 	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
 	    	container.camera.moveBackward(container.map,sprintfactor);
 	    }
+	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
+	    	container.camera.moveLeft(container.map,sprintfactor);
+	    }
 	    
 	    Vector pos = container.camera.pos;
 	    Vector dir = container.camera.dir;
@@ -141,7 +145,6 @@ public class Raycaster implements RaycastRenderer {
 	        	stepY = 1;
 	        	sideDistY = (mapY + 1.0 - rposy) * deltaDistY;
 	        }
-	        
 	        //DDA
 	        while (!hit) {
 	        	if (sideDistX < sideDistY) {
@@ -154,10 +157,17 @@ public class Raycaster implements RaycastRenderer {
 	        		side = true;
 	        	}
 	            element = container.map.get(mapX, mapY);
+	            if (element.isThin()) {
+	        		if (rayHitSegment(new Line(pos.x,pos.y,pos.x+sideDistX+deltaDistX,pos.y+sideDistY+deltaDistY),element.segment) != null) {
+	        			System.out.println("joj");
+	        			hit = true;
+	        		}
+	        	}
 	        	if (element != Element.SPACE) {
 	        		hit = true;
 	        	}
 	        }
+	        //System.out.println(mapX + " " + rdirx);
 	          
 	        if (!side) {
 	        	perpWallDist = (mapX - rposx + (1 - stepX)/2)/rdirx;
@@ -305,6 +315,34 @@ public class Raycaster implements RaycastRenderer {
 	    
 	    //g2.drawImage(floor, 0, 0, null);
 	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
+	}
+	
+	public static Vector rayHitSegment(Line ray, Line seg) {
+		double m1 = ray.slope();
+		double b1 = ray.yIntercept();
+		
+		double m2 = seg.slope();
+		double b2 = seg.yIntercept();
+		
+		if (m1==m2) {
+			return null;
+		}
+		
+		double bDiff = b1-b2;
+		double mDiff = m2-m1;
+		
+		double sharedX = (bDiff/mDiff);
+		double sharedY = (m1*sharedX)+b1;
+		
+		Vector p = new Vector(sharedX,sharedY);
+		double minX = Math.min(seg.point.x, seg.endpoint.x);
+		double maxX = Math.max(seg.point.x, seg.endpoint.x);
+		double minY = Math.min(seg.point.y, seg.endpoint.y);
+		double maxY = Math.max(seg.point.y, seg.endpoint.y);
+		if (p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) {
+			return p;
+		}
+		return null;
 	}
 
 	@Override

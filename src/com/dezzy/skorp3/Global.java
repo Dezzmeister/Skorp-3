@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.UI.MouseRobot;
 import com.dezzy.skorp3.annotations.Processors;
+import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.game3D.VBO3DList;
@@ -19,6 +20,7 @@ import com.dezzy.skorp3.skorp3D.data.VBO;
 import com.dezzy.skorp3.skorp3D.data.VBOList;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.ElementTable;
+import com.dezzy.skorp3.skorp3D.raycast.core.Orientation;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
@@ -105,6 +107,7 @@ public final class Global {
 			table.add(new Element(3,"red",Color.RED,true).applyTexture(wood));
 			table.add(new Element(4,"magenta",Color.MAGENTA,true).applyTexture(metal));
 			table.add(new Element(5,"gold",Color.YELLOW,false).applyTexture(tiles));
+			table.add(new Element(6,"halftest",Color.GREEN,false).applyTexture(nicebricks).makeThin(Orientation.XPLANE, new Line(0.5,0,0.5,1)));
 			/**
 			int[][] map = {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -168,7 +171,7 @@ public final class Global {
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
-					{1,1,1,1,1,0,0,0,0,1},
+					{1,1,1,1,1,6,1,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,1,1,1,1,1,1,1,1,1}
 			};
@@ -179,6 +182,7 @@ public final class Global {
 			Sprite weirdThing = new Sprite("assets/raycast/sprites/weirdthing.png",64).at(3, 2);
 			
 			mainMap = new WorldMap(testroom,table);
+			mainMap.setBorder(new Element(3,"red",Color.RED,true).applyTexture(wood));
 			mainMap.startAt(2, 2);
 			mainMap.applyStartPos(camera);
 			mainMap.addSprite(test);

@@ -20,7 +20,6 @@ public class WorldMap {
 	
 	public WorldMap(Element[][] worldMap) {
 		map = worldMap;
-		
 	}
 	
 	public WorldMap(int[][] idMap, ElementTable governingTable) {
@@ -29,6 +28,13 @@ public class WorldMap {
 		for (int row = 0; row < idMap.length; row++) {
 			for (int col = 0; col < idMap[0].length; col++) {
 				map[row][col] = governingTable.getByID(idMap[row][col]);
+				if (map[row][col].isThin()) {
+					map[row][col] = map[row][col].clone();
+					map[row][col].segment.point.x += row;
+					map[row][col].segment.endpoint.x += row;
+					map[row][col].segment.point.y += col;
+					map[row][col].segment.endpoint.y += col;
+				}
 			}
 		}
 	}
@@ -72,15 +78,14 @@ public class WorldMap {
 	 * @param element Element to set border to
 	 */
 	public void setBorder(Element element) {
-		Element e = new Element(element.id(),element.name(),element.color(),false);
 		for (int col = 0; col < map[0].length; col++) {
-			map[0][col] = e;
-			map[map.length-1][col] = e;
+			map[0][col] = element;
+			map[map.length-1][col] = element;
 		}
 		
 		for (int row = 0; row < map.length; row++) {
-			map[row][0] = e;
-			map[row][map[0].length-1] = e;
+			map[row][0] = element;
+			map[row][map[0].length-1] = element;
 		}
 	}
 	
@@ -133,11 +138,12 @@ public class WorldMap {
 	
 	/**
 	 * Returns a 4D array containing every element's front and side texture pixels. The first coordinate is the x value,
-	 * the second coordinate is the y value, the third coordinate is either 0 or 1, (corresponding to either front or side array), and
+	 * the second coordinate is the y value, the third coordinate is either 0 or 1, (corresponding to either front or side texture), and
 	 * the array at that index is the texture's pixels.
 	 * <p>
 	 * Example:
 	 * <code>int i = getTextureArrays()[20][44][1][450];</code>
+	 * <p>
 	 * <code>[20][44]</code> is the Element at x position 20, y position 44. <code>[1]</code> specifies the side texture,
 	 * and <code>[450]</code> specifies the 450th pixel in this texture.
 	 * <p>

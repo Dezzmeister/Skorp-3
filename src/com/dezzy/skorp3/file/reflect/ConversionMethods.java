@@ -6,27 +6,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A class containing methods to convert a String to
- * <p>
- * 	-Integer
- * <p>
- * 	-Double
- * <p>
- * 	-Character
- * <p>
- * 	-Float
- * <p>
- * 	-Short
- * <p>
- * 	-Long
- * <p>
- * 	-Boolean
- * <p>
- * 	-Byte
- * <p>
- *	-String (for easier reflection)
- *<p>
- * ConversionMethods knows its own methods, and it should be used with reflection.
+ * A class containing methods to convert a <code>String</code> to
+ * <ul>
+ * <li>
+ * 	<code>Integer</code>
+ * </li>
+ * <li>
+ * 	<code>Double</code>
+ * </li>
+ * <li>
+ * 	<code>Character</code>
+ * </li>
+ * <li>
+ * 	<code>Float</code>
+ * </li>
+ * <li>
+ * 	<code>Short</code>
+ * </li>
+ * <li>
+ * 	<code>Long</code>
+ * </li>
+ * <li>
+ * 	<code>Boolean</code>
+ * </li>
+ * <li>
+ * 	<code>Byte</code>
+ * </li>
+ * <li>
+ *	<code>String</code> (for easier reflection)
+ *</li>
+ *</ul>
+ * <code>ConversionMethods</code> knows its own methods, and it should be used with reflection.
  * 
  * @author Dezzmeister
  * @see com.dezzy.skorp3.file.Config
