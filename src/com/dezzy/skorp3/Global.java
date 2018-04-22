@@ -61,6 +61,11 @@ public final class Global {
 	public static final Container pane = frame.getContentPane();
 	public static final Mouse mouseData = new MouseRobot(SCREENWIDTH,SCREENHEIGHT,pane);
 	public static final boolean[] keys = new boolean[256];
+	public static final Texture nicebricks = new Texture("assets/raycast/textures/nicebricks.png",256);
+	public static final Texture darkbricks = new Texture("assets/raycast/textures/darkbricks.png",512);
+	public static final Texture tiles = new Texture("assets/raycast/textures/tiles.png",512);
+	public static final Texture metal = new Texture("assets/raycast/textures/metal.png",512);
+	public static final Texture wood = new Texture("assets/raycast/textures/wood.png",512);
 	
 	//public static final Keyboard keyboard = new Keyboard();
 	
@@ -94,25 +99,20 @@ public final class Global {
 									   		new Wall(0,0,0,10,Color.GREEN),
 									   		new Wall(10,0,10,10,Color.RED),
 									   		new Wall(0,10,10,10,Color.BLUE),
-									   		new Wall(0,1,1,1,Color.RED),
-									   		new Wall(1,1,4,4,Color.RED));
+									   		new Wall(0,1,1,1,Color.RED).setTexture(nicebricks),
+									   		new Wall(1,1,4,4,Color.RED).setTexture(nicebricks),
+									   		new Wall(4,4,4,7,Color.GREEN).setTexture(nicebricks));
 	}
 	
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector(7,4))
+								      .setPos(new Vector(1,1))
 								      .setDir(new Vector(-0.75,0))
 								      .setPlane(new Vector(0,0.5));
 		
 		static {
 			ElementTable table = new ElementTable();
-			
-			Texture nicebricks = new Texture("assets/raycast/textures/nicebricks.png",256);
-			Texture darkbricks = new Texture("assets/raycast/textures/darkbricks.png",512);
-			Texture tiles = new Texture("assets/raycast/textures/tiles.png",512);
-			Texture metal = new Texture("assets/raycast/textures/metal.png",512);
-			Texture wood = new Texture("assets/raycast/textures/wood.png",512);
 			
 			table.add(new Element(1,"border",Color.ORANGE,false).applyTexture(darkbricks));
 			table.add(new Element(2,"green",Color.GREEN,true).applyTexture(nicebricks));
