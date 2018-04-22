@@ -49,11 +49,11 @@ public final class Global {
 	/**
 	 * X resolution of the displayed image
 	 */
-	public static final int SCREENWIDTH = 1000;
+	public static final int SCREENWIDTH = 500;
 	/**
 	 * Y resolution of the displayed image
 	 */
-	public static final int SCREENHEIGHT = 1000;
+	public static final int SCREENHEIGHT = 500;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
 	
@@ -90,10 +90,10 @@ public final class Global {
 	
 	public static class Raycast2 {
 		public static RaycastMap map = new RaycastMap(10,10,
-									   		new Wall(0,0,10,0,Color.ORANGE));
-									   		//new Wall(0,0,0,10,Color.GREEN),
-									   		//new Wall(10,0,10,10,Color.RED),
-									   		//new Wall(0,10,10,10,Color.BLUE));
+									   		new Wall(0,0,10,0,Color.ORANGE),
+									   		new Wall(0,0,0,10,Color.GREEN),
+									   		new Wall(10,0,10,10,Color.RED),
+									   		new Wall(0,10,10,10,Color.BLUE));
 	}
 	
 	public static class Raycast {

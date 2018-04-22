@@ -61,17 +61,19 @@ public class Raycaster2 implements RaycastRenderer {
 	    if (!container.keys['W'] && !container.keys[KeyEvent.VK_UP] && !container.keys['S'] && !container.keys[KeyEvent.VK_DOWN]) {
 	    	sprintfactor = 0;
 	    }
-	    /**
+	    
 	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
-	    	container.camera.moveForward(container.map,sprintfactor);
+	    	container.camera.moveForward(sprintfactor);
 	    }
+	    
 	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
-	    	container.camera.moveBackward(container.map,sprintfactor);
+	    	container.camera.moveBackward(sprintfactor);
 	    }
+	    /*
 	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
 	    	container.camera.moveLeft(container.map,sprintfactor);
 	    }
-	    **/
+	    */
 	    Vector pos = container.camera.pos;
 	    Vector dir = container.camera.dir;
 	    Vector plane = container.camera.plane;
@@ -80,16 +82,15 @@ public class Raycaster2 implements RaycastRenderer {
 	    	//Map the x value to a range of -1 to 1
 	    	double norm = (2 * (x/(double)WIDTH)) - 1;
 	    	
-	    	
 	    	Vector rayendp = new Vector(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	Wall ray = new Wall(pos,rayendp);
 	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
 	    	for (Wall l : container.map.walls) {
-	    		Vector hit = rayHitSegment(ray,l);
+	    		Vector hit = rayHitSegment(pos,rayendp,l);
 	    		if (hit != null) {
 	    			double distance = Vector.distance(pos, hit);
-	    			double angle = Math.atan2(pos.y-hit.y, pos.x-hit.x);
+	    			//double angle = Wall.angleBetweenLines(wall1, wall2)
 	    			if (distance < zbuf[x]) {
 	    				zbuf[x] = distance;
 	    				int lineHeight = (int) (HEIGHT/distance);
@@ -105,31 +106,22 @@ public class Raycaster2 implements RaycastRenderer {
 	    resetZBuffer();
 	}
 	
-	public static Vector rayHitSegment(Wall ray, Wall seg) {
-		double m1 = ray.slope();
-		double b1 = ray.yIntercept();
+	public static Vector rayHitSegment(Vector rayStart, Vector rayDirection, Wall segment) {
+		Vector r0 = rayStart;
+		Vector r1 = rayDirection;
+		Vector a = segment.v0;
+		Vector b = segment.v1;
 		
-		double m2 = seg.slope();
-		double b2 = seg.yIntercept();
-		
-		if (m1==m2) {
-			return null;
-		}
-		
-		double bDiff = b1-b2;
-		double mDiff = m2-m1;
-		
-		double sharedX = (bDiff/mDiff);
-		double sharedY = (m1*sharedX)+b1;
-		
-		Vector p = new Vector(sharedX,sharedY);
-		double minX = Math.min(seg.v0.x, seg.v1.x);
-		double maxX = Math.max(seg.v0.x, seg.v1.x);
-		double minY = Math.min(seg.v0.y, seg.v1.y);
-		double maxY = Math.max(seg.v0.y, seg.v1.y);
-		//Ensure that the point found lies on the second line
-		if (p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) {
-			return p;
+		Vector s1,s2;
+		s1 = new Vector(r1.x-r0.x,r1.y-r0.y);
+		s2 = new Vector(b.x-a.x,b.y-a.y);
+		  
+		double s,t;
+		s = (-s1.y * (r0.x - a.x) + s1.x * (r0.y - a.y)) / (-s2.x * s1.y + s1.x * s2.y);
+		t = (s2.x * (r0.y - a.y) - s2.y * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
+		  
+		if (s >= 0 && s <= 1 && t >= 0) {
+		  return new Vector(r0.x + (t * s1.x), r0.y + (t * s1.y));
 		}
 		return null;
 	}

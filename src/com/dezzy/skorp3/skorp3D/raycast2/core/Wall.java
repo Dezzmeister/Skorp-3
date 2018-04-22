@@ -44,4 +44,11 @@ public class Wall {
 		
 		return y - (slope()*x);
 	}
+	
+	public static double angleBetweenLines(Wall wall1, Wall wall2) {
+		double angle1 = Math.atan2(wall1.v0.y - wall1.v1.y, wall1.v0.x - wall1.v1.x);
+		double angle2 = Math.atan2(wall2.v0.y - wall2.v1.y, wall2.v0.x - wall2.v1.x);
+		  
+		return angle1-angle2;
+	}
 }

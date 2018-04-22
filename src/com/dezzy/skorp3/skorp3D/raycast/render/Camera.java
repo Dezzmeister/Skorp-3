@@ -102,6 +102,20 @@ public class Camera {
 	    }
 	}
 	
+	public void moveForward(double factor) {
+		double speed = factor * moveSpeed;
+		
+		pos.x+=dir.x*speed;
+		pos.y+=dir.y*speed;
+	}
+	
+	public void moveBackward(double factor) {
+		double speed = factor * moveSpeed;
+		
+		pos.x-=dir.x*speed;
+		pos.y-=dir.y*speed;
+	}
+	
 	public void moveLeft(WorldMap map, double factor) {
 		
 	}

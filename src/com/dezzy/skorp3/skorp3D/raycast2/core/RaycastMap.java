@@ -1,6 +1,10 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
+import java.awt.Color;
+
 public class RaycastMap {
+	public static final Wall AXIS = new Wall(0,0,1,1,Color.BLACK);
+	private static final int SHADERANGE = 80;
 	public Wall[] walls;
 	public final int WIDTH;
 	public final int HEIGHT;
@@ -9,9 +13,28 @@ public class RaycastMap {
 		walls = _walls;
 		WIDTH = _width;
 		HEIGHT = _height;
+		preShade();
 	}
 	
 	public int wallCount() {
 		return walls.length;
+	}
+	
+	/**
+	 * Darkens the color of each wall based on its angle from the x axis.
+	 */
+	public void preShade() {
+		for (int i = 0; i < walls.length; i++) {
+			double angle = Math.abs(Math.toDegrees(Wall.angleBetweenLines(walls[i], AXIS)));
+			angle %= 180;
+			double norm = angle/180;
+			int shadeValue = (int)(norm*SHADERANGE);
+			Color c = walls[i].color;
+			int red = c.getRed()-shadeValue;
+			int green = c.getGreen()-shadeValue;
+			int blue = c.getBlue()-shadeValue;
+			Color shaded = new Color(red >= 0 ? red : 0,green >= 0 ? green : 0,blue >= 0 ? blue : 0);
+			walls[i].color = shaded;
+		}
 	}
 }

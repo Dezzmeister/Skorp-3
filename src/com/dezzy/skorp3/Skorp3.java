@@ -21,7 +21,7 @@ import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 
 public class Skorp3 {
 	public static void main(String ... args) {
-		raycast();
+		raycast2();
 	}
 	
 	public static void true3D() {		
