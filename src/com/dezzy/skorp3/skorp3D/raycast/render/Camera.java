@@ -7,6 +7,7 @@ public class Camera {
 	public Vector pos;
 	public Vector dir;
 	public Vector plane;
+	private Vector sidedir;
 	
 	private double moveSpeed = 0.055;
 	private double rotSpeed = 0.005;
@@ -20,6 +21,7 @@ public class Camera {
 	
 	public Camera setDir(Vector _dir) {
 		dir = _dir;
+		computeSideDir();
 		return this;
 	}
 	
@@ -42,6 +44,15 @@ public class Camera {
 	
 	public void setMoveSpeed(double speed) {
 		moveSpeed = speed;
+	}
+	
+	private void computeSideDir() {
+		double t = Math.PI/2.0;
+		
+		double x = dir.x*Math.cos(t) - dir.y*Math.sin(t);
+		double y = dir.x*Math.sin(t) + dir.y*Math.cos(t);
+		
+		sidedir = new Vector(x,y);
 	}
 	
 	/**
@@ -102,6 +113,10 @@ public class Camera {
 	    }
 	}
 	
+	public void moveLeft(WorldMap map, double factor) {
+		
+	}
+	
 	public void moveForward(double factor) {
 		double speed = factor * moveSpeed;
 		
@@ -116,7 +131,19 @@ public class Camera {
 		pos.y-=dir.y*speed;
 	}
 	
-	public void moveLeft(WorldMap map, double factor) {
+	public void moveLeft(double factor) {
+		computeSideDir();
+		double speed = factor * moveSpeed;
 		
+		pos.x+=sidedir.x*speed;
+		pos.y+=sidedir.y*speed;
+	}
+	
+	public void moveRight(double factor) {
+		computeSideDir();
+		double speed = factor * moveSpeed;
+		
+		pos.x-=sidedir.x*speed;
+		pos.y-=sidedir.y*speed;
 	}
 }
