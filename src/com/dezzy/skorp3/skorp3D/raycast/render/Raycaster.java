@@ -18,20 +18,15 @@ import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
 	private int WIDTH, HEIGHT;
-	private double aspect = 1;
-	private static final Color FLOOR = new Color(89,45,0);
 	private double[] zbuf;
 	private Sprite[] sprites;
 	/**
 	 * Meant for static floors (without texturing).
-	 */
-	private BufferedImage floor;
-	
+	 */	
 	public Raycaster(RaycastGraphicsContainer _container, int width, int height) {
 		container = _container;
 		WIDTH = width;
 		HEIGHT = height;
-		aspect = WIDTH/(double)HEIGHT;
 		zbuf = new double[WIDTH];
 		sprites = container.map.getSprites();
 		
@@ -42,8 +37,8 @@ public class Raycaster implements RaycastRenderer {
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
-	public void makeFloor() {
-		floor = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_ARGB);
+	public static BufferedImage makeFloor(int width, int height) {
+		BufferedImage floor = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = floor.createGraphics();
 		
 		//Sick-looking floor
@@ -57,17 +52,19 @@ public class Raycaster implements RaycastRenderer {
 		int greenstep = (startgreen - endgreen)/iterations;
 				
 		int b = 0;
-		for (int i = HEIGHT; i > ((HEIGHT/2) + ((HEIGHT/2)/iterations)); i -= ((HEIGHT/2)/iterations)) {
+		for (int i = height; i > ((height/2) + ((height/2)/iterations)); i -= ((height/2)/iterations)) {
 			//89 45 0
 			//to
 			//46 23 0
 					
 			g2.setColor(new Color(startblue - (b * bluestep),startgreen - (b * greenstep),0));
-			g2.fillRect(0, i - ((HEIGHT/2)/iterations), WIDTH, (HEIGHT/2)/iterations);
+			g2.fillRect(0, i - ((height/2)/iterations), width, (height/2)/iterations);
 			b++;
 		}
 		
 		g2.dispose();
+		
+		return floor;
 	}
 	
 	@Override
@@ -353,6 +350,5 @@ public class Raycaster implements RaycastRenderer {
 	public void updateDimensions(int width, int height) {
 		WIDTH = width;
 		HEIGHT = height;
-		aspect = WIDTH/(double)HEIGHT;
 	}
 }

@@ -3,16 +3,17 @@ package com.dezzy.skorp3.skorp3D.raycast2.core;
 import java.awt.Color;
 
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
-import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Wall {
-	public static final Texture defaultTexture = new Texture("assets/raycast/textures/darkbricks.png",512);
+	public static final Texture2 defaultTexture = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
 	
 	public Vector v0;
 	public Vector v1;
 	public double length;
 	public int color = 0x00FFFFFF;
-	public Texture texture = defaultTexture;
+	public int shadeValue = 0;
+	public Texture2 texture = defaultTexture;
 	
 	public Wall(Vector _v0, Vector _v1, Color _color) {
 		v0 = _v0;
@@ -39,7 +40,7 @@ public class Wall {
 		v1 = _v1;
 	}
 	
-	public Wall setTexture(Texture _texture) {
+	public Wall setTexture(Texture2 _texture) {
 		texture = _texture;
 		return this;
 	}
@@ -48,7 +49,7 @@ public class Wall {
 		return Vector.distance(v, v0)/length;
 	}
 	
-	public Texture getTexture() {
+	public Texture2 getTexture() {
 		return texture;
 	}
 	
@@ -95,11 +96,28 @@ public class Wall {
 		return Math.abs(angle1-angle2);
 	}
 	
-	private int getIntFromRGB(Color color) {
+	public static int getIntFromRGB(Color color) {
 		int rgb = color.getRed();
 		rgb = (rgb << 8) + color.getGreen();
 		rgb = (rgb << 8) + color.getBlue();
 		
 		return rgb;
+	}
+	
+	public static Color getRGBFromInt(int col) {
+		int red = (col >> 16) & 0xFF;
+		int green = (col >> 8) & 0xFF;
+		int blue = col & 0xFF;
+		
+		return new Color(red,green,blue);
+	}
+	
+	public int shade(int col) {
+		Color c = getRGBFromInt(col);
+		int red = c.getRed()-shadeValue;
+		int green = c.getGreen()-shadeValue;
+		int blue = c.getBlue()-shadeValue;
+		Color shaded = new Color(red >= 0 ? red : 0,green >= 0 ? green : 0,blue >= 0 ? blue : 0);
+		return getIntFromRGB(shaded);
 	}
 }

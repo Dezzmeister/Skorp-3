@@ -11,8 +11,10 @@ import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
+import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
+import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 /**
  * The chief difference between this raycaster and the first is that this does not use digital differential analysis
@@ -28,7 +30,9 @@ public class Raycaster2 implements RaycastRenderer {
 	private RaycastContainer2 container;
 	private final int WIDTH;
 	private final int HEIGHT;
+	//TODO consider using a 2D z-buffer to allow for transparent sections in walls that are not limited to vertical stripes
 	private double[] zbuf;
+	private BufferedImage floor;
 	
 	public Raycaster2(RaycastContainer2 _container, int _width, int _height) {
 		container = _container;
@@ -36,6 +40,7 @@ public class Raycaster2 implements RaycastRenderer {
 		HEIGHT = _height;
 		zbuf = new double[WIDTH];
 		resetZBuffer();
+		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -115,6 +120,7 @@ public class Raycaster2 implements RaycastRenderer {
 	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
 	    			
+	    			boolean makeTransparent = false;
 	    			if (distance < zbuf[x]) {
 	    				int lineHeight = (int) (HEIGHT/distance);
 	    				
@@ -126,24 +132,28 @@ public class Raycaster2 implements RaycastRenderer {
 	    				
 	    				double wallNorm = l.getNorm(hit);
 	    				
-	    				int texX = (int) (wallNorm * l.texture.SIZE);
+	    				int texX = (int) (wallNorm * l.texture.width);
+	    				makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
 	    				
 	    				for (int y = drawStart; y < drawEnd; y++) {
 	    					double normY = (y-trueDrawStart)/(double)lineHeight;
-	    					int texY = (int) (normY*(l.texture.SIZE));
+	    					int texY = (int) (normY*(l.texture.height));
 	    					
-	    					int color = l.texture.pixels[texX + (texY * l.texture.SIZE)];
-	    					
-	    					img.setRGB(x, y, color);
+	    					int color = l.texture.pixels[texX + (texY * l.texture.width)];
+	    			
+	    					if (!makeTransparent) {
+	    						img.setRGB(x, y, color);
+	    					}
 	    				}
-	    				
-	    				zbuf[x] = distance;
+	    				if (!makeTransparent) {
+	    					zbuf[x] = distance;
+	    				}
 	    			}
 	    		}
 	    	}
 	    }
 	    resetZBuffer();
-	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
+	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	
 	public static double clamp(double val, double minVal, double maxVal) {

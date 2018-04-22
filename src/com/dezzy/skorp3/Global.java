@@ -28,6 +28,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
+import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 /**
  * Global should be used to hold global variables/objects that will be used throughout Skorp.
@@ -61,11 +62,6 @@ public final class Global {
 	public static final Container pane = frame.getContentPane();
 	public static final Mouse mouseData = new MouseRobot(SCREENWIDTH,SCREENHEIGHT,pane);
 	public static final boolean[] keys = new boolean[256];
-	public static final Texture nicebricks = new Texture("assets/raycast/textures/nicebricks.png",256);
-	public static final Texture darkbricks = new Texture("assets/raycast/textures/darkbricks.png",512);
-	public static final Texture tiles = new Texture("assets/raycast/textures/tiles.png",512);
-	public static final Texture metal = new Texture("assets/raycast/textures/metal.png",512);
-	public static final Texture wood = new Texture("assets/raycast/textures/wood.png",512);
 	
 	//public static final Keyboard keyboard = new Keyboard();
 	
@@ -94,14 +90,19 @@ public final class Global {
 	}
 	
 	public static class Raycast2 {
+		static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
+		static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
+		
 		public static RaycastMap map = new RaycastMap(10,10,
 									   		new Wall(0,0,10,0,Color.ORANGE),
 									   		new Wall(0,0,0,10,Color.GREEN),
 									   		new Wall(10,0,10,10,Color.RED),
 									   		new Wall(0,10,10,10,Color.BLUE),
-									   		new Wall(0,1,1,1,Color.RED).setTexture(nicebricks),
-									   		new Wall(1,1,4,4,Color.RED).setTexture(nicebricks),
-									   		new Wall(4,4,4,7,Color.GREEN).setTexture(nicebricks));
+									   		new Wall(0,1,1,1,Color.RED).setTexture(cartoonstones),
+									   		new Wall(1,1,4,4,Color.RED).setTexture(cartoonstones),
+									   		new Wall(4,4,4,7,Color.GREEN).setTexture(cartoonstones),
+									   		new Wall(4,7,4,8,Color.BLACK).setTexture(bars),
+									   		new Wall(4,8,4,9.25,Color.BLACK).setTexture(cartoonstones));
 	}
 	
 	public static class Raycast {
@@ -113,6 +114,12 @@ public final class Global {
 		
 		static {
 			ElementTable table = new ElementTable();
+			
+			final Texture nicebricks = new Texture("assets/raycast/textures/nicebricks.png",256);
+			final Texture darkbricks = new Texture("assets/raycast/textures/darkbricks.png",512);
+			final Texture tiles = new Texture("assets/raycast/textures/tiles.png",512);
+			final Texture metal = new Texture("assets/raycast/textures/metal.png",512);
+			final Texture wood = new Texture("assets/raycast/textures/wood.png",512);
 			
 			table.add(new Element(1,"border",Color.ORANGE,false).applyTexture(darkbricks));
 			table.add(new Element(2,"green",Color.GREEN,true).applyTexture(nicebricks));

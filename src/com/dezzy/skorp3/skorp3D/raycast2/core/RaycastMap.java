@@ -6,11 +6,11 @@ public class RaycastMap {
 	/**
 	 * Used by <code>preShade()</code> to determine what axis to calculate angles off of.
 	 */
-	public static final Wall AXIS = new Wall(0,0,1,1,Color.BLACK);
+	public static final Wall AXIS = new Wall(0,0,1,0,Color.BLACK);
 	/**
 	 * The difference in darkness between an unshaded wall and a wall with maximum possible shading.
 	 */
-	private static final int SHADE_RANGE = 80;
+	private static final int SHADE_RANGE = 50;
 	public Wall[] walls;
 	public final int WIDTH;
 	public final int HEIGHT;
@@ -35,12 +35,16 @@ public class RaycastMap {
 			angle %= 180;
 			double norm = angle/180;
 			int shadeValue = (int)(norm*SHADE_RANGE);
+			walls[i].shadeValue = shadeValue;
+			/*
 			Color c = walls[i].getColor();
 			int red = c.getRed()-shadeValue;
 			int green = c.getGreen()-shadeValue;
 			int blue = c.getBlue()-shadeValue;
 			Color shaded = new Color(red >= 0 ? red : 0,green >= 0 ? green : 0,blue >= 0 ? blue : 0);
 			walls[i].setColor(shaded);
+			*/
+			
 		}
 	}
 }
