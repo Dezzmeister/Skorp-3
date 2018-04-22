@@ -91,6 +91,9 @@ public class Raycaster2 implements RaycastRenderer {
 	    Vector dir = container.camera.dir;
 	    Vector plane = container.camera.plane;
 	    
+	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
+    	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
+	    
 	    for (int x = 0; x < WIDTH; x++) {
 	    	//Map the x value to a range of -1 to 1
 	    	double norm = (2 * (x/(double)WIDTH)) - 1;
@@ -98,30 +101,43 @@ public class Raycaster2 implements RaycastRenderer {
 	    	//The direction of the ray
 	    	Vector rayendp = new Vector(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	
-	    	//The correct wall
-	    	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
-	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
-	    	for (Wall l : container.map.walls) {
+	    	for (int i = 0; i < container.map.walls.length; i++) {
+	    		Wall l = container.map.walls[i];
+	    		
 	    		Vector hit = rayHitSegment(pos,rayendp,l);
-	    		Wall ray = new Wall(pos,hit);
+	    		
 	    		if (hit != null) {
+	    			Wall ray = new Wall(pos,hit);
+	    			
 	    			double distance = Vector.distance(pos, hit);
+	    			
+	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
 	    			
 	    			if (distance < zbuf[x]) {
-	    				zbuf[x] = distance;
 	    				int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    				int drawStart = (HEIGHT/2) - (lineHeight/2);
-	    				drawStart = (int)clamp(drawStart,0,HEIGHT-1);
+	    				int trueDrawStart = (HEIGHT/2) - (lineHeight/2);
+	    				int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    				int drawEnd = (HEIGHT/2) + (lineHeight/2);
-	    				drawEnd = (int)clamp(drawEnd,0,HEIGHT-1);
+	    				int trueDrawEnd = (HEIGHT/2) + (lineHeight/2);
+	    				int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
-	    				for (int y = drawStart; y <= drawEnd; y++) {
-	    					img.setRGB(x, y, l.color);
+	    				double wallNorm = l.getNorm(hit);
+	    				
+	    				int texX = (int) (wallNorm * l.texture.SIZE);
+	    				
+	    				for (int y = drawStart; y < drawEnd; y++) {
+	    					double normY = (y-trueDrawStart)/(double)lineHeight;
+	    					int texY = (int) (normY*(l.texture.SIZE));
+	    					
+	    					int color = l.texture.pixels[texX + (texY * l.texture.SIZE)];
+	    					
+	    					img.setRGB(x, y, color);
 	    				}
+	    				
+	    				zbuf[x] = distance;
 	    			}
 	    		}
 	    	}

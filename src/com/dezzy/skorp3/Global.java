@@ -41,11 +41,11 @@ public final class Global {
 	/**
 	 * X resolution of the rendered image
 	 */
-	public static final int WIDTH = 500;
+	public static final int WIDTH = 400;
 	/**
 	 * Y resolution of the rendered image
 	 */
-	public static final int HEIGHT = 500;
+	public static final int HEIGHT = 400;
 	/**
 	 * X resolution of the displayed image
 	 */
@@ -101,7 +101,7 @@ public final class Global {
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector(1,1))
+								      .setPos(new Vector(7,4))
 								      .setDir(new Vector(-0.75,0))
 								      .setPlane(new Vector(0,0.5));
 		

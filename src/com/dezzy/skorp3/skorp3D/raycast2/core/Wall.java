@@ -1,13 +1,18 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import java.awt.Color;
 
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+
 public class Wall {
+	public static final Texture defaultTexture = new Texture("assets/raycast/textures/darkbricks.png",512);
+	
 	public Vector v0;
 	public Vector v1;
 	public double length;
 	public int color = 0x00FFFFFF;
+	public Texture texture = defaultTexture;
 	
 	public Wall(Vector _v0, Vector _v1, Color _color) {
 		v0 = _v0;
@@ -32,6 +37,19 @@ public class Wall {
 	public Wall(Vector _v0, Vector _v1) {
 		v0 = _v0;
 		v1 = _v1;
+	}
+	
+	public Wall setTexture(Texture _texture) {
+		texture = _texture;
+		return this;
+	}
+	
+	public double getNorm(Vector v) {
+		return Vector.distance(v, v0)/length;
+	}
+	
+	public Texture getTexture() {
+		return texture;
 	}
 	
 	private void updateLength() {
