@@ -12,6 +12,7 @@ public class RaycastMap {
 	 */
 	private static final int SHADE_RANGE = 20;
 	public Wall[] walls;
+	public Sector[] sectors;
 	public final int WIDTH;
 	public final int HEIGHT;
 	
