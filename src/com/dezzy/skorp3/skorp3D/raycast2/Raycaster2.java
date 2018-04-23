@@ -13,6 +13,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
@@ -110,7 +111,7 @@ public class Raycaster2 implements RaycastRenderer {
 	    	for (int i = 0; i < container.map.walls.length; i++) {
 	    		Wall l = container.map.walls[i];
 	    		
-	    		Vector hit = rayHitSegment(pos,rayendp,l);
+	    		Vector hit = RenderUtils.rayHitSegment(pos,rayendp,l);
 	    		
 	    		if (hit != null) {
 	    			Wall ray = new Wall(pos,hit);
@@ -168,26 +169,6 @@ public class Raycaster2 implements RaycastRenderer {
 			return maxVal;
 		}
 		return val;
-	}
-	
-	public static Vector rayHitSegment(Vector rayStart, Vector rayDirection, Wall segment) {
-		Vector r0 = rayStart;
-		Vector r1 = rayDirection;
-		Vector a = segment.v0;
-		Vector b = segment.v1;
-		
-		Vector s1,s2;
-		s1 = new Vector(r1.x-r0.x,r1.y-r0.y);
-		s2 = new Vector(b.x-a.x,b.y-a.y);
-		  
-		double s,t;
-		s = (-s1.y * (r0.x - a.x) + s1.x * (r0.y - a.y)) / (-s2.x * s1.y + s1.x * s2.y);
-		t = (s2.x * (r0.y - a.y) - s2.y * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
-		  
-		if (s >= 0 && s <= 1 && t >= 0) {
-		  return new Vector(r0.x + (t * s1.x), r0.y + (t * s1.y));
-		}
-		return null;
 	}
 
 	@Override
