@@ -124,20 +124,20 @@ public class Raycaster2 implements RaycastRenderer {
 	    			if (distance < zbuf[x]) {
 	    				int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    				int trueDrawStart = (HEIGHT/2) - (lineHeight/2);
+	    				int trueDrawStart = (HEIGHT >> 1) - (lineHeight >> 1);
 	    				int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    				int trueDrawEnd = (HEIGHT/2) + (lineHeight/2);
+	    				int trueDrawEnd = (HEIGHT >> 1) + (lineHeight >> 1);
 	    				int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    				double wallNorm = l.getNorm(hit);
 	    				
-	    				int texX = (int) (wallNorm * l.texture.width);
+	    				int texX = (int) ((wallNorm * l.texture.width) * l.xTiles) % l.texture.width;
 	    				makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
 	    				
 	    				for (int y = drawStart; y < drawEnd; y++) {
 	    					double normY = (y-trueDrawStart)/(double)lineHeight;
-	    					int texY = (int) (normY*(l.texture.height));
+	    					int texY = (int) ((normY*(l.texture.height)) * l.yTiles) % l.texture.height;
 	    					
 	    					int color = l.texture.pixels[texX + (texY * l.texture.width)];
 	    			
@@ -147,6 +147,10 @@ public class Raycaster2 implements RaycastRenderer {
 	    				}
 	    				if (!makeTransparent) {
 	    					zbuf[x] = distance;
+	    				}
+	    				
+	    				for (int y = 0; y < drawStart; y++) {
+	    					img.setRGB(x,y,0xFF0000FF);
 	    				}
 	    			}
 	    		}

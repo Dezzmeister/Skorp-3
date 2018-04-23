@@ -14,8 +14,8 @@ public class Wall {
 	public int color = 0x00FFFFFF;
 	public int shadeValue = 0;
 	public Texture2 texture = defaultTexture;
-	public int xTiles = 1;
-	public int yTiles = 1;
+	public double xTiles = 1;
+	public double yTiles = 1;
 	
 	public Wall(Vector _v0, Vector _v1, Color _color) {
 		v0 = _v0;
@@ -129,7 +129,7 @@ public class Wall {
 		return this;
 	}
 	
-	public Wall tile(int _xTiles, int _yTiles) {
+	public Wall tile(double _xTiles, double _yTiles) {
 		xTiles = _xTiles;
 		yTiles = _yTiles;
 		return this;

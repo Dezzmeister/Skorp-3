@@ -42,11 +42,11 @@ public final class Global {
 	/**
 	 * X resolution of the rendered image
 	 */
-	public static final int WIDTH = 400;
+	public static final int WIDTH = 500;
 	/**
 	 * Y resolution of the rendered image
 	 */
-	public static final int HEIGHT = 400;
+	public static final int HEIGHT = 500;
 	/**
 	 * X resolution of the displayed image
 	 */
@@ -94,15 +94,15 @@ public final class Global {
 		static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
 		
 		public static RaycastMap map = new RaycastMap(10,10,
-									   		new Wall(0,0,10,0,Color.ORANGE),
-									   		new Wall(0,0,0,10,Color.GREEN),
-									   		new Wall(10,0,10,10,Color.RED),
-									   		new Wall(0,10,10,10,Color.BLUE),
-									   		new Wall(0,1,1,1,Color.RED).setTexture(cartoonstones),
-									   		new Wall(1,1,4,4,Color.RED).setTexture(cartoonstones),
-									   		new Wall(4,4,4,7,Color.GREEN).setTexture(cartoonstones),
-									   		new Wall(4,7,4,8,Color.BLACK).setTexture(bars),
-									   		new Wall(4,8,4,9.25,Color.BLACK).setTexture(cartoonstones));
+									   		new Wall(0,0,10,0).tile(8, 2),
+									   		new Wall(0,0,0,10).tile(8, 1),
+									   		new Wall(10,0,10,10).tile(8, 1),
+									   		new Wall(0,10,10,10).tile(8, 1),
+									   		new Wall(0,1,1,1).setTexture(cartoonstones),
+									   		new Wall(1,1,4,4).setTexture(cartoonstones),
+									   		new Wall(4,4,4,7).setTexture(cartoonstones),
+									   		new Wall(4,7,4,8).setTexture(bars),
+									   		new Wall(4,8,4,9.25).setTexture(cartoonstones));
 	}
 	
 	public static class Raycast {

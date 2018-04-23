@@ -36,16 +36,7 @@ public class RaycastMap {
 			double norm = angle/180;
 			int shadeValue = (int)(norm*(SHADE_RANGE));
 			
-			walls[i].shade(shadeValue);
-			/*
-			Color c = walls[i].getColor();
-			int red = c.getRed()-shadeValue;
-			int green = c.getGreen()-shadeValue;
-			int blue = c.getBlue()-shadeValue;
-			Color shaded = new Color(red >= 0 ? red : 0,green >= 0 ? green : 0,blue >= 0 ? blue : 0);
-			walls[i].setColor(shaded);
-			*/
-			
+			walls[i].shade(shadeValue);			
 		}
 	}
 }
