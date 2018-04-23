@@ -14,6 +14,8 @@ public class Wall {
 	public int color = 0x00FFFFFF;
 	public int shadeValue = 0;
 	public Texture2 texture = defaultTexture;
+	public int xTiles = 1;
+	public int yTiles = 1;
 	
 	public Wall(Vector _v0, Vector _v1, Color _color) {
 		v0 = _v0;
@@ -112,12 +114,24 @@ public class Wall {
 		return new Color(red,green,blue);
 	}
 	
-	public int shade(int col) {
-		Color c = getRGBFromInt(col);
-		int red = c.getRed()-shadeValue;
-		int green = c.getGreen()-shadeValue;
-		int blue = c.getBlue()-shadeValue;
-		Color shaded = new Color(red >= 0 ? red : 0,green >= 0 ? green : 0,blue >= 0 ? blue : 0);
-		return getIntFromRGB(shaded);
+	public Wall shade(int darkenBy) {
+		texture = new Texture2(texture.path,texture.width,texture.height);
+		for (int i = 0; i < texture.pixels.length; i++) {
+			if (texture.pixels[i] != Texture2.ALPHA) {
+				Color c = new Color(texture.pixels[i]);
+				int red = c.getRed()-darkenBy;
+				int green = c.getGreen()-darkenBy;
+				int blue = c.getBlue()-darkenBy;
+				Color newcolor = new Color(red >= 0 ? red : 0, green >= 0 ? green : 0, blue >= 0 ? blue : 0);
+				texture.pixels[i] = getIntFromRGB(newcolor);
+			}
+		}
+		return this;
+	}
+	
+	public Wall tile(int _xTiles, int _yTiles) {
+		xTiles = _xTiles;
+		yTiles = _yTiles;
+		return this;
 	}
 }

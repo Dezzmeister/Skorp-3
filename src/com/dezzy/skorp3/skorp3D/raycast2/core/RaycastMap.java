@@ -10,7 +10,7 @@ public class RaycastMap {
 	/**
 	 * The difference in darkness between an unshaded wall and a wall with maximum possible shading.
 	 */
-	private static final int SHADE_RANGE = 50;
+	private static final int SHADE_RANGE = 20;
 	public Wall[] walls;
 	public final int WIDTH;
 	public final int HEIGHT;
@@ -34,8 +34,9 @@ public class RaycastMap {
 			double angle = Math.toDegrees(Wall.angleBetweenLines(walls[i], AXIS));
 			angle %= 180;
 			double norm = angle/180;
-			int shadeValue = (int)(norm*SHADE_RANGE);
-			walls[i].shadeValue = shadeValue;
+			int shadeValue = (int)(norm*(SHADE_RANGE));
+			
+			walls[i].shade(shadeValue);
 			/*
 			Color c = walls[i].getColor();
 			int red = c.getRed()-shadeValue;

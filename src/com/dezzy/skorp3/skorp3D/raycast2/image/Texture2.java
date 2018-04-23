@@ -15,7 +15,7 @@ public class Texture2 {
 	public static final int ALPHA = 0xFFF223F8;
 	
 	public int[] pixels;
-	private String path;
+	public String path;
 	public final int width;
 	public final int height;
 	
