@@ -94,7 +94,7 @@ public final class Global {
 		static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
 		
 		public static RaycastMap map = new RaycastMap(10,10,
-									   		new Wall(0,0,10,0).tile(8, 2),
+									   		new Wall(0,0,10,0).tile(8, 1),
 									   		new Wall(0,0,0,10).tile(8, 1),
 									   		new Wall(10,0,10,10).tile(8, 1),
 									   		new Wall(0,10,10,10).tile(8, 1),

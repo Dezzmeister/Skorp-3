@@ -11,6 +11,10 @@ public class Texture2 {
 	/**
 	 * Some weird purple color
 	 * (242,35,248)
+	 * <p>
+	 * The alpha mask for any transparency in a texture. If a texture has a pixel of this color
+	 * in the top row, then that entire column will be transparent. This will be changed in the future so that
+	 * transparency can be applied without being restricted to the entire stripe.
 	 */
 	public static final int ALPHA = 0xFFF223F8;
 	

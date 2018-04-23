@@ -129,6 +129,19 @@ public class Wall {
 		return this;
 	}
 	
+	/**
+	 * Allows a texture to be repeated multiple times (tiled) along a wall. By default, 
+	 * xTiles is 1 and yTiles is 1, so the texture is stretched to fit the wall even
+	 * if it may look ridiculous in doing so. Use this method to fix that: For example,
+	 * if <code>tile(2,1)</code> is called, then this Wall's texture will appear twice on the Wall;
+	 * both textures will be side-by-side. Likewise, if <code>tile(3,2)</code> is called, the texture will appear 6 times on the wall,
+	 * arranged in a grid with a height of 2 and a width of 3. Each texture will be distorted to fit in a space 1/3 of the wall's width by
+	 * 1/2 of its height.
+	 * 
+	 * @param _xTiles how many times to repeat the x texture
+	 * @param _yTiles how many times to repeat the y texture
+	 * @return this <code>Wall</code>
+	 */
 	public Wall tile(double _xTiles, double _yTiles) {
 		xTiles = _xTiles;
 		yTiles = _yTiles;
