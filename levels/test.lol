@@ -8,6 +8,13 @@ mapwidth: 10
 mapdepth: 10
 
 sector:
+	defpts:
+		pt: 0,0
+		pt: 0,10
+		pt: 10,10
+		pt: 10,
+	enddefpts
+	
 	floorheight: 0
 	ceilheight: 1.25
 	

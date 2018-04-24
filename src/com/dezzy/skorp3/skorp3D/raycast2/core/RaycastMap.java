@@ -23,6 +23,13 @@ public class RaycastMap {
 		preShade();
 	}
 	
+	public RaycastMap(int _width, int _height, Sector ... _sectors) {
+		sectors = _sectors;
+		WIDTH = _width;
+		HEIGHT = _height;
+		preShade();
+	}
+	
 	public int wallCount() {
 		return walls.length;
 	}
