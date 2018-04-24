@@ -34,3 +34,6 @@ com.dezzy.skorp3.skorp3D.raycast2
 com.dezzy.skorp3.skorp3D.raycast2.core
 com.dezzy.skorp3.skorp3D.raycast2.image
 com.dezzy.skorp3.skorp3D.raycast2.data
+com.dezzy.skorp3.skorp3D.true3D2
+com.dezzy.skorp3.skorp3D.true3D2.render
+com.dezzy.skorp3.skorp3D.true3D2.core
