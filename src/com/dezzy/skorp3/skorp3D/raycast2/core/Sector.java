@@ -6,6 +6,9 @@ public class Sector {
 	public Vector[] points;
 	public Wall[] walls;
 	
+	public double floorScale = 1;
+	public double ceilScale = 1;
+	
 	public Sector(Vector ... _points) {
 		points = _points;
 	}
@@ -14,4 +17,6 @@ public class Sector {
 		walls = _walls;
 		return this;
 	}
+	
+	
 }

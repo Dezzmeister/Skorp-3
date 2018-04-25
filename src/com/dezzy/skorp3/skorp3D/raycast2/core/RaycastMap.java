@@ -27,6 +27,7 @@ public class RaycastMap {
 		sectors = _sectors;
 		WIDTH = _width;
 		HEIGHT = _height;
+		sectors = _sectors;
 		preShade();
 	}
 	
@@ -38,6 +39,7 @@ public class RaycastMap {
 	 * Darkens the color of each wall based on its angle from the x axis.
 	 */
 	public void preShade() {
+		/*
 		for (int i = 0; i < walls.length; i++) {
 			double angle = Math.toDegrees(Wall.angleBetweenLines(walls[i], AXIS));
 			angle %= 180;
@@ -46,5 +48,6 @@ public class RaycastMap {
 			
 			walls[i].shade(shadeValue);			
 		}
+		*/
 	}
 }

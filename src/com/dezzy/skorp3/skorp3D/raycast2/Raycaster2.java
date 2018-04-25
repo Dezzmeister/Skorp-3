@@ -14,6 +14,7 @@ import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
@@ -34,6 +35,9 @@ public class Raycaster2 implements RaycastRenderer {
 	//TODO consider using a 2D z-buffer to allow for transparent sections in walls that are not limited to vertical stripes
 	private double[] zbuf;
 	private BufferedImage floor;
+	private Sector currentSector;
+	private BufferedImage img;
+	private Graphics2D g2;
 	
 	public Raycaster2(RaycastContainer2 _container, int _width, int _height) {
 		container = _container;
@@ -42,6 +46,13 @@ public class Raycaster2 implements RaycastRenderer {
 		zbuf = new double[WIDTH];
 		resetZBuffer();
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
+		for (int i = 0; i < container.map.sectors.length; i++) {
+			boolean inSector = RenderUtils.vectorInSector(container.camera.pos, container.map.sectors[i]);
+			if (inSector) {
+				currentSector = container.map.sectors[i];
+				break;
+			}
+		}
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -58,41 +69,16 @@ public class Raycaster2 implements RaycastRenderer {
 		}
 	}
 	
-	@Urgency(3)
 	@Override
 	public void render() {
-		Graphics2D g2 = (Graphics2D) container.g;
-		g2.setBackground(Color.BLACK);
-		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
-		
-		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);		
-	    
-	    //Rotate left/right
-	    if (container.mouse.dx() < 0) {
-	    	container.camera.rotateLeft(Math.abs(container.mouse.dx()));
-	    } else if (container.mouse.dx() > 0) {
-	    	container.camera.rotateRight(container.mouse.dx());
-	    }
-	    
-	    //Move
-	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
-	    
-	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
-	    	container.camera.moveForward(sprintfactor);
-	    }
-	    
-	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
-	    	container.camera.moveBackward(sprintfactor);
-	    }
-	    
-	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
-	    	container.camera.moveLeft(sprintfactor);
-	    }
-	    
-	    if (container.keys['D'] || container.keys[KeyEvent.VK_RIGHT]) {
-	    	container.camera.moveRight(sprintfactor);
-	    }
-	    
+		preRender();	
+		handleRotation();
+		handleMovement();
+		renderSector(currentSector);
+		postRender();
+	}
+	
+	public void renderSector(Sector sector) {	    
 	    Vector pos = container.camera.pos;
 	    Vector dir = container.camera.dir;
 	    Vector plane = container.camera.plane;
@@ -108,8 +94,8 @@ public class Raycaster2 implements RaycastRenderer {
 	    	Vector rayendp = new Vector(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
-	    	for (int i = 0; i < container.map.walls.length; i++) {
-	    		Wall l = container.map.walls[i];
+	    	for (int i = 0; i < sector.walls.length; i++) {
+	    		Wall l = sector.walls[i];
 	    		
 	    		Vector hit = RenderUtils.rayHitSegment(pos,rayendp,l);
 	    		
@@ -125,10 +111,10 @@ public class Raycaster2 implements RaycastRenderer {
 	    			if (distance < zbuf[x]) {
 	    				int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    				int trueDrawStart = (HEIGHT >> 1) - (lineHeight >> 1);
+	    				int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1)*sector.ceilScale);
 	    				int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    				int trueDrawEnd = (HEIGHT >> 1) + (lineHeight >> 1);
+	    				int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1)*sector.floorScale);
 	    				int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    				double wallNorm = l.getNorm(hit);
@@ -157,7 +143,46 @@ public class Raycaster2 implements RaycastRenderer {
 	    		}
 	    	}
 	    }
-	    resetZBuffer();
+	}
+	
+	public void preRender() {
+		g2 = (Graphics2D) container.g;
+		g2.setBackground(Color.BLACK);
+		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
+		
+		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);	
+	}
+	
+	public void handleMovement() {
+	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    
+	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
+	    	container.camera.moveForward(sprintfactor);
+	    }
+	    
+	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
+	    	container.camera.moveBackward(sprintfactor);
+	    }
+	    
+	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
+	    	container.camera.moveLeft(sprintfactor);
+	    }
+	    
+	    if (container.keys['D'] || container.keys[KeyEvent.VK_RIGHT]) {
+	    	container.camera.moveRight(sprintfactor);
+	    }
+	}
+	
+	public void handleRotation() {
+		if (container.mouse.dx() < 0) {
+	    	container.camera.rotateLeft(Math.abs(container.mouse.dx()));
+	    } else if (container.mouse.dx() > 0) {
+	    	container.camera.rotateRight(container.mouse.dx());
+	    }
+	}
+	
+	public void postRender() {
+		resetZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	

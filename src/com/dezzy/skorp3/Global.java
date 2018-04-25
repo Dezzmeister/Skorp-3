@@ -27,6 +27,7 @@ import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
@@ -90,19 +91,25 @@ public final class Global {
 	}
 	
 	public static class Raycast2 {
-		static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
-		static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
+		public static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
+		public static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
 		
-		public static RaycastMap map = new RaycastMap(10,10,
-									   		new Wall(0,0,10,0).tile(8, 1),
-									   		new Wall(0,0,0,10).tile(8, 1),
-									   		new Wall(10,0,10,10).tile(8, 1),
-									   		new Wall(0,10,10,10).tile(8, 1),
-									   		new Wall(0,1,1,1).setTexture(cartoonstones),
-									   		new Wall(1,1,4,4).setTexture(cartoonstones),
-									   		new Wall(4,4,4,7).setTexture(cartoonstones),
-									   		new Wall(4,7,4,8).setTexture(bars),
-									   		new Wall(4,8,4,9.25).setTexture(cartoonstones));
+		public static final Sector mainSector = new Sector(new Vector(0,0),
+														   new Vector(0,10),
+														   new Vector(10,10),
+														   new Vector(10,0))
+														   .defineWalls(
+																   new Wall(0,0,10,0).tile(8, 1),
+															   	   new Wall(0,0,0,10).tile(8, 1),
+															       new Wall(10,0,10,10).tile(8, 1),
+															   	   new Wall(0,10,10,10).tile(8, 1),
+															   	   new Wall(0,1,1,1).setTexture(cartoonstones),
+															   	   new Wall(1,1,4,4).setTexture(cartoonstones),
+															       new Wall(4,4,4,7).setTexture(cartoonstones),
+															   	   new Wall(4,7,4,8).setTexture(bars),
+															   	   new Wall(4,8,4,9.25).setTexture(cartoonstones));
+		
+		public static RaycastMap map = new RaycastMap(10,10,mainSector);
 	}
 	
 	public static class Raycast {
