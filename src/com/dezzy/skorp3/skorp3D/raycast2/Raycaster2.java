@@ -145,6 +145,9 @@ public class Raycaster2 implements RaycastRenderer {
 	    }
 	}
 	
+	/**
+	 * Set the Graphics2D object and create/reset the BufferedImage.
+	 */
 	public void preRender() {
 		g2 = (Graphics2D) container.g;
 		g2.setBackground(Color.BLACK);
@@ -181,6 +184,9 @@ public class Raycaster2 implements RaycastRenderer {
 	    }
 	}
 	
+	/**
+	 * After all visible sectors have been rendered, update the z-buffer and obtain the final image.
+	 */
 	public void postRender() {
 		resetZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
