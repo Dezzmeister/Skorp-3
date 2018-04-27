@@ -7,31 +7,41 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
+import com.dezzy.skorp3.UI.Mouse;
+import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.render.Renderer;
-import com.dezzy.skorp3.skorp3D.true3D2.core.GraphicsContainer2;
 import com.dezzy.skorp3.skorp3D.true3D2.core.Triangle;
 
 public class TrueRenderer2 implements Renderer {
-	private GraphicsContainer2 container;
+	private volatile Graphics g;
+	private volatile Mouse mouse;
+	private Data3D data3D;
+	private JPanel panel;
+	private Camera camera;
 	private List<Triangle> triangles;
 	private final int WIDTH;
 	private final int HEIGHT;
 	
-	public TrueRenderer2(GraphicsContainer2 _container, int _width, int _height) {
-		container = _container;
+	public TrueRenderer2(int _width, int _height, Mouse _mouse, Data3D _data3D, JPanel _panel, Camera _camera) {
 		WIDTH = _width;
 		HEIGHT = _height;
+		mouse = _mouse;
+		data3D = _data3D;
+		panel = _panel;
+		camera = _camera;
 		
 		triangles = new ArrayList<Triangle>();
 	}
 	
 	@Override
 	public void render() {
-		Graphics2D g2 = (Graphics2D) container.g;
+		Graphics2D g2 = (Graphics2D) g;
 		g2.setBackground(Color.BLACK);
-		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
+		g2.clearRect(0, 0, WIDTH, HEIGHT);
 		
 		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		
