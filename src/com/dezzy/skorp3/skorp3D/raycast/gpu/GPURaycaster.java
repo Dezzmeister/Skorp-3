@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast.gpu;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -95,5 +96,11 @@ public class GPURaycaster implements RaycastRenderer {
 	@Override
 	public RaycastGraphicsContainer getGraphicsContainer() {
 		return container;
+	}
+
+	@Override
+	public void updateGraphicsObject(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -38,4 +38,14 @@ public class Sector {
 		ceilYTiles = _yTiles;
 		return this;
 	}
+	
+	public Sector setFloor(double scale) {
+		floorScale = scale;
+		return this;
+	}
+	
+	public Sector setCeiling(double scale) {
+		ceilScale = scale;
+		return this;
+	}
 }

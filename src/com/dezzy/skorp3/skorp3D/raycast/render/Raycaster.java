@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -350,5 +351,11 @@ public class Raycaster implements RaycastRenderer {
 	public void updateDimensions(int width, int height) {
 		WIDTH = width;
 		HEIGHT = height;
+	}
+
+	@Override
+	public void updateGraphicsObject(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }

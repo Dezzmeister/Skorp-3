@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.render;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -154,6 +155,12 @@ public class BarycentricRenderer implements TrueRenderer {
 	@Override
 	public synchronized GraphicsContainer getGraphicsContainer() {
 		return container;
+	}
+
+	@Override
+	public void updateGraphicsObject(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.true3D2.render;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -58,5 +59,11 @@ public class TrueRenderer2 implements Renderer {
 	public boolean shouldRedraw() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void updateGraphicsObject(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 }

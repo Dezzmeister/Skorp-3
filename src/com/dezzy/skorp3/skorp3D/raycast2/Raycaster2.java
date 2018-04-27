@@ -1,22 +1,27 @@
 package com.dezzy.skorp3.skorp3D.raycast2;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.Global;
+import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
-import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
+import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
+import com.dezzy.skorp3.skorp3D.render.Renderer;
 
 /**
  * The chief difference between this raycaster and the first is that this does not use digital differential analysis
@@ -28,8 +33,14 @@ import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
  * @author Dezzmeister
  *
  */
-public class Raycaster2 implements RaycastRenderer {
-	private RaycastContainer2 container;
+public class Raycaster2 implements Renderer {
+	private volatile Graphics g;
+	private volatile RaycastMap map;
+	private volatile Mouse mouse;
+	private volatile JPanel panel;
+	private volatile Camera camera;
+	private volatile boolean[] keys;
+	
 	private final int WIDTH;
 	private final int HEIGHT;
 	//TODO consider using a 2D z-buffer to allow for transparent sections in walls that are not limited to vertical stripes
@@ -39,26 +50,32 @@ public class Raycaster2 implements RaycastRenderer {
 	private BufferedImage img;
 	private Graphics2D g2;
 	
-	public Raycaster2(RaycastContainer2 _container, int _width, int _height) {
-		container = _container;
+	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
 		HEIGHT = _height;
+		
+		map = _map;
+		mouse = _mouse;
+		panel = _panel;
+		camera = _camera;
+		keys = _keys;
+		
 		zbuf = new double[WIDTH];
 		resetZBuffer();
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
-		for (int i = 0; i < container.map.sectors.length; i++) {
-			boolean inSector = RenderUtils.vectorInSector(container.camera.pos, container.map.sectors[i]);
+		for (int i = 0; i < map.sectors.length; i++) {
+			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
 			if (inSector) {
-				currentSector = container.map.sectors[i];
+				currentSector = map.sectors[i];
 				break;
 			}
 		}
 		
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
+		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
+		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
 		
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
-		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
+		panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
+		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
 	//TODO optimize with predefined array and System.arraycopy()? (if need be)
@@ -79,9 +96,9 @@ public class Raycaster2 implements RaycastRenderer {
 	}
 	
 	public void renderSector(Sector sector) {	    
-	    Vector pos = container.camera.pos;
-	    Vector dir = container.camera.dir;
-	    Vector plane = container.camera.plane;
+	    Vector pos = camera.pos;
+	    Vector dir = camera.dir;
+	    Vector plane = camera.plane;
 	    
 	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
     	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
@@ -132,6 +149,7 @@ public class Raycaster2 implements RaycastRenderer {
 	    						img.setRGB(x, y, color);
 	    					}
 	    				}
+	    				
 	    				if (!makeTransparent) {
 	    					zbuf[x] = distance;
 	    				}
@@ -149,38 +167,38 @@ public class Raycaster2 implements RaycastRenderer {
 	 * Set the Graphics2D object and create/reset the BufferedImage.
 	 */
 	public void preRender() {
-		g2 = (Graphics2D) container.g;
+		g2 = (Graphics2D) g;
 		g2.setBackground(Color.BLACK);
-		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
+		g2.clearRect(0, 0, panel.getWidth(), panel.getHeight());
 		
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);	
 	}
 	
 	public void handleMovement() {
-	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    int sprintfactor = (keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
 	    
-	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
-	    	container.camera.moveForward(sprintfactor);
+	    if (keys['W'] || keys[KeyEvent.VK_UP]) {
+	    	camera.moveForward(sprintfactor);
 	    }
 	    
-	    if (container.keys['S'] || container.keys[KeyEvent.VK_DOWN]) {
-	    	container.camera.moveBackward(sprintfactor);
+	    if (keys['S'] || keys[KeyEvent.VK_DOWN]) {
+	    	camera.moveBackward(sprintfactor);
 	    }
 	    
-	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
-	    	container.camera.moveLeft(sprintfactor);
+	    if (keys['A'] || keys[KeyEvent.VK_LEFT]) {
+	    	camera.moveLeft(sprintfactor);
 	    }
 	    
-	    if (container.keys['D'] || container.keys[KeyEvent.VK_RIGHT]) {
-	    	container.camera.moveRight(sprintfactor);
+	    if (keys['D'] || keys[KeyEvent.VK_RIGHT]) {
+	    	camera.moveRight(sprintfactor);
 	    }
 	}
 	
 	public void handleRotation() {
-		if (container.mouse.dx() < 0) {
-	    	container.camera.rotateLeft(Math.abs(container.mouse.dx()));
-	    } else if (container.mouse.dx() > 0) {
-	    	container.camera.rotateRight(container.mouse.dx());
+		if (mouse.dx() < 0) {
+	    	camera.rotateLeft(Math.abs(mouse.dx()));
+	    } else if (mouse.dx() > 0) {
+	    	camera.rotateRight(mouse.dx());
 	    }
 	}
 	
@@ -204,12 +222,12 @@ public class Raycaster2 implements RaycastRenderer {
 
 	@Override
 	public boolean shouldRedraw() {
-		return container.hasUpdated();
+		return mouse.hasUpdated();
 	}
 
 	@Override
-	public RaycastContainer2 getGraphicsContainer() {
-		return container;
+	public void updateGraphicsObject(Graphics _g) {
+		g = _g;		
 	}
 
 }

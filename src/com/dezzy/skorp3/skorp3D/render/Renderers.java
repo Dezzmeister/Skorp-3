@@ -19,8 +19,10 @@ public class Renderers {
 		return renderer;
 	}
 	
+	/*
 	public static final RaycastRenderer createAndStartRaycaster2(RaycastContainer2 container, int width, int height) {
 		RaycastRenderer renderer = new Raycaster2(container, width, height);
 		return renderer;
 	}
+	*/
 }

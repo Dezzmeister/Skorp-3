@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.skorp3D.render;
 
+import java.awt.Graphics;
+
 /**
  * Details the requirements of a class that can be used to render a scene.
  * 
@@ -30,4 +32,12 @@ public interface Renderer extends Runnable {
 	 * @return true if frame should be redrawn
 	 */
 	public boolean shouldRedraw();
+	
+	/**
+	 * Updates the graphics object belonging to this Renderer. Used with JPanel's
+	 * <code>paintComponent()</code>.
+	 * 
+	 * @param g AWT Graphics object
+	 */
+	public void updateGraphicsObject(Graphics g);
 }
