@@ -14,4 +14,9 @@ public class Mesh {
 	public Mesh(int size) {
 		vertices = new Vertex[size];
 	}
+	
+	public Mesh set(int index, int x, int y, int z) {
+		vertices[index] = new Vertex(x,y,z);
+		return this;
+	}
 }

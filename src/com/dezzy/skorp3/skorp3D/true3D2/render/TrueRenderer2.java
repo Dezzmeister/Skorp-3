@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -14,7 +12,8 @@ import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.render.Renderer;
-import com.dezzy.skorp3.skorp3D.true3D2.core.Triangle;
+import com.dezzy.skorp3.skorp3D.true3D2.core.Mesh;
+import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
 
 public class TrueRenderer2 implements Renderer {
 	private volatile Graphics g;
@@ -22,11 +21,11 @@ public class TrueRenderer2 implements Renderer {
 	private Data3D data3D;
 	private JPanel panel;
 	private Camera camera;
-	private List<Triangle> triangles;
+	private MeshList meshes;
 	private final int WIDTH;
 	private final int HEIGHT;
 	
-	public TrueRenderer2(int _width, int _height, Mouse _mouse, Data3D _data3D, JPanel _panel, Camera _camera) {
+	public TrueRenderer2(int _width, int _height, Mouse _mouse, Data3D _data3D, JPanel _panel, Camera _camera, MeshList _meshes) {
 		WIDTH = _width;
 		HEIGHT = _height;
 		mouse = _mouse;
@@ -34,7 +33,7 @@ public class TrueRenderer2 implements Renderer {
 		panel = _panel;
 		camera = _camera;
 		
-		triangles = new ArrayList<Triangle>();
+		meshes = _meshes;
 	}
 	
 	@Override
@@ -52,16 +51,39 @@ public class TrueRenderer2 implements Renderer {
 		
 		transform = transform.multiply(rotateX).multiply(rotateY);
 		
-		for (Triangle t : triangles) {
-			Vertex v1 = t.v1;
-			Vertex v2 = t.v2;
-			Vertex v3 = t.v3;
-			
-			v1 = transform.transform(v1);
-			v2 = transform.transform(v2);
-			v3 = transform.transform(v3);
-			
-			
+		for (Mesh m : meshes) {
+			for (int i = 0; i < m.vertices.length-2; i += 3) {
+				Vertex v1 = m.vertices[i];
+				Vertex v2 = m.vertices[i + 1];
+				Vertex v3 = m.vertices[i + 2];
+				
+				v1 = transform.transform(v1);
+				v2 = transform.transform(v2);
+				v3 = transform.transform(v3);
+				
+				v1.x/=v1.z;
+				v1.y/=v1.z;
+				
+				v2.x/=v2.z;
+				v2.y/=v2.z;
+				
+				v3.x/=v3.z;
+				v3.y/=v3.z;
+				
+				g2.setColor(Color.YELLOW);
+				int x1 = v1.x.intValue();
+				int y1 = v1.y.intValue();
+				
+				int x2 = v2.x.intValue();
+				int y2 = v2.y.intValue();
+				
+				int x3 = v3.x.intValue();
+				int y3 = v3.y.intValue();
+				
+				g2.drawLine(x1, y1, x2, y2);
+				g2.drawLine(x2, y2, x3, y3);
+				g2.drawLine(x3, y3, x1, y1);
+			}
 		}
 	}
 
@@ -72,8 +94,7 @@ public class TrueRenderer2 implements Renderer {
 	}
 
 	@Override
-	public void updateGraphicsObject(Graphics g) {
-		// TODO Auto-generated method stub
-		
+	public void updateGraphicsObject(Graphics _g) {
+		g = _g;		
 	}
 }

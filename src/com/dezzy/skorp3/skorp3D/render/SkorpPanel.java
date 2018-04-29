@@ -15,7 +15,7 @@ import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 import com.dezzy.skorp3.skorp3D.raycast2.Raycaster2;
-import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
+import com.dezzy.skorp3.skorp3D.true3D2.render.TrueRenderer2;
 
 public abstract class SkorpPanel extends JPanel implements MouseMotionListener, KeyListener {
 
@@ -111,6 +111,25 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 				renderer.render();
 			}
 			
+		};
+		
+		return panel;
+	}
+	
+	public static SkorpPanel createStandardTrue3D2(Container pane, int width, int height) {
+		SkorpPanel panel = new SkorpPanel(Global.mouseData, pane, new boolean[256]) {
+			private static final long serialVersionUID = 5359349255429231524L;
+			private Renderer renderer;
+			
+			{
+				renderer = new TrueRenderer2(Global.WIDTH, Global.HEIGHT, Global.mouseData, Global.True3D.data3D, this, Global.True3D2.camera, Global.True3D2.meshlist);
+			}
+			
+			@Override
+			public void paintComponent(Graphics g) {
+				renderer.updateGraphicsObject(g);
+				renderer.render();
+			}
 		};
 		
 		return panel;

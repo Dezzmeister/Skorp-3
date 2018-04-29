@@ -3,10 +3,11 @@ package com.dezzy.skorp3.math3D;
 import java.util.List;
 
 import com.dezzy.skorp3.GPU.GPUKernel;
+import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.math3D.datastructures.Stack;
 
 /**
- * Represents a 4x4 matrix. ESSENTIAL for the 3D code.
+ * Represents a 4x4 matrix. ESSENTIAL for the True3D code.
  * 
  * @author Dezzmeister
  *
@@ -26,6 +27,7 @@ public class Matrix4 {
 			values = _values;
 		} else {
 			System.out.println("Matrix4 array should have 16 values!");
+			Logger.warn("Matrix4 created with " + _values.length + " values, should have 16!");
 		}
 	}
 	

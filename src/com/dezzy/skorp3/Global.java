@@ -16,6 +16,7 @@ import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.VBO3D;
 import com.dezzy.skorp3.game3D.VBO3DList;
+import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.data.VBO;
 import com.dezzy.skorp3.skorp3D.data.VBOList;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
@@ -30,6 +31,8 @@ import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
+import com.dezzy.skorp3.skorp3D.true3D2.core.Mesh;
+import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
 
 /**
  * Global should be used to hold global variables/objects that will be used throughout Skorp.
@@ -88,6 +91,20 @@ public final class Global {
 		
 		public static final VBO VBO = new VBO();
 		public static final VBOList VBOLIST = new VBOList();
+	}
+	
+	public static class True3D2 {
+		public static MeshList meshlist = new MeshList();
+		public static Mesh testmesh = new Mesh(3);
+		public static com.dezzy.skorp3.skorp3D.true3D2.render.Camera camera = new com.dezzy.skorp3.skorp3D.true3D2.render.Camera(new Vertex(0,0,0), new Vertex(0,0,-1));
+		
+		static {
+			testmesh.set(0,100,-100,-100);
+			testmesh.set(1,200,-100,-100);
+			testmesh.set(2,150,-200,-100);
+			
+			meshlist.add(testmesh);
+		}
 	}
 	
 	public static class Raycast2 {
