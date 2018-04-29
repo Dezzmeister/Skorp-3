@@ -1,10 +1,10 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Sector {
-	public Vector[] points;
+	public Vector2[] points;
 	public Wall[] walls;
 	
 	public Texture2 ceiltexture = new Texture2("assets/raycast/textures/plaster.png",512,512);
@@ -18,7 +18,7 @@ public class Sector {
 	public double floorScale = 1;
 	public double ceilScale = 1;
 	
-	public Sector(Vector ... _points) {
+	public Sector(Vector2 ... _points) {
 		points = _points;
 	}
 	

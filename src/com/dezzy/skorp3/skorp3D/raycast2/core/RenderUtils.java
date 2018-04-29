@@ -1,6 +1,6 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 
 public final class RenderUtils {
 	
@@ -8,27 +8,27 @@ public final class RenderUtils {
 		throw new RuntimeException();
 	}
 	
-	public static Vector rayHitSegment(Vector rayStart, Vector rayDirection, Wall segment) {
-		Vector r0 = rayStart;
-		Vector r1 = rayDirection;
-		Vector a = segment.v0;
-		Vector b = segment.v1;
+	public static Vector2 rayHitSegment(Vector2 rayStart, Vector2 rayDirection, Wall segment) {
+		Vector2 r0 = rayStart;
+		Vector2 r1 = rayDirection;
+		Vector2 a = segment.v0;
+		Vector2 b = segment.v1;
 		
-		Vector s1,s2;
-		s1 = new Vector(r1.x-r0.x,r1.y-r0.y);
-		s2 = new Vector(b.x-a.x,b.y-a.y);
+		Vector2 s1,s2;
+		s1 = new Vector2(r1.x-r0.x,r1.y-r0.y);
+		s2 = new Vector2(b.x-a.x,b.y-a.y);
 		  
 		double s,t;
 		s = (-s1.y * (r0.x - a.x) + s1.x * (r0.y - a.y)) / (-s2.x * s1.y + s1.x * s2.y);
 		t = (s2.x * (r0.y - a.y) - s2.y * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
 		  
 		if (s >= 0 && s <= 1 && t >= 0) {
-		  return new Vector(r0.x + (t * s1.x), r0.y + (t * s1.y));
+		  return new Vector2(r0.x + (t * s1.x), r0.y + (t * s1.y));
 		}
 		return null;
 	}
 	
-	public static boolean vectorInSector(Vector v, Sector s) {
+	public static boolean vectorInSector(Vector2 v, Sector s) {
 		int j = s.points.length-1;
 		boolean oddNodes = false;
 		
@@ -36,8 +36,8 @@ public final class RenderUtils {
 		double y = v.y;
 		
 		for (int i = 0; i < s.points.length; i++) {
-			Vector p = s.points[i];
-			Vector e = s.points[j];
+			Vector2 p = s.points[i];
+			Vector2 e = s.points[j];
 			
 			if ((p.y < y && e.y >= y
 			  || e.y < y && p.y >= y)

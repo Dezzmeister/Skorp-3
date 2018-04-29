@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import com.dezzy.skorp3.file.Load;
 import com.dezzy.skorp3.log.Logger;
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
@@ -36,7 +36,7 @@ public class MapLoader {
 		
 		List<Sector> finalSectors = new ArrayList<Sector>();
 		List<Wall> pendingWalls = new ArrayList<Wall>();
-		List<Vector> sectorPoints = new ArrayList<Vector>();
+		List<Vector2> sectorPoints = new ArrayList<Vector2>();
 		Map<String,Texture2> textures = new HashMap<String,Texture2>();
 		
 		Sector[] sectorArray;
@@ -59,7 +59,7 @@ public class MapLoader {
 			if (beginsWith(s,"pt")) {
 				int x = Integer.parseInt(s.substring(s.indexOf(": ")+2,s.indexOf(",")));
 				int y = Integer.parseInt(s.substring(s.indexOf(",")+1));
-				sectorPoints.add(new Vector(x,y));
+				sectorPoints.add(new Vector2(x,y));
 			}
 			
 			if (beginsWith(s,"wall:")) {

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -12,10 +13,9 @@ import javax.swing.KeyStroke;
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.annotations.urgency.Urgency;
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
-import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
@@ -96,9 +96,9 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	public void renderSector(Sector sector) {	    
-	    Vector pos = camera.pos;
-	    Vector dir = camera.dir;
-	    Vector plane = camera.plane;
+	    Vector2 pos = camera.pos;
+	    Vector2 dir = camera.dir;
+	    Vector2 plane = camera.plane;
 	    
 	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
     	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
@@ -108,18 +108,18 @@ public class Raycaster2 implements Renderer {
 	    	double norm = (2 * (x/(double)WIDTH)) - 1;
 	    	
 	    	//The direction of the ray
-	    	Vector rayendp = new Vector(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+	    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
 	    	for (int i = 0; i < sector.walls.length; i++) {
 	    		Wall l = sector.walls[i];
 	    		
-	    		Vector hit = RenderUtils.rayHitSegment(pos,rayendp,l);
+	    		Vector2 hit = RenderUtils.rayHitSegment(pos,rayendp,l);
 	    		
 	    		if (hit != null) {
 	    			Wall ray = new Wall(pos,hit);
 	    			
-	    			double distance = Vector.distance(pos, hit);
+	    			double distance = Vector2.distance(pos, hit);
 	    			
 	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));

@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -22,7 +23,7 @@ import com.dezzy.skorp3.skorp3D.data.VBOList;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.ElementTable;
 import com.dezzy.skorp3.skorp3D.raycast.core.Orientation;
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
@@ -111,10 +112,10 @@ public final class Global {
 		public static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
 		public static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
 		
-		public static final Sector mainSector = new Sector(new Vector(0,0),
-														   new Vector(0,10),
-														   new Vector(10,10),
-														   new Vector(10,0))
+		public static final Sector mainSector = new Sector(new Vector2(0,0),
+														   new Vector2(0,10),
+														   new Vector2(10,10),
+														   new Vector2(10,0))
 														   .defineWalls(
 																   new Wall(0,0,10,0).tile(8, 1),
 															   	   new Wall(0,0,0,10).tile(8, 1),
@@ -132,9 +133,9 @@ public final class Global {
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector(1,1))
-								      .setDir(new Vector(-0.75,0))
-								      .setPlane(new Vector(0,0.5));
+								      .setPos(new Vector2(1,1))
+								      .setDir(new Vector2(-0.75,0))
+								      .setPlane(new Vector2(0,0.5));
 		
 		static {
 			ElementTable table = new ElementTable();

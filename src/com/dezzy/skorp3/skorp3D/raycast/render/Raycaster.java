@@ -13,7 +13,7 @@ import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.RaycastContainer;
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 
 public class Raycaster implements RaycastRenderer {
@@ -100,9 +100,9 @@ public class Raycaster implements RaycastRenderer {
 	    	container.camera.moveLeft(container.map,sprintfactor);
 	    }
 	    
-	    Vector pos = container.camera.pos;
-	    Vector dir = container.camera.dir;
-	    Vector plane = container.camera.plane;
+	    Vector2 pos = container.camera.pos;
+	    Vector2 dir = container.camera.dir;
+	    Vector2 plane = container.camera.plane;
 	    
 	    for (int x = 0; x < WIDTH; x++) {
 	    	Element element = null;
@@ -310,7 +310,7 @@ public class Raycaster implements RaycastRenderer {
 	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	
-	public static Vector rayHitSegment(Line ray, Line seg) {
+	public static Vector2 rayHitSegment(Line ray, Line seg) {
 		double m1 = ray.slope();
 		double b1 = ray.yIntercept();
 		
@@ -327,7 +327,7 @@ public class Raycaster implements RaycastRenderer {
 		double sharedX = (bDiff/mDiff);
 		double sharedY = (m1*sharedX)+b1;
 		
-		Vector p = new Vector(sharedX,sharedY);
+		Vector2 p = new Vector2(sharedX,sharedY);
 		double minX = Math.min(seg.point.x, seg.endpoint.x);
 		double maxX = Math.max(seg.point.x, seg.endpoint.x);
 		double minY = Math.min(seg.point.y, seg.endpoint.y);

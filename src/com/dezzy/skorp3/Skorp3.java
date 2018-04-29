@@ -10,12 +10,21 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import com.dezzy.skorp3.math3D.Matrix3;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanelSupplier;
 
 public class Skorp3 {
 	public static void main(String ... args) {
-		launch(SkorpPanel::createStandardTrue3D2);
+		Matrix3 test = new Matrix3(new double[] {
+				6, 1, 1,
+				4, -2, 5,
+				2, 8, 7
+		});
+		
+		System.out.println(test.determinant());
+		
+		//launch(SkorpPanel::createStandardTrue3D2);
 	}
 	
 	public static void launch(SkorpPanelSupplier supplier) {

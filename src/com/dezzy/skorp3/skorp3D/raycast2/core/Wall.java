@@ -2,14 +2,14 @@ package com.dezzy.skorp3.skorp3D.raycast2.core;
 
 import java.awt.Color;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Wall {
 	public static final Texture2 defaultTexture = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
 	
-	public Vector v0;
-	public Vector v1;
+	public Vector2 v0;
+	public Vector2 v1;
 	public double length;
 	public int color = 0x00FFFFFF;
 	public int shadeValue = 0;
@@ -17,7 +17,7 @@ public class Wall {
 	public double xTiles = 1;
 	public double yTiles = 1;
 	
-	public Wall(Vector _v0, Vector _v1, Color _color) {
+	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
 		v1 = _v1;
 		color = getIntFromRGB(_color);
@@ -25,19 +25,19 @@ public class Wall {
 	}
 	
 	public Wall(double x1, double y1, double x2, double y2, Color _color) {
-		v0 = new Vector(x1,y1);
-		v1 = new Vector(x2,y2);
+		v0 = new Vector2(x1,y1);
+		v1 = new Vector2(x2,y2);
 		color = getIntFromRGB(_color);
 		updateLength();
 	}
 	
 	public Wall(double x1, double y1, double x2, double y2) {
-		v0 = new Vector(x1,y1);
-		v1 = new Vector(x2,y2);
+		v0 = new Vector2(x1,y1);
+		v1 = new Vector2(x2,y2);
 		updateLength();
 	}
 	
-	public Wall(Vector _v0, Vector _v1) {
+	public Wall(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
 		v1 = _v1;
 	}
@@ -47,8 +47,8 @@ public class Wall {
 		return this;
 	}
 	
-	public double getNorm(Vector v) {
-		return Vector.distance(v, v0)/length;
+	public double getNorm(Vector2 v) {
+		return Vector2.distance(v, v0)/length;
 	}
 	
 	public Texture2 getTexture() {
@@ -56,7 +56,7 @@ public class Wall {
 	}
 	
 	private void updateLength() {
-		length = Vector.distance(v0, v1);
+		length = Vector2.distance(v0, v1);
 	}
 	
 	public double slope() {

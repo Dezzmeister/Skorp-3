@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.math3D.Matrix4;
-import com.dezzy.skorp3.math3D.Vertex;
 import com.dezzy.skorp3.skorp3D.render.Renderer;
 import com.dezzy.skorp3.skorp3D.true3D2.core.Mesh;
 import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
+import com.dezzy.skorp3.skorp3D.true3D2.core.Vector4;
 
 public class TrueRenderer2 implements Renderer {
 	private volatile Graphics g;
@@ -53,9 +53,9 @@ public class TrueRenderer2 implements Renderer {
 		
 		for (Mesh m : meshes) {
 			for (int i = 0; i < m.vertices.length-2; i += 3) {
-				Vertex v1 = m.vertices[i];
-				Vertex v2 = m.vertices[i + 1];
-				Vertex v3 = m.vertices[i + 2];
+				Vector4 v1 = m.vertices[i];
+				Vector4 v2 = m.vertices[i + 1];
+				Vector4 v3 = m.vertices[i + 2];
 				
 				v1 = transform.transform(v1);
 				v2 = transform.transform(v2);
@@ -71,14 +71,14 @@ public class TrueRenderer2 implements Renderer {
 				v3.y/=v3.z;
 				
 				g2.setColor(Color.YELLOW);
-				int x1 = v1.x.intValue();
-				int y1 = v1.y.intValue();
+				int x1 = (int) v1.x;
+				int y1 = (int) v1.y;
 				
-				int x2 = v2.x.intValue();
-				int y2 = v2.y.intValue();
+				int x2 = (int) v2.x;
+				int y2 = (int) v2.y;
 				
-				int x3 = v3.x.intValue();
-				int y3 = v3.y.intValue();
+				int x3 = (int) v3.x;
+				int y3 = (int) v3.y;
 				
 				g2.drawLine(x1, y1, x2, y2);
 				g2.drawLine(x2, y2, x3, y3);

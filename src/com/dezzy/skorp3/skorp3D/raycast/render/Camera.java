@@ -1,31 +1,31 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector;
+import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 
 public class Camera {
-	public Vector pos;
-	public Vector dir;
-	public Vector plane;
-	private Vector sidedir;
+	public Vector2 pos;
+	public Vector2 dir;
+	public Vector2 plane;
+	private Vector2 sidedir;
 	
 	private double moveSpeed = 0.055;
 	private double rotSpeed = 0.005;
 	
 	public double fogDistance = 10;
 	
-	public Camera setPos(Vector _pos) {
+	public Camera setPos(Vector2 _pos) {
 		pos = _pos;
 		return this;
 	}
 	
-	public Camera setDir(Vector _dir) {
+	public Camera setDir(Vector2 _dir) {
 		dir = _dir;
 		computeSideDir();
 		return this;
 	}
 	
-	public Camera setPlane(Vector _plane) {
+	public Camera setPlane(Vector2 _plane) {
 		plane = _plane;
 		return this;
 	}
@@ -52,7 +52,7 @@ public class Camera {
 		double x = dir.x*Math.cos(t) - dir.y*Math.sin(t);
 		double y = dir.x*Math.sin(t) + dir.y*Math.cos(t);
 		
-		sidedir = new Vector(x,y);
+		sidedir = new Vector2(x,y);
 	}
 	
 	/**
