@@ -71,7 +71,79 @@ public class Matrix4 {
                 );
 	}
 	
-	//public double determinant
+	public double determinant() {
+		double[] dets = new double[4];
+		for (int top = 0; top < 4; top++) {
+			double[] mat = new double[9];
+			int index = 0;
+			for (int i = 4; i < 16; i++) {
+				if ((i - top) % 4 != 0) {
+					mat[index++] = values[i];
+				}
+			}
+			Matrix3 matrix = new Matrix3(mat);
+			dets[top] = values[top] * matrix.determinant();
+		}
+		
+		return dets[0]-dets[1]+dets[2]-dets[3];
+	}
+	
+	/**
+	 * 
+	 * @return matrix of minors, calculated from this matrix
+	 */
+	public Matrix4 matrixOfMinors() {
+		double[] minors = new double[16];
+		for (int y = 0; y < 4; y++) {
+			for (int x = 0; x < 4; x++) {
+				double[] mat = new double[9];
+				int index = 0;
+				for (int _y = 0; _y < 4; _y++) {
+					for (int _x = 0; _x < 4; _x++) {
+						if (x!=_x && y!=_y) {
+							mat[index++] = values[_x+_y*4];
+						}
+					}
+				}
+				minors[x+y*4] = new Matrix3(mat).determinant();
+			}
+		}
+		
+		return new Matrix4(minors);
+	}
+	
+	public Matrix4 matrixOfCofactors() {
+		double[] cofactors = new double[16];
+		
+		for (int i = 0; i < 16; i++) {
+			if (i/4 % 2 == 0) {
+				cofactors[i] = (i % 2 == 1) ? -values[i] : values[i];
+			} else {
+				cofactors[i] = (i % 2 == 1) ? values[i] : -values[i];
+			}
+		}
+		
+		return new Matrix4(cofactors);
+	}
+	
+	public Matrix4 adjugate() {
+		double[] adjugate = new double[16];
+		
+		for (int y = 0; y < 4; y++) {
+			for (int x = 0; x < 4; x++) {
+				adjugate[x+y*4] = values[y+x*4];
+			}
+		}
+		
+		return new Matrix4(adjugate);
+	}
+	
+	public Matrix4 inverse() {
+		Matrix4 mat = matrixOfMinors().matrixOfCofactors().adjugate();
+		double invdet = 1/determinant();
+		
+		return mat.multiply(invdet);
+	}
 	
 	public Vertex[] transform(Vertex ... vertices) {
 		for (int i = 0; i < vertices.length; i++) {
@@ -176,5 +248,13 @@ public class Matrix4 {
 				0, 0, -(2/(farZ-nearZ)), -((farZ+nearZ)/(farZ-nearZ)),
 				0, 0, 0, 1
 		});
+	}
+	
+	@Override
+	public String toString() {
+		return "["+values[0]+"\t"+values[1]+"\t"+values[2]+"\t"+values[3]+"]\n"+
+			   "["+values[4]+"\t"+values[5]+"\t"+values[6]+"\t"+values[7]+"]\n"+
+			   "["+values[8]+"\t"+values[9]+"\t"+values[10]+"\t"+values[11]+"]\n"+
+			   "["+values[12]+"\t"+values[13]+"\t"+values[14]+"\t"+values[15]+"]";
 	}
 }
