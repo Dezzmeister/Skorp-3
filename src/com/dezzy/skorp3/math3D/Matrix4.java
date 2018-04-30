@@ -89,6 +89,8 @@ public class Matrix4 {
 	}
 	
 	/**
+	 * Calculates a 4x4 matrix, for which each element of the matrix is the determinant of the 3x3 matrix
+	 * formed by the elements not in that element's row or column. Used in calculating the inverse.
 	 * 
 	 * @return matrix of minors, calculated from this matrix
 	 */
@@ -112,6 +114,12 @@ public class Matrix4 {
 		return new Matrix4(minors);
 	}
 	
+	/**
+	 * Calculates a 4x4 matrix for which the signs are flipped only for elements in a "checkerboard" pattern.
+	 * Used in calculating the inverse.
+	 * 
+	 * @return matrix of cofactors, calculated from this matrix
+	 */
 	public Matrix4 matrixOfCofactors() {
 		double[] cofactors = new double[16];
 		
@@ -126,6 +134,12 @@ public class Matrix4 {
 		return new Matrix4(cofactors);
 	}
 	
+	/**
+	 * Calculates a 4x4 matrix for which all elements are transposed across the diagonal.
+	 * Used in calculating the inverse.
+	 * 
+	 * @return adjugate matrix, calculated from this matrix
+	 */
 	public Matrix4 adjugate() {
 		double[] adjugate = new double[16];
 		
