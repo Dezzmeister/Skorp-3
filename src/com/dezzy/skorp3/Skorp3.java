@@ -35,7 +35,7 @@ public class Skorp3 {
 		System.out.println(test2.inverse());
 		System.out.println();
 		System.out.println(test2.multiply(test2.inverse()));
-		
+		launch(SkorpPanel::createStandardRaycast2);
 		//launch(SkorpPanel::createStandardTrue3D2);
 	}
 	

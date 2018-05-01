@@ -65,10 +65,10 @@ public class MapLoader {
 			if (beginsWith(s,"wall:")) {
 				String coords = s.substring(s.indexOf(": ")+2);
 				String[] array = coords.split(",");
-				double x1 = Double.parseDouble(array[0]);
-				double y1 = Double.parseDouble(array[1]);
-				double x2 = Double.parseDouble(array[2]);
-				double y2 = Double.parseDouble(array[3]);
+				float x1 = Float.parseFloat(array[0]);
+				float y1 = Float.parseFloat(array[1]);
+				float x2 = Float.parseFloat(array[2]);
+				float y2 = Float.parseFloat(array[3]);
 				currentWall = new Wall(x1,y1,x2,y2);
 			}
 			

@@ -327,7 +327,7 @@ public class Raycaster implements RaycastRenderer {
 		double sharedX = (bDiff/mDiff);
 		double sharedY = (m1*sharedX)+b1;
 		
-		Vector2 p = new Vector2(sharedX,sharedY);
+		Vector2 p = new Vector2((float)sharedX,(float)sharedY);
 		double minX = Math.min(seg.point.x, seg.endpoint.x);
 		double maxX = Math.max(seg.point.x, seg.endpoint.x);
 		double minY = Math.min(seg.point.y, seg.endpoint.y);

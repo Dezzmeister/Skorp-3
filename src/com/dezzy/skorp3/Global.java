@@ -125,7 +125,7 @@ public final class Global {
 															   	   new Wall(1,1,4,4).setTexture(cartoonstones),
 															       new Wall(4,4,4,7).setTexture(cartoonstones),
 															   	   new Wall(4,7,4,8).setTexture(bars),
-															   	   new Wall(4,8,4,9.25).setTexture(cartoonstones));
+															   	   new Wall(4,8,4,9.25f).setTexture(cartoonstones));
 		
 		public static RaycastMap map = new RaycastMap(10,10,mainSector);
 	}
@@ -134,8 +134,8 @@ public final class Global {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
 								      .setPos(new Vector2(1,1))
-								      .setDir(new Vector2(-0.75,0))
-								      .setPlane(new Vector2(0,0.5));
+								      .setDir(new Vector2(-0.75f,0))
+								      .setPlane(new Vector2(0,0.5f));
 		
 		static {
 			ElementTable table = new ElementTable();

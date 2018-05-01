@@ -10,13 +10,13 @@ public class Sector {
 	public Texture2 ceiltexture = new Texture2("assets/raycast/textures/plaster.png",512,512);
 	public Texture2 floortexture = new Texture2("assets/raycast/textures/floortiles.png",512,512);
 	
-	public double ceilXTiles = 1;
-	public double ceilYTiles = 1;
-	public double floorXTiles = 1;
-	public double floorYTiles = 1;
+	public float ceilXTiles = 1;
+	public float ceilYTiles = 1;
+	public float floorXTiles = 1;
+	public float floorYTiles = 1;
 	
-	public double floorScale = 1;
-	public double ceilScale = 1;
+	public float floorScale = 1;
+	public float ceilScale = 1;
 	
 	public Sector(Vector2 ... _points) {
 		points = _points;
@@ -27,24 +27,24 @@ public class Sector {
 		return this;
 	}
 	
-	public Sector tileFloor(double _xTiles, double _yTiles) {
+	public Sector tileFloor(float _xTiles, float _yTiles) {
 		floorXTiles = _xTiles;
 		floorYTiles = _yTiles;
 		return this;
 	}
 	
-	public Sector tileCeiling(double _xTiles, double _yTiles) {
+	public Sector tileCeiling(float _xTiles, float _yTiles) {
 		ceilXTiles = _xTiles;
 		ceilYTiles = _yTiles;
 		return this;
 	}
 	
-	public Sector setFloor(double scale) {
+	public Sector setFloor(float scale) {
 		floorScale = scale;
 		return this;
 	}
 	
-	public Sector setCeiling(double scale) {
+	public Sector setCeiling(float scale) {
 		ceilScale = scale;
 		return this;
 	}

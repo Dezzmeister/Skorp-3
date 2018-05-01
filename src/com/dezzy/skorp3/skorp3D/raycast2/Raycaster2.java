@@ -44,7 +44,7 @@ public class Raycaster2 implements Renderer {
 	private final int WIDTH;
 	private final int HEIGHT;
 	//TODO consider using a 2D z-buffer to allow for transparent sections in walls that are not limited to vertical stripes
-	private double[] zbuf;
+	private float[] zbuf;
 	private BufferedImage floor;
 	private Sector currentSector;
 	private BufferedImage img;
@@ -60,7 +60,7 @@ public class Raycaster2 implements Renderer {
 		camera = _camera;
 		keys = _keys;
 		
-		zbuf = new double[WIDTH];
+		zbuf = new float[WIDTH];
 		resetZBuffer();
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		for (int i = 0; i < map.sectors.length; i++) {
@@ -82,7 +82,7 @@ public class Raycaster2 implements Renderer {
 	@Urgency(4)
 	private void resetZBuffer() {
 		for (int i = 0; i < zbuf.length; i++) {
-			zbuf[i] = Double.MAX_VALUE;
+			zbuf[i] = Float.MAX_VALUE;
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class Raycaster2 implements Renderer {
 	    
 	    for (int x = 0; x < WIDTH; x++) {
 	    	//Map the x value to a range of -1 to 1
-	    	double norm = (2 * (x/(double)WIDTH)) - 1;
+	    	float norm = (2 * (x/(float)WIDTH)) - 1;
 	    	
 	    	//The direction of the ray
 	    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
@@ -119,7 +119,7 @@ public class Raycaster2 implements Renderer {
 	    		if (hit != null) {
 	    			Wall ray = new Wall(pos,hit);
 	    			
-	    			double distance = Vector2.distance(pos, hit);
+	    			float distance = Vector2.distance(pos, hit);
 	    			
 	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
@@ -134,13 +134,13 @@ public class Raycaster2 implements Renderer {
 	    				int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1)*sector.floorScale);
 	    				int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
-	    				double wallNorm = l.getNorm(hit);
+	    				float wallNorm = l.getNorm(hit);
 	    				
 	    				int texX = (int) ((wallNorm * l.texture.width) * l.xTiles) % l.texture.width;
 	    				makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
 	    				
 	    				for (int y = drawStart; y < drawEnd; y++) {
-	    					double normY = (y-trueDrawStart)/(double)lineHeight;
+	    					float normY = (y-trueDrawStart)/(float)lineHeight;
 	    					int texY = (int) ((normY*(l.texture.height)) * l.yTiles) % l.texture.height;
 	    					
 	    					int color = l.texture.pixels[texX + (texY * l.texture.width)];

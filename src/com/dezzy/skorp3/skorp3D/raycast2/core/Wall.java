@@ -10,12 +10,12 @@ public class Wall {
 	
 	public Vector2 v0;
 	public Vector2 v1;
-	public double length;
+	public float length;
 	public int color = 0x00FFFFFF;
 	public int shadeValue = 0;
 	public Texture2 texture = defaultTexture;
-	public double xTiles = 1;
-	public double yTiles = 1;
+	public float xTiles = 1;
+	public float yTiles = 1;
 	
 	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
@@ -24,14 +24,14 @@ public class Wall {
 		updateLength();
 	}
 	
-	public Wall(double x1, double y1, double x2, double y2, Color _color) {
+	public Wall(float x1, float y1, float x2, float y2, Color _color) {
 		v0 = new Vector2(x1,y1);
 		v1 = new Vector2(x2,y2);
 		color = getIntFromRGB(_color);
 		updateLength();
 	}
 	
-	public Wall(double x1, double y1, double x2, double y2) {
+	public Wall(float x1, float y1, float x2, float y2) {
 		v0 = new Vector2(x1,y1);
 		v1 = new Vector2(x2,y2);
 		updateLength();
@@ -47,7 +47,7 @@ public class Wall {
 		return this;
 	}
 	
-	public double getNorm(Vector2 v) {
+	public float getNorm(Vector2 v) {
 		return Vector2.distance(v, v0)/length;
 	}
 	
@@ -59,15 +59,15 @@ public class Wall {
 		length = Vector2.distance(v0, v1);
 	}
 	
-	public double slope() {
-		double xDiff = v1.x-v0.x;
-		double yDiff = v1.y-v0.y;
+	public float slope() {
+		float xDiff = v1.x-v0.x;
+		float yDiff = v1.y-v0.y;
 		return yDiff/xDiff;
 	}
 	
-	public double yIntercept() {
-		double x = v0.x;
-		double y = v0.y;
+	public float yIntercept() {
+		float x = v0.x;
+		float y = v0.y;
 		
 		return y - (slope()*x);
 	}
@@ -91,9 +91,9 @@ public class Wall {
 	 * @param wall2 second wall
 	 * @return angle in radians
 	 */
-	public static double angleBetweenLines(Wall wall1, Wall wall2) {
-		double angle1 = Math.atan2(wall1.v0.y - wall1.v1.y, wall1.v0.x - wall1.v1.x);
-		double angle2 = Math.atan2(wall2.v0.y - wall2.v1.y, wall2.v0.x - wall2.v1.x);
+	public static float angleBetweenLines(Wall wall1, Wall wall2) {
+		float angle1 = (float) Math.atan2(wall1.v0.y - wall1.v1.y, wall1.v0.x - wall1.v1.x);
+		float angle2 = (float) Math.atan2(wall2.v0.y - wall2.v1.y, wall2.v0.x - wall2.v1.x);
 		  
 		return Math.abs(angle1-angle2);
 	}
@@ -142,7 +142,7 @@ public class Wall {
 	 * @param _yTiles how many times to repeat the y texture
 	 * @return this <code>Wall</code>
 	 */
-	public Wall tile(double _xTiles, double _yTiles) {
+	public Wall tile(float _xTiles, float _yTiles) {
 		xTiles = _xTiles;
 		yTiles = _yTiles;
 		return this;

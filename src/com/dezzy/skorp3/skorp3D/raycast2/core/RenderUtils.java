@@ -18,7 +18,7 @@ public final class RenderUtils {
 		s1 = new Vector2(r1.x-r0.x,r1.y-r0.y);
 		s2 = new Vector2(b.x-a.x,b.y-a.y);
 		  
-		double s,t;
+		float s,t;
 		s = (-s1.y * (r0.x - a.x) + s1.x * (r0.y - a.y)) / (-s2.x * s1.y + s1.x * s2.y);
 		t = (s2.x * (r0.y - a.y) - s2.y * (r0.x - a.x)) / (-s2.x * s1.y + s1.x * s2.y);
 		  
