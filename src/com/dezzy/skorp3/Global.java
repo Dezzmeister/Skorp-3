@@ -47,11 +47,11 @@ public final class Global {
 	/**
 	 * X resolution of the rendered image
 	 */
-	public static final int WIDTH = 500;
+	public static final int WIDTH = 300;
 	/**
 	 * Y resolution of the rendered image
 	 */
-	public static final int HEIGHT = 500;
+	public static final int HEIGHT = 300;
 	/**
 	 * X resolution of the displayed image
 	 */
@@ -111,6 +111,7 @@ public final class Global {
 	public static class Raycast2 {
 		public static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
 		public static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
+		public static final Texture2 window = new Texture2("assets/raycast/textures/window.png",16,16);
 		
 		public static final Sector mainSector = new Sector(new Vector2(0,0),
 														   new Vector2(0,10),
@@ -125,7 +126,8 @@ public final class Global {
 															   	   new Wall(1,1,4,4).setTexture(cartoonstones),
 															       new Wall(4,4,4,7).setTexture(cartoonstones),
 															   	   new Wall(4,7,4,8).setTexture(bars),
-															   	   new Wall(4,8,4,9.25f).setTexture(cartoonstones));
+															   	   new Wall(4,8,4,9.25f).setTexture(window),
+															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1));
 		
 		public static RaycastMap map = new RaycastMap(10,10,mainSector);
 	}

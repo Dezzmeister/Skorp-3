@@ -17,26 +17,7 @@ import com.dezzy.skorp3.skorp3D.render.SkorpPanelSupplier;
 
 public class Skorp3 {
 	public static void main(String ... args) {
-		Matrix3 test = new Matrix3(new double[] {
-				6, 1, 1,
-				4, -2, 5,
-				2, 8, 7
-		});
-		
-		System.out.println(test.determinant());
-		
-		Matrix4 test2 = new Matrix4(new double[] {
-				9, 2, 4, -9,
-				8, 4, 1, -3,
-				-7, -8, 3, 4,
-				4, -6, 1, 4
-		});
-		
-		System.out.println(test2.inverse());
-		System.out.println();
-		System.out.println(test2.multiply(test2.inverse()));
 		launch(SkorpPanel::createStandardRaycast2);
-		//launch(SkorpPanel::createStandardTrue3D2);
 	}
 	
 	public static void launch(SkorpPanelSupplier supplier) {

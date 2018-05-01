@@ -43,8 +43,14 @@ public class Raycaster2 implements Renderer {
 	
 	private final int WIDTH;
 	private final int HEIGHT;
-	//TODO consider using a 2D z-buffer to allow for transparent sections in walls that are not limited to vertical stripes
-	private float[] zbuf;
+	/**
+	 * A 2D z-buffer, used instead of a 1D z-buffer to support transparent sections in walls
+	 */
+	private float[] zbuf2;
+	/**
+	 * The purpose of this z-buffer is to speed up resetting by using System.arraycopy() instead of a for loop.
+	 */
+	private float[] emptyZBuffer;
 	private BufferedImage floor;
 	private Sector currentSector;
 	private BufferedImage img;
@@ -60,8 +66,15 @@ public class Raycaster2 implements Renderer {
 		camera = _camera;
 		keys = _keys;
 		
-		zbuf = new float[WIDTH];
-		resetZBuffer();
+		emptyZBuffer = new float[WIDTH * HEIGHT];
+		for (int i = 0; i < emptyZBuffer.length; i++) {
+			emptyZBuffer[i] = Float.MAX_VALUE;
+		}
+		
+		zbuf2 = new float[WIDTH * HEIGHT];
+		reset2DZBuffer();
+
+		zbuf2 = new float[WIDTH * HEIGHT];
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		for (int i = 0; i < map.sectors.length; i++) {
 			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
@@ -78,12 +91,8 @@ public class Raycaster2 implements Renderer {
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
-	//TODO optimize with predefined array and System.arraycopy()? (if need be)
-	@Urgency(4)
-	private void resetZBuffer() {
-		for (int i = 0; i < zbuf.length; i++) {
-			zbuf[i] = Float.MAX_VALUE;
-		}
+	private void reset2DZBuffer() {		
+		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
 	@Override
@@ -123,39 +132,38 @@ public class Raycaster2 implements Renderer {
 	    			
 	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
-	    			
-	    			boolean makeTransparent = false;
-	    			if (distance < zbuf[x]) {
-	    				int lineHeight = (int) (HEIGHT/distance);
+	    			//if (distance < zbuf[x]) {
+	    			int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    				int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1)*sector.ceilScale);
-	    				int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
+	    			int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1)*sector.ceilScale);
+	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    				int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1)*sector.floorScale);
-	    				int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
+	    			int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1)*sector.floorScale);
+	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
-	    				float wallNorm = l.getNorm(hit);
+	    			float wallNorm = l.getNorm(hit);
 	    				
-	    				int texX = (int) ((wallNorm * l.texture.width) * l.xTiles) % l.texture.width;
-	    				makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
+	    			int texX = (int) ((wallNorm * l.texture.width) * l.xTiles) % l.texture.width;
+	    			//makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
 	    				
-	    				for (int y = drawStart; y < drawEnd; y++) {
-	    					float normY = (y-trueDrawStart)/(float)lineHeight;
-	    					int texY = (int) ((normY*(l.texture.height)) * l.yTiles) % l.texture.height;
+	    			for (int y = drawStart; y < drawEnd; y++) {
+	    				float normY = (y-trueDrawStart)/(float)lineHeight;
+	    				int texY = (int) ((normY*(l.texture.height)) * l.yTiles) % l.texture.height;
 	    					
-	    					int color = l.texture.pixels[texX + (texY * l.texture.width)];
-	    			
-	    					if (!makeTransparent) {
-	    						img.setRGB(x, y, color);
-	    					}
-	    				}
+	    				int color = l.texture.pixels[texX + (texY * l.texture.width)];
 	    				
-	    				if (!makeTransparent) {
-	    					zbuf[x] = distance;
+	    				if (color != Texture2.ALPHA && distance < zbuf2[x + y * WIDTH]) {
+	    					img.setRGB(x, y, color);
+	    						
+	    					zbuf2[x + y * WIDTH] = distance;
 	    				}
+	    			}
 	    				
-	    				for (int y = 0; y < drawStart; y++) {
+	    			for (int y = 0; y < drawStart; y++) {
+	    				if (distance < zbuf2[x + y * WIDTH]) {
 	    					img.setRGB(x,y,0xFF0000FF);
+	    						
+	    					zbuf2[x + y * WIDTH] = distance;
 	    				}
 	    			}
 	    		}
@@ -206,7 +214,7 @@ public class Raycaster2 implements Renderer {
 	 * After all visible sectors have been rendered, update the z-buffer and obtain the final image.
 	 */
 	public void postRender() {
-		resetZBuffer();
+		reset2DZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	
