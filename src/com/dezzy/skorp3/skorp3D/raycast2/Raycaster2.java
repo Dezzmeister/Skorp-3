@@ -85,11 +85,6 @@ public class Raycaster2 implements Renderer {
 				break;
 			}
 		}
-		gpu = new RaycastTask(WIDTH,HEIGHT);
-		
-		Range range = Range.create(WIDTH);
-	    gpu.execute(range);
-	    gpu.dispose();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -142,10 +137,10 @@ public class Raycaster2 implements Renderer {
 	    			//if (distance < zbuf[x]) {
 	    			int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    			int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1)*sector.ceilScale);
+	    			int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1));
 	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    			int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1)*sector.floorScale);
+	    			int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1));
 	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    			float wallNorm = l.getNorm(hit);
@@ -164,6 +159,10 @@ public class Raycaster2 implements Renderer {
 	    						
 	    					zbuf2[x + y * WIDTH] = distance;
 	    				}
+	    			}
+	    			
+	    			for (int y = drawEnd; y < HEIGHT; y++) {
+	    				
 	    			}
 	    			
 	    			//Draw blue sky

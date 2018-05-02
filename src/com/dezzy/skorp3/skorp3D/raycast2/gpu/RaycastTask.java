@@ -2,13 +2,16 @@ package com.dezzy.skorp3.skorp3D.raycast2.gpu;
 
 import com.aparapi.Kernel;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
 public class RaycastTask extends Kernel {
 	private int WIDTH;
 	private int HEIGHT;
 	private int[] img;
-	Vector2 vec = new Vector2(5,5);
-	Vector2 vec2 = new Vector2(4,4);
+	Linetype vec1 = new Wall(5,5,4,6);
+	Linetype vec2 = new Wall(4,4,5,8);
 	
 	public RaycastTask(int _width, int _height) {
 		WIDTH = _width;
@@ -17,7 +20,7 @@ public class RaycastTask extends Kernel {
 	
 	@Override
 	public void run() {
-		
+		float vfloat = 5.5f;
 	}
 
 }
