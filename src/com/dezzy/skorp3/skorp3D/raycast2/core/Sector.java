@@ -21,6 +21,18 @@ public class Sector {
 	public float floorHeight = 1;
 	public float ceilHeight = 1;
 	
+	/**
+	 * Floor texture uv coordinates. 
+	 */
+	public Vector2 uvf0;
+	public Vector2 uvf1;
+	
+	/**
+	 * Ceiling texture uv coordinates.
+	 */
+	public Vector2 uvc0;
+	public Vector2 uvc1;
+	
 	public Sector(Vector2 ... _points) {
 		points = _points;
 	}
@@ -49,6 +61,18 @@ public class Sector {
 	
 	public Sector setCeiling(float height) {
 		ceilHeight = height;
+		return this;
+	}
+	
+	public Sector mapFloor(Vector2 _uvf0, Vector2 _uvf1) {
+		uvf0 = _uvf0;
+		uvf1 = _uvf1;
+		return this;
+	}
+	
+	public Sector mapCeiling(Vector2 _uvc0, Vector2 _uvc1) {
+		uvc0 = _uvc0;
+		uvc1 = _uvc1;
 		return this;
 	}
 }
