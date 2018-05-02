@@ -5,9 +5,9 @@ import java.awt.Color;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
-public class Wall {
+public class Wall implements Linetype {
 	public static final Texture2 defaultTexture = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
-	
+
 	public Vector2 v0;
 	public Vector2 v1;
 	public float length;
@@ -47,15 +47,11 @@ public class Wall {
 		return this;
 	}
 	
-	public float getNorm(Vector2 v) {
-		return Vector2.distance(v, v0)/length;
-	}
-	
 	public Texture2 getTexture() {
 		return texture;
 	}
 	
-	private void updateLength() {
+	public void updateLength() {
 		length = Vector2.distance(v0, v1);
 	}
 	
@@ -146,5 +142,34 @@ public class Wall {
 		xTiles = _xTiles;
 		yTiles = _yTiles;
 		return this;
+	}
+	
+	@Override
+	public Vector2 v0() {
+		return v0;
+	}
+	
+	@Override
+	public Vector2 v1() {
+		return v1;
+	}
+	
+	/**
+	 * WARNING: This is not guaranteed to return the current length of the wall. If
+	 * either of the wall's endpoints has changed and no call to <code>updateLength()</code> has
+	 * been made, this will return an outdated length.
+	 * <p>
+	 * However, under normal use, this should not be a problem.
+	 * 
+	 * @return length of this Wall, as of last call to <code>updateLength()</code>
+	 */
+	@Override
+	public float length() {
+		return length;
+	}
+	
+	@Override
+	public float getNorm(Vector2 v) {
+		return Vector2.distance(v, v0)/length;
 	}
 }
