@@ -5,14 +5,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
+import com.aparapi.Range;
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
-import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
@@ -20,6 +19,7 @@ import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
+import com.dezzy.skorp3.skorp3D.raycast2.gpu.RaycastTask;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 import com.dezzy.skorp3.skorp3D.render.Renderer;
 
@@ -55,6 +55,7 @@ public class Raycaster2 implements Renderer {
 	private Sector currentSector;
 	private BufferedImage img;
 	private Graphics2D g2;
+	private RaycastTask gpu;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -76,6 +77,7 @@ public class Raycaster2 implements Renderer {
 
 		zbuf2 = new float[WIDTH * HEIGHT];
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
+		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		for (int i = 0; i < map.sectors.length; i++) {
 			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
 			if (inSector) {
@@ -83,6 +85,11 @@ public class Raycaster2 implements Renderer {
 				break;
 			}
 		}
+		gpu = new RaycastTask(WIDTH,HEIGHT);
+		
+		Range range = Range.create(WIDTH);
+	    gpu.execute(range);
+	    gpu.dispose();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -158,11 +165,21 @@ public class Raycaster2 implements Renderer {
 	    					zbuf2[x + y * WIDTH] = distance;
 	    				}
 	    			}
-	    				
+	    			
+	    			//Draw blue sky
 	    			for (int y = 0; y < drawStart; y++) {
 	    				if (distance < zbuf2[x + y * WIDTH]) {
 	    					img.setRGB(x,y,0xFF0000FF);
 	    						
+	    					zbuf2[x + y * WIDTH] = distance;
+	    				}
+	    			}
+	    			
+	    			//Draw brown floor
+	    			for (int y = drawEnd; y < HEIGHT; y++) {
+	    				if (distance < zbuf2[x + y * WIDTH]) {
+	    					img.setRGB(x, y, 0xFF8B4513);
+	    					
 	    					zbuf2[x + y * WIDTH] = distance;
 	    				}
 	    			}
@@ -177,9 +194,7 @@ public class Raycaster2 implements Renderer {
 	public void preRender() {
 		g2 = (Graphics2D) g;
 		g2.setBackground(Color.BLACK);
-		g2.clearRect(0, 0, panel.getWidth(), panel.getHeight());
-		
-		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);	
+		//g2.clearRect(0, 0, panel.getWidth(), panel.getHeight());	
 	}
 	
 	public void handleMovement() {
