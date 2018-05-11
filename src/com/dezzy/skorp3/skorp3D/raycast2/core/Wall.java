@@ -16,11 +16,18 @@ public class Wall implements Linetype {
 	public Texture2 texture = defaultTexture;
 	public float xTiles = 1;
 	public float yTiles = 1;
+	private boolean isPortal = false;
 	
 	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
 		v1 = _v1;
 		color = getIntFromRGB(_color);
+		updateLength();
+	}
+	
+	public Wall(Linetype line) {
+		v0 = line.v0();
+		v1 = line.v1();
 		updateLength();
 	}
 	
@@ -40,6 +47,11 @@ public class Wall implements Linetype {
 	public Wall(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
 		v1 = _v1;
+	}
+	
+	public Wall makePortal() {
+		isPortal = true;
+		return this;
 	}
 	
 	public Wall setTexture(Texture2 _texture) {
@@ -142,6 +154,10 @@ public class Wall implements Linetype {
 		xTiles = _xTiles;
 		yTiles = _yTiles;
 		return this;
+	}
+	
+	public boolean isPortal() {
+		return isPortal;
 	}
 	
 	@Override

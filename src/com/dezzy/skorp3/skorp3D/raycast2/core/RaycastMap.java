@@ -1,6 +1,9 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RaycastMap {
 	/**
@@ -13,6 +16,7 @@ public class RaycastMap {
 	private static final int SHADE_RANGE = 20;
 	public Wall[] walls;
 	public Sector[] sectors;
+	public Portal[] portals;
 	public final int WIDTH;
 	public final int HEIGHT;
 	
@@ -29,6 +33,30 @@ public class RaycastMap {
 		HEIGHT = _height;
 		sectors = _sectors;
 		preShade();
+	}
+	
+	public RaycastMap definePortals(Portal ... _portals) {
+		portals = _portals;
+		addPortalsToWalls();
+		return this;
+	}
+	
+	/**
+	 * Adds every Portal in the portal array to its border sectors' wall arrays. This allows the 
+	 * raycaster to check Portals like conventional Walls so that it can determine starting and ending points
+	 * for drawing other sectors.
+	 */
+	private void addPortalsToWalls() {
+		for (Portal p : portals) {
+			for (Sector s : p.borders()) {
+				Wall[] walls = new Wall[s.walls.length+1];
+				for (int i = 0; i < s.walls.length; i++) {
+					walls[i] = s.walls[i];
+				}
+				walls[walls.length-1] = new Wall(p).makePortal();
+				s.defineWalls(walls);
+			}
+		}
 	}
 	
 	public int wallCount() {

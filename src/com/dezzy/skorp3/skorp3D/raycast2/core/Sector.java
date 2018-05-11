@@ -35,6 +35,7 @@ public class Sector {
 	
 	public Sector(Vector2 ... _points) {
 		points = _points;
+		walls = new Wall[0];
 	}
 	
 	public Sector defineWalls(Wall ... _walls) {

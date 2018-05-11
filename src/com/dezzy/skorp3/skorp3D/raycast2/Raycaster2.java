@@ -78,13 +78,7 @@ public class Raycaster2 implements Renderer {
 		zbuf2 = new float[WIDTH * HEIGHT];
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		for (int i = 0; i < map.sectors.length; i++) {
-			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
-			if (inSector) {
-				currentSector = map.sectors[i];
-				break;
-			}
-		}
+		updateCurrentSector();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -102,6 +96,7 @@ public class Raycaster2 implements Renderer {
 		preRender();	
 		handleRotation();
 		handleMovement();
+		updateCurrentSector();
 		renderSector(currentSector);
 		postRender();
 	}
@@ -113,12 +108,14 @@ public class Raycaster2 implements Renderer {
 	    
 	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
     	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
+    	
+    	boolean previousWasWall = true;
 	    
 	    for (int x = 0; x < WIDTH; x++) {
 	    	//Map the x value to a range of -1 to 1
 	    	float norm = (2 * (x/(float)WIDTH)) - 1;
 	    	
-	    	//The direction of the ray
+	    	//The direction vector of the ray
 	    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
@@ -161,10 +158,6 @@ public class Raycaster2 implements Renderer {
 	    				}
 	    			}
 	    			
-	    			for (int y = drawEnd; y < HEIGHT; y++) {
-	    				
-	    			}
-	    			
 	    			//Draw blue sky
 	    			for (int y = 0; y < drawStart; y++) {
 	    				if (distance < zbuf2[x + y * WIDTH]) {
@@ -185,6 +178,16 @@ public class Raycaster2 implements Renderer {
 	    		}
 	    	}
 	    }
+	}
+	
+	public void updateCurrentSector() {
+		for (int i = 0; i < map.sectors.length; i++) {
+			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
+			if (inSector) {
+				currentSector = map.sectors[i];
+				break;
+			}
+		}
 	}
 	
 	/**

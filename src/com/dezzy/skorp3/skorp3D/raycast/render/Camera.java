@@ -1,7 +1,12 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
+import static com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils.*;
+
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Portal;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
 public class Camera {
 	public Vector2 pos;
