@@ -21,6 +21,8 @@ public class Sector {
 	public float floorHeight = 1;
 	public float ceilHeight = 1;
 	
+	private boolean rendered = false;
+	
 	/**
 	 * Floor texture uv coordinates. 
 	 */
@@ -75,5 +77,17 @@ public class Sector {
 		uvc0 = _uvc0;
 		uvc1 = _uvc1;
 		return this;
+	}
+	
+	public void markAsRendered() {
+		rendered = true;
+	}
+	
+	public void markAsUnrendered() {
+		rendered = false;
+	}
+	
+	public boolean hasBeenRendered() {
+		return rendered;
 	}
 }

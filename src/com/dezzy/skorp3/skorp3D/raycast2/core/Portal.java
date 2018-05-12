@@ -23,7 +23,7 @@ public class Portal implements Linetype {
 		updateLength();
 	}
 	
-	public Portal updateBorders(Sector _border1, Sector _border2) {
+	public Portal setBorders(Sector _border1, Sector _border2) {
 		border1 = _border1;
 		border2 = _border2;
 		return this;

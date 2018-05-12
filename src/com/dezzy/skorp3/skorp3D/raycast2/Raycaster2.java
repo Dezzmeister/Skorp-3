@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -67,8 +68,8 @@ public class Raycaster2 implements Renderer {
 	private BufferedImage img;
 	private Graphics2D g2;
 	private RaycastTask gpu;
-	private List<PortalRenderObject> PROs;
-	private int PROIndex = -1;
+	private Stack<PortalRenderObject> PROs;
+	private Stack<Portal> PBO = new Stack<Portal>();
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -85,7 +86,7 @@ public class Raycaster2 implements Renderer {
 			emptyZBuffer[i] = Float.MAX_VALUE;
 		}
 		
-		PROs = new ArrayList<PortalRenderObject>();
+		PROs = new Stack<PortalRenderObject>();
 		
 		zbuf2 = new float[WIDTH * HEIGHT];
 		reset2DZBuffer();
@@ -117,12 +118,11 @@ public class Raycaster2 implements Renderer {
 		handleRotation();
 		handleMovement();
 		updateCurrentSector();
-		renderSector(currentSector,0,WIDTH,false);
-		renderPROs();
+		renderSector(currentSector,0,WIDTH);
 		postRender();
 	}
 	
-	public void renderSector(Sector sector, int startX, int endX, boolean doNotAddPROs) {	    
+	public void renderSector(Sector sector, int startX, int endX) {	    
 	    Vector2 pos = camera.pos;
 	    Vector2 dir = camera.dir;
 	    Vector2 plane = camera.plane;
@@ -130,9 +130,8 @@ public class Raycaster2 implements Renderer {
 	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
     	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
     	
-    	boolean previousWasWall = true;
-	    
 	    for (int x = startX; x < endX; x++) {
+	    	sector.markAsRendered();
 	    	//Map the x value to a range of -1 to 1
 	    	float norm = (2 * (x/(float)WIDTH)) - 1;
 	    	
@@ -150,36 +149,12 @@ public class Raycaster2 implements Renderer {
 	    			
 	    			float distance = Vector2.distance(pos, hit);
 	    			if (l.isPortal()) {
-	    				/*
-	    				for (int y = 0; y < HEIGHT; y++) {
-	    					zbuf2[x + y * WIDTH] = distance;
-	    				}
-	    				*/
-	    				if (x == 0) {
-	    					if (!doNotAddPROs) {
-	    						PROs.add(new PortalRenderObject().startAt(0).setPortal(l.getPortal()));
-	    						PROIndex++;
-	    					}
-	    					previousWasWall = false;
-	    				}
-	    				if (x == WIDTH-1) {
-	    					PROs.get(PROIndex).endAt(x);
-	    				}
-	    				if (previousWasWall) {
-	    					if (!doNotAddPROs) {
-	    						PROs.add(new PortalRenderObject().startAt(x).setPortal(l.getPortal()));
-	    						PROIndex++;
-	    					}
-	    					previousWasWall = false;
+	    				if (!l.getPortal().otherSector(sector).hasBeenRendered() && zbuf2[x] > distance) {
+	    					renderSector(l.getPortal().otherSector(sector),0,WIDTH);
 	    				}
 	    				continue;
 	    			} else {
-	    				if (!previousWasWall) {
-	    					if (!doNotAddPROs) {
-	    						PROs.get(PROIndex).endAt(x);
-	    					}
-	    					previousWasWall = true;
-	    				}
+	    				
 	    			}
 	    			
 	    			//TODO Change this!!! No cosine!!
@@ -233,23 +208,16 @@ public class Raycaster2 implements Renderer {
 	    }
 	}
 	
-	public void renderPROs() {
-		for (PortalRenderObject p : PROs) {
-			renderSector(p.portal.otherSector(currentSector),p.startX,p.endX, true);
-		}
-	}
-	
 	/**
 	 * An intermediate class used in rendering sectors. 
 	 * 
 	 * @author Dezzmeister
 	 *
 	 */
-	@SuppressWarnings("unused")
 	private class PortalRenderObject {
 		public Portal portal;
 		public int startX;
-		public int endX;
+		public int endX = -1;
 		
 		public PortalRenderObject setPortal(Portal _portal) {
 			portal = _portal;
@@ -267,9 +235,8 @@ public class Raycaster2 implements Renderer {
 		}		
 	}
 	
-	private void clearPROBuffer() {
+	private void clearPROStack() {
 		PROs.clear();
-		PROIndex = -1;
 	}
 	
 	public void updateCurrentSector() {
@@ -324,9 +291,16 @@ public class Raycaster2 implements Renderer {
 	 */
 	public void postRender() {
 		reset2DZBuffer();
-		clearPROBuffer();
+		clearPROStack();
+		unrenderSectors();
 		//reset2DPortalZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
+	}
+	
+	public void unrenderSectors() {
+		for (int i = 0; i < map.sectors.length; i++) {
+			map.sectors[i].markAsUnrendered();
+		}
 	}
 	
 	public static double clamp(double val, double minVal, double maxVal) {
