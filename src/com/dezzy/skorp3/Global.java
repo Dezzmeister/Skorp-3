@@ -28,6 +28,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Portal;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
@@ -120,7 +121,7 @@ public final class Global {
 														   new Vector2(10,0))
 														   .defineWalls(
 																   new Wall(0,0,10,0).tile(8, 1),
-															   	   new Wall(0,0,0,10).tile(8, 1),
+															   	   //new Wall(0,0,0,10).tile(8, 1),
 															       new Wall(10,0,10,10).tile(8, 1),
 															   	   new Wall(0,10,10,10).tile(8, 1),
 															   	   new Wall(0,1,1,1).setTexture(cartoonstones),
@@ -129,12 +130,18 @@ public final class Global {
 															   	   new Wall(4,7,4,8).setTexture(bars),
 															   	   new Wall(4,8,4,9.25f).setTexture(window),
 															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1));
-		public static final Sector testSector = new Sector(new Vector2(10,10),
-														   new Vector2(10,20),
-														   new Vector2(20,20),
-														   new Vector2(20,10));
+		public static final Sector testSector = new Sector(new Vector2(0,0),
+														   new Vector2(0,10),
+														   new Vector2(-10,10),
+														   new Vector2(-10,0))
+														   .defineWalls(
+																   new Wall(0,0,-10,0).tile(8, 1),
+																   new Wall(-10,0,-10,10).tile(8, 1).setTexture(cartoonstones),
+																   new Wall(-10,10,0,10).tile(8, 1).setTexture(cartoonstones));
 		
-		public static RaycastMap map = new RaycastMap(10,10,mainSector,testSector);
+		public static RaycastMap map = new RaycastMap(10,10,mainSector,testSector)
+													 .definePortals(
+															 new Portal(0,0,0,10).updateBorders(mainSector, testSector));
 	}
 	
 	public static class Raycast {

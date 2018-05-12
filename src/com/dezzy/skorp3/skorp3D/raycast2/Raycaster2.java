@@ -5,16 +5,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import com.aparapi.Range;
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Portal;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
@@ -44,18 +46,29 @@ public class Raycaster2 implements Renderer {
 	private final int WIDTH;
 	private final int HEIGHT;
 	/**
-	 * A 2D z-buffer, used instead of a 1D z-buffer to support transparent sections in walls
+	 * A 2D z-buffer, used instead of a 1D z-buffer to support transparent sections in walls. Represented as a 1D array
+	 * for speed. (It actually is significantly faster.)
 	 */
 	private float[] zbuf2;
 	/**
 	 * The purpose of this z-buffer is to speed up resetting by using System.arraycopy() instead of a for loop.
 	 */
 	private float[] emptyZBuffer;
+	/**
+	 * Holds a number for each vertical stripe on the screen, telling how many portals lie on that stripe
+	 */
+	private int[] portalbuf;
+	/**
+	 * A z-buffer for portals.
+	 */
+	private float[] portalzbuf2;
 	private BufferedImage floor;
 	private Sector currentSector;
 	private BufferedImage img;
 	private Graphics2D g2;
 	private RaycastTask gpu;
+	private List<PortalRenderObject> PROs;
+	private int PROIndex = -1;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -72,10 +85,13 @@ public class Raycaster2 implements Renderer {
 			emptyZBuffer[i] = Float.MAX_VALUE;
 		}
 		
+		PROs = new ArrayList<PortalRenderObject>();
+		
 		zbuf2 = new float[WIDTH * HEIGHT];
 		reset2DZBuffer();
 
 		zbuf2 = new float[WIDTH * HEIGHT];
+		portalzbuf2 = new float[WIDTH * HEIGHT];
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		updateCurrentSector();
@@ -91,17 +107,22 @@ public class Raycaster2 implements Renderer {
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
+	private void reset2DPortalZBuffer() {
+		System.arraycopy(emptyZBuffer, 0, portalzbuf2, 0, WIDTH * HEIGHT);
+	}
+	
 	@Override
 	public void render() {
 		preRender();	
 		handleRotation();
 		handleMovement();
 		updateCurrentSector();
-		renderSector(currentSector);
+		renderSector(currentSector,0,WIDTH,false);
+		renderPROs();
 		postRender();
 	}
 	
-	public void renderSector(Sector sector) {	    
+	public void renderSector(Sector sector, int startX, int endX, boolean doNotAddPROs) {	    
 	    Vector2 pos = camera.pos;
 	    Vector2 dir = camera.dir;
 	    Vector2 plane = camera.plane;
@@ -111,7 +132,7 @@ public class Raycaster2 implements Renderer {
     	
     	boolean previousWasWall = true;
 	    
-	    for (int x = 0; x < WIDTH; x++) {
+	    for (int x = startX; x < endX; x++) {
 	    	//Map the x value to a range of -1 to 1
 	    	float norm = (2 * (x/(float)WIDTH)) - 1;
 	    	
@@ -128,6 +149,38 @@ public class Raycaster2 implements Renderer {
 	    			Wall ray = new Wall(pos,hit);
 	    			
 	    			float distance = Vector2.distance(pos, hit);
+	    			if (l.isPortal()) {
+	    				/*
+	    				for (int y = 0; y < HEIGHT; y++) {
+	    					zbuf2[x + y * WIDTH] = distance;
+	    				}
+	    				*/
+	    				if (x == 0) {
+	    					if (!doNotAddPROs) {
+	    						PROs.add(new PortalRenderObject().startAt(0).setPortal(l.getPortal()));
+	    						PROIndex++;
+	    					}
+	    					previousWasWall = false;
+	    				}
+	    				if (x == WIDTH-1) {
+	    					PROs.get(PROIndex).endAt(x);
+	    				}
+	    				if (previousWasWall) {
+	    					if (!doNotAddPROs) {
+	    						PROs.add(new PortalRenderObject().startAt(x).setPortal(l.getPortal()));
+	    						PROIndex++;
+	    					}
+	    					previousWasWall = false;
+	    				}
+	    				continue;
+	    			} else {
+	    				if (!previousWasWall) {
+	    					if (!doNotAddPROs) {
+	    						PROs.get(PROIndex).endAt(x);
+	    					}
+	    					previousWasWall = true;
+	    				}
+	    			}
 	    			
 	    			//TODO Change this!!! No cosine!!
 	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
@@ -180,6 +233,45 @@ public class Raycaster2 implements Renderer {
 	    }
 	}
 	
+	public void renderPROs() {
+		for (PortalRenderObject p : PROs) {
+			renderSector(p.portal.otherSector(currentSector),p.startX,p.endX, true);
+		}
+	}
+	
+	/**
+	 * An intermediate class used in rendering sectors. 
+	 * 
+	 * @author Dezzmeister
+	 *
+	 */
+	@SuppressWarnings("unused")
+	private class PortalRenderObject {
+		public Portal portal;
+		public int startX;
+		public int endX;
+		
+		public PortalRenderObject setPortal(Portal _portal) {
+			portal = _portal;
+			return this;
+		}
+		
+		public PortalRenderObject startAt(int x) {
+			startX = x;
+			return this;
+		}
+		
+		public PortalRenderObject endAt(int x) {
+			endX = x;
+			return this;
+		}		
+	}
+	
+	private void clearPROBuffer() {
+		PROs.clear();
+		PROIndex = -1;
+	}
+	
 	public void updateCurrentSector() {
 		for (int i = 0; i < map.sectors.length; i++) {
 			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
@@ -228,10 +320,12 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	/**
-	 * After all visible sectors have been rendered, update the z-buffer and obtain the final image.
+	 * After all visible sectors have been rendered, update the z-buffers and obtain the final image.
 	 */
 	public void postRender() {
 		reset2DZBuffer();
+		clearPROBuffer();
+		//reset2DPortalZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	

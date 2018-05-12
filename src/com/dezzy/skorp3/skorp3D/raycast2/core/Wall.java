@@ -17,6 +17,7 @@ public class Wall implements Linetype {
 	public float xTiles = 1;
 	public float yTiles = 1;
 	private boolean isPortal = false;
+	private Portal portal = null;
 	
 	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
@@ -25,9 +26,10 @@ public class Wall implements Linetype {
 		updateLength();
 	}
 	
-	public Wall(Linetype line) {
+	public Wall(Portal line) {
 		v0 = line.v0();
 		v1 = line.v1();
+		portal = line;
 		updateLength();
 	}
 	
@@ -158,6 +160,10 @@ public class Wall implements Linetype {
 	
 	public boolean isPortal() {
 		return isPortal;
+	}
+	
+	public Portal getPortal() {
+		return portal;
 	}
 	
 	@Override
