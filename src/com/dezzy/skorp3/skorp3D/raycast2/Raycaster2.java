@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JPanel;
@@ -122,13 +120,23 @@ public class Raycaster2 implements Renderer {
 		postRender();
 	}
 	
+	private Vector2 pos;
+	private Vector2 dir;
+	private Vector2 plane;
+	private Vector2 rayendp;
+	private Wall lastDrawn;
+	private Wall perpWall;
+	private Vector2 hit;
+	private Wall ray;
+	private Wall wall;
+	
 	public void renderSector(Sector sector, int startX, int endX) {	    
-	    Vector2 pos = camera.pos;
-	    Vector2 dir = camera.dir;
-	    Vector2 plane = camera.plane;
+	    pos = camera.pos;
+	    dir = camera.dir;
+	    plane = camera.plane;
 	    
 	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
-    	Wall perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
+    	perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
     	
 	    for (int x = startX; x < endX; x++) {
 	    	sector.markAsRendered();
@@ -136,21 +144,27 @@ public class Raycaster2 implements Renderer {
 	    	float norm = (2 * (x/(float)WIDTH)) - 1;
 	    	
 	    	//The direction vector of the ray
-	    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+	    	rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 	    	
 	    	//TODO Add sectors and use those instead of just testing all the walls.
 	    	for (int i = 0; i < sector.walls.length; i++) {
-	    		Wall l = sector.walls[i];
+	    		wall = sector.walls[i];
 	    		
-	    		Vector2 hit = RenderUtils.rayHitSegment(pos,rayendp,l);
+	    		hit = RenderUtils.rayHitSegment(pos,rayendp,wall);
 	    		
 	    		if (hit != null) {
-	    			Wall ray = new Wall(pos,hit);
+	    			ray = new Wall(pos,hit);
 	    			
 	    			float distance = Vector2.distance(pos, hit);
-	    			if (l.isPortal()) {
-	    				if (!l.getPortal().otherSector(sector).hasBeenRendered() && zbuf2[x] > distance) {
-	    					renderSector(l.getPortal().otherSector(sector),0,WIDTH);
+	    			
+	    			if (wall.isPortal()) {
+	    				if (!wall.getPortal().otherSector(sector).hasBeenRendered()) {
+	    					for (int y = 0; y < HEIGHT; y++) {
+		    					if (zbuf2[x + y * WIDTH] > distance) {
+		    						renderSector(wall.getPortal().otherSector(sector),x,WIDTH);
+		    						break;
+		    					}
+		    				}
 	    				}
 	    				continue;
 	    			} else {
@@ -168,21 +182,22 @@ public class Raycaster2 implements Renderer {
 	    			int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1));
 	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
-	    			float wallNorm = l.getNorm(hit);
+	    			float wallNorm = wall.getNorm(hit);
 	    				
-	    			int texX = (int) ((wallNorm * l.texture.width) * l.xTiles) % l.texture.width;
+	    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
 	    			//makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
-	    				
+	    			
 	    			for (int y = drawStart; y < drawEnd; y++) {
 	    				float normY = (y-trueDrawStart)/(float)lineHeight;
-	    				int texY = (int) ((normY*(l.texture.height)) * l.yTiles) % l.texture.height;
+	    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
 	    					
-	    				int color = l.texture.pixels[texX + (texY * l.texture.width)];
+	    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
 	    				
 	    				if (color != Texture2.ALPHA && distance < zbuf2[x + y * WIDTH]) {
 	    					img.setRGB(x, y, color);
 	    						
 	    					zbuf2[x + y * WIDTH] = distance;
+	    					lastDrawn = wall;
 	    				}
 	    			}
 	    			
@@ -206,6 +221,11 @@ public class Raycaster2 implements Renderer {
 	    		}
 	    	}
 	    }
+	}
+	
+	private void testWall(Wall w, int x, Sector sector, Wall norm, Wall rayendp) {
+		
+    			
 	}
 	
 	/**

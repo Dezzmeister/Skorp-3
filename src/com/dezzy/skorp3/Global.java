@@ -114,7 +114,8 @@ public final class Global {
 		public static final Texture2 cartoonstones = new Texture2("assets/raycast/textures/cartoonstones.png",512,512);
 		public static final Texture2 bars = new Texture2("assets/raycast/textures/bars.png",16,16);
 		public static final Texture2 window = new Texture2("assets/raycast/textures/window.png",16,16);
-		public static final Texture2 brix = new Texture2("assets/raycast/textures/brix.png",512,512);
+		//public static final Texture2 brix = new Texture2("assets/raycast/textures/brix.png",512,512);
+		public static final Texture2 rockface = new Texture2("assets/raycast/textures/rock.png",2000,2000);
 		
 		public static final Sector mainSector = new Sector(new Vector2(0,0),
 														   new Vector2(0,10),
@@ -145,9 +146,9 @@ public final class Global {
 															new Vector2(-20,10),
 															new Vector2(-10,10))
 															.defineWalls(
-																	new Wall(-10,0,-20,0).tile(8, 1).setTexture(brix),
-																	new Wall(-20,0,-20,10).tile(8, 1).setTexture(brix),
-																	new Wall(-20,10,-10,10).tile(8, 1).setTexture(brix));
+																	new Wall(-10,0,-20,0).tile(8, 1).setTexture(rockface),
+																	new Wall(-20,0,-20,10).tile(8, 1).setTexture(rockface),
+																	new Wall(-20,10,-10,10).tile(8, 1).setTexture(rockface));
 		
 		public static RaycastMap map = new RaycastMap(10,10,mainSector,testSector,testSector2)
 													 .definePortals(
