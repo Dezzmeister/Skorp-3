@@ -6,7 +6,6 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -32,6 +31,7 @@ import com.dezzy.skorp3.skorp3D.raycast2.core.Portal;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
+import com.dezzy.skorp3.skorp3D.raycast2.data.MapLoader;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 import com.dezzy.skorp3.skorp3D.true3D2.core.Mesh;
 import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
@@ -154,6 +154,8 @@ public final class Global {
 													 .definePortals(
 															 new Portal(0,0,0,10).setBorders(mainSector, testSector),
 															 new Portal(-10,0,-10,10).setBorders(testSector, testSector2));
+		
+		public static RaycastMap loadedmap = new MapLoader("C:/Users/Joe Junior/git/Skorp-3/levels/test.lol").finalMap();
 	}
 	
 	public static class Raycast {

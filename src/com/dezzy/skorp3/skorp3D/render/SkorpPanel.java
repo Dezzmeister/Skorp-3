@@ -102,7 +102,7 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 			private Renderer renderer;
 			
 			{				
-				renderer = new Raycaster2(Global.WIDTH, Global.HEIGHT, Global.Raycast2.map, Global.mouseData, this, Global.Raycast.camera, keys);
+				renderer = new Raycaster2(Global.WIDTH, Global.HEIGHT, Global.Raycast2.loadedmap, Global.mouseData, this, Global.Raycast.camera, keys);
 			}
 			
 			@Override
