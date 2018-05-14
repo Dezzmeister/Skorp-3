@@ -1,18 +1,18 @@
 Dezzy
 
 deftex: darkbricks,assets/raycast/textures/darkbricks.png,512,512
-tex: cartoonbricks,assets/raycast/textures/cartoonbricks.png,512,512
-tex: bars,assets/raycast/textures/bars.png,16,16
+deftex: cartoonbricks,assets/raycast/textures/cartoonbricks.png,512,512
+deftex: bars,assets/raycast/textures/bars.png,16,16
 
 mapwidth: 10
 mapdepth: 10
 
-sector:
+sector main:
 	defpts:
 		pt: 0,0
 		pt: 0,10
 		pt: 10,10
-		pt: 10,
+		pt: 10,0
 	enddefpts
 	
 	floorheight: 0

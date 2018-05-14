@@ -193,7 +193,7 @@ public class Raycaster2 implements Renderer {
 	    					
 	    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
 	    				
-	    				if (color != Texture2.ALPHA && distance < zbuf2[x + y * WIDTH]) {
+	    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
 	    					img.setRGB(x, y, color);
 	    						
 	    					zbuf2[x + y * WIDTH] = distance;
@@ -323,7 +323,7 @@ public class Raycaster2 implements Renderer {
 		}
 	}
 	
-	public static double clamp(double val, double minVal, double maxVal) {
+	public static double clamp(float val, float minVal, float maxVal) {
 		if (val < minVal) {
 			return minVal;
 		}

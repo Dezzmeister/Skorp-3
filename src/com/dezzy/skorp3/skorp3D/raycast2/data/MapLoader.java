@@ -34,48 +34,146 @@ public class MapLoader {
 			System.exit(0);
 		}
 		
-		List<Sector> finalSectors = new ArrayList<Sector>();
+		Map<String,Sector> pendingSectors = new HashMap<String,Sector>();
 		List<Wall> pendingWalls = new ArrayList<Wall>();
 		List<Vector2> sectorPoints = new ArrayList<Vector2>();
 		Map<String,Texture2> textures = new HashMap<String,Texture2>();
 		
-		Sector[] sectorArray;
-		Wall[] walls;
-		
 		Texture2 defaultTex;
-		Wall currentWall;
+		Wall currentWall = null;
 		
+		Sector currentSector = null;
+		String currentSectorName = null;
+		
+		int line = -1;
 		for (String s : file) {
+			line++;
+			String errorMessage = "ERROR at line " + line + " while reading " + path + ": ";
 			s = format(s);
+			
+			if (beginsWith(s,"deftex")) {
+				String string = s.substring(s.indexOf(": ")+2);
+				String[] params = string.split(",");
+				if (params.length==4) {
+					textures.put(params[0],new Texture2(params[1],Integer.parseInt(params[2]),Integer.parseInt(params[3])));
+				} else {
+					Logger.log(errorMessage + "deftex must have four and only four parameters!");
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"sector")) {
+				if (s.indexOf(" ") == -1 || s.lastIndexOf(":") == -1) {
+					Logger.log(errorMessage + "\"sector\" should be followed by space, sector name, then colon!");
+				} else {
+					currentSectorName = s.substring(s.indexOf(" ")+1,s.lastIndexOf(":"));
+					currentSector = new Sector();
+				}
+				continue;
+			}
 			
 			if (beginsWith(s,"mapwidth")) {
 				width = Integer.parseInt(s.substring(s.indexOf(": ")+2));
+				continue;
 			}
 			
 			if (beginsWith(s,"mapheight")) {
 				height = Integer.parseInt(s.substring(s.indexOf(": ")+2));
+				continue;
 			}
 			
 			if (beginsWith(s,"pt")) {
 				int x = Integer.parseInt(s.substring(s.indexOf(": ")+2,s.indexOf(",")));
 				int y = Integer.parseInt(s.substring(s.indexOf(",")+1));
 				sectorPoints.add(new Vector2(x,y));
+				continue;
+			}
+			
+			if (beginsWith(s,"enddefpts")) {
+				Vector2[] secpts = (Vector2[]) sectorPoints.toArray();
+				sectorPoints.clear();
+				if (currentSector != null) {
+					currentSector.points = secpts;
+				} else {
+					Logger.log(errorMessage + "enddefpts must be within a sector definition!");
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"endsector")) {
+				if (currentSector == null) {
+					Logger.log(errorMessage + "endsector must end a sector definition!");
+				} else {
+					Wall[] walls = (Wall[]) pendingWalls.toArray();
+					currentSector.walls = walls;
+					pendingWalls.clear();
+					pendingSectors.put(currentSectorName, currentSector);
+					currentSectorName = null;
+					currentSector = null;
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"settex")) {
+				String texname = null;
+				if (s.indexOf(": ") != -1) {
+					texname = s.substring(s.indexOf(": "+2));
+					Texture2 tex = textures.get(texname);
+					if (tex != null) {
+						Logger.log(errorMessage + "no texture named \"" + texname + "\" was found!");
+					} else if (currentWall == null) {
+						Logger.log(errorMessage + "settex must be within a wall definition!");
+					} else {
+						currentWall.setTexture(tex);
+					}
+				} else {
+					Logger.log(errorMessage + "\"settex\" should be followed by a valid texture name, previously defined with deftex!");
+				}
+				continue;
 			}
 			
 			if (beginsWith(s,"wall:")) {
 				String coords = s.substring(s.indexOf(": ")+2);
-				String[] array = coords.split(",");
-				float x1 = Float.parseFloat(array[0]);
-				float y1 = Float.parseFloat(array[1]);
-				float x2 = Float.parseFloat(array[2]);
-				float y2 = Float.parseFloat(array[3]);
-				currentWall = new Wall(x1,y1,x2,y2);
+				String[] params = coords.split(",");
+				if (params.length == 4) {
+					float x1 = Float.parseFloat(params[0]);
+					float y1 = Float.parseFloat(params[1]);
+					float x2 = Float.parseFloat(params[2]);
+					float y2 = Float.parseFloat(params[3]);
+					currentWall = new Wall(x1,y1,x2,y2);
+				} else {
+					Logger.log(errorMessage + "wall must have four and only four parameters!");
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"endwall")) {
+				if (currentWall == null) {
+					Logger.log(errorMessage + "endwall must end a wall definition!");
+				} else {
+					pendingWalls.add(currentWall);
+					currentWall = null;
+				}
+				continue;
 			}
 			
 			if (beginsWith(s,"tile:")) {
 				String tilevals = s.substring(s.indexOf(": ")+2);
+				String[] params = tilevals.split(",");
+				if (currentWall == null) {
+					Logger.log(errorMessage + "tile must be within a wall definition!");
+				}
+				if (params.length==2) {
+					float xTiles = Float.parseFloat(params[0]);
+					float yTiles = Float.parseFloat(params[1]);
+					currentWall.tile(xTiles, yTiles);
+				} else {
+					Logger.log(errorMessage + "tile must have 2 and only 2 float parameters!");
+				}
 			}
 		}
+		
+		Sector[] finalSectors = (Sector[]) pendingSectors.values().toArray();
 	}
 	
 	/**

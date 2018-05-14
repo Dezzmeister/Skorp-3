@@ -35,6 +35,10 @@ public class Sector {
 	public Vector2 uvc0;
 	public Vector2 uvc1;
 	
+	public Sector() {
+		
+	}
+	
 	public Sector(Vector2 ... _points) {
 		points = _points;
 		walls = new Wall[0];
