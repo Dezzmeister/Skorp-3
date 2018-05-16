@@ -6,14 +6,14 @@ import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Wall implements Linetype {
-	public static final Texture2 defaultTexture = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
+	public static final Texture2 DEFAULT_TEXTURE = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
 
 	public Vector2 v0;
 	public Vector2 v1;
 	public float length;
 	public int color = 0x00FFFFFF;
 	public int shadeValue = 0;
-	public Texture2 texture = defaultTexture;
+	public Texture2 texture = DEFAULT_TEXTURE;
 	public float xTiles = 1;
 	public float yTiles = 1;
 	private boolean isPortal = false;

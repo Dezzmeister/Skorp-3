@@ -7,6 +7,11 @@ deftex: bars,assets/raycast/textures/bars.png,16,16
 mapwidth: 10
 mapdepth: 10
 
+walltemplate cartoonwall:
+	tile: 8,1
+	settex: cartoonstones
+endtemplate
+
 sector main:
 	defpts:
 		pt: 0,0
@@ -26,9 +31,7 @@ sector main:
 		tile: 8,1
 	endwall
 	
-	wall: 0,10,10,10
-		tile: 8,1
-	endwall
+	wall: 0,10,10,10,cartoonwall
 	
 	wall: 0,1,1,1
 		settex: cartoonstones

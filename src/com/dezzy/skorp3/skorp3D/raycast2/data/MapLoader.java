@@ -18,6 +18,7 @@ import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class MapLoader {
 	private RaycastMap map;
+	private String errorMessage;
 	
 	public MapLoader(String path) {
 		loadAndProcessMap(path);
@@ -41,37 +42,71 @@ public class MapLoader {
 		List<Vector2> sectorPoints = new ArrayList<Vector2>();
 		Map<String,Texture2> textures = new HashMap<String,Texture2>();
 		List<Portal> portals = new ArrayList<Portal>();
+		Map<String,WallTemplate> wallTemplates = new HashMap<String,WallTemplate>();
 		
-		Texture2 defaultTex;
+		Texture2 defaultTexture = Wall.DEFAULT_TEXTURE;
+		
 		Wall currentWall = null;
 		
 		Sector currentSector = null;
 		String currentSectorName = null;
+		String currentTemplateName = null;
+		
+		String lastDefinedTexName = null;
 		
 		int line = -1;
 		for (String s : file) {
 			line++;
-			String errorMessage = "ERROR at line " + line + " while reading " + path + ": ";
+			errorMessage = "ERROR at line " + line + " while reading " + path + ": ";
 			s = format(s);
+			
+			if (s.indexOf("//") != -1) {
+				s = s.substring(0,s.indexOf("//"));
+			}
 			
 			if (beginsWith(s,"wall:")) {
 				String coords = s.substring(s.indexOf(": ")+2);
 				String[] params = coords.split(",");
-				if (params.length == 4) {
+				if (params.length == 4 || params.length == 5) {
 					float x1 = Float.parseFloat(params[0]);
 					float y1 = Float.parseFloat(params[1]);
 					float x2 = Float.parseFloat(params[2]);
 					float y2 = Float.parseFloat(params[3]);
 					currentWall = new Wall(x1,y1,x2,y2);
 				} else {
-					Logger.log(errorMessage + "wall must have 4 and only 4 parameters!");
+					error("wall definition must have either 4 or 5 parameters!");
+				}
+				
+				//fifth parameter is a wall template
+				if (params.length == 5) {
+					String templateName = params[4];
+					WallTemplate template = wallTemplates.get(templateName);
+					System.out.println(templateName);
+					if (template == null) {
+						error("specified wall template does not exist!");
+					} else {
+						currentWall.xTiles = template.xTiles;
+						currentWall.yTiles = template.yTiles;
+						if (template.texname != null) {
+							Texture2 tex = textures.get(template.texname);
+							if (tex == null) {
+								error("texture specified in wall template " + templateName + " is not a valid texture!");
+							} else {
+								currentWall.texture = tex;
+							}
+						} else {
+							currentWall.texture = defaultTexture;
+						}
+					}
+					pendingWalls.add(currentWall);
+					currentWall = null;
 				}
 				continue;
 			}
 			
 			if (beginsWith(s,"endwall")) {
 				if (currentWall == null) {
-					Logger.log(errorMessage + "endwall must end a wall definition!");
+					error("endwall must end a wall definition!");
 				} else {
 					pendingWalls.add(currentWall);
 					currentWall = null;
@@ -79,55 +114,55 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"settex")) {
+			if (beginsWith(s,"settex:")) {
 				String texname = "";
 				if (s.indexOf(": ") != -1) {
 					texname = s.substring(s.indexOf(": ")+2);
+					lastDefinedTexName = texname;
 					Texture2 tex = textures.get(texname);
 					if (tex == null) {
-						Logger.log(errorMessage + "no texture named \"" + texname + "\" was found!");
+						error("no texture named \"" + texname + "\" was found!");
 					} else if (currentWall == null) {
-						Logger.log(errorMessage + "settex must be within a wall definition!");
+						error("settex must be within a wall definition!");
 					} else {
 						currentWall.setTexture(tex);
 					}
 				} else {
-					Logger.log(errorMessage + "\"settex\" should be followed by a valid texture name, previously defined with deftex!");
+					error("\"settex\" should be followed by a valid texture name, previously defined with deftex!");
 				}
 				continue;
 			}
 			
-			if (beginsWith(s,"tile")) {
+			if (beginsWith(s,"tile:")) {
 				String tilevals = s.substring(s.indexOf(": ")+2);
 				String[] params = tilevals.split(",");
 				if (currentWall == null) {
-					Logger.log(errorMessage + "tile must be within a wall definition!");
+					error("tile must be within a valid wall or walltemplate definition!");
 				}
-				if (params.length==2) {
+				if (params.length==2 && currentWall != null) {
 					float xTiles = Float.parseFloat(params[0]);
 					float yTiles = Float.parseFloat(params[1]);
 					currentWall.tile(xTiles, yTiles);
 				} else {
-					Logger.log(errorMessage + "tile must have 2 and only 2 float parameters!");
+					error("tile must have 2 and only 2 float parameters!");
 				}
 				continue;
 			}
 			
-			if (beginsWith(s,"deftex")) {
+			if (beginsWith(s,"deftex:")) {
 				String string = s.substring(s.indexOf(": ")+2);
 				String[] params = string.split(",");
 				if (params.length==4) {
-					System.out.println(params[0]);
 					textures.put(params[0],new Texture2(params[1],Integer.parseInt(params[2]),Integer.parseInt(params[3])));
 				} else {
-					Logger.log(errorMessage + "deftex must have 4 and only 4 parameters!");
+					error("deftex must have 4 and only 4 parameters!");
 				}
 				continue;
 			}
 			
 			if (beginsWith(s,"sector")) {
 				if (s.indexOf(" ") == -1 || s.lastIndexOf(":") == -1) {
-					Logger.log(errorMessage + "\"sector\" should be followed by space, sector name, then colon!");
+					error("\"sector\" should be followed by space, sector name, then colon!");
 				} else {
 					currentSectorName = s.substring(s.indexOf(" ")+1,s.lastIndexOf(":"));
 					currentSector = new Sector();
@@ -135,12 +170,12 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"mapwidth")) {
+			if (beginsWith(s,"mapwidth:")) {
 				width = Integer.parseInt(s.substring(s.indexOf(": ")+2));
 				continue;
 			}
 			
-			if (beginsWith(s,"mapheight")) {
+			if (beginsWith(s,"mapheight:")) {
 				height = Integer.parseInt(s.substring(s.indexOf(": ")+2));
 				continue;
 			}
@@ -162,14 +197,14 @@ public class MapLoader {
 				if (currentSector != null) {
 					currentSector.points = secpts;
 				} else {
-					Logger.log(errorMessage + "enddefpts must be within a sector definition!");
+					error("enddefpts must be within a valid sector definition!");
 				}
 				continue;
 			}
 			
 			if (beginsWith(s,"endsector")) {
 				if (currentSector == null) {
-					Logger.log(errorMessage + "endsector must end a sector definition!");
+					error("endsector must end a valid sector definition!");
 				} else {
 					Wall[] walls = new Wall[pendingWalls.size()];
 					for (int i = 0; i < walls.length; i++) {
@@ -184,7 +219,7 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"portal")) {
+			if (beginsWith(s,"portal:")) {
 				String string = s.substring(s.indexOf(": ")+2);
 				String[] params = string.split(",");
 				if (params.length == 6) {
@@ -197,14 +232,39 @@ public class MapLoader {
 					Sector s1 = pendingSectors.get(params[5]);
 					
 					if (s0 == null || s1 == null) {
-						Logger.log(errorMessage + "invalid sector names!");
+						error("invalid sector names!");
 					} else {
 						Portal p = new Portal(new Vector2(x1,y1), new Vector2(x2,y2));
 						p.setBorders(s0, s1);
 						portals.add(p);
 					}
 				} else {
-					Logger.log(errorMessage + "portal must have 2 and only 2 parameters!");
+					error("portal must have 2 and only 2 parameters!");
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"walltemplate:")) {
+				if ("walltemplate  ".length() > s.length()) {
+					error("walltemplate definition requires a name!");
+				} else {
+					currentWall = new Wall(0,0,0,0);
+					currentTemplateName = s.substring(s.indexOf(" ")+1,s.indexOf(":"));
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"endtemplate")) {
+				if (currentTemplateName == null) {
+					error("endtemplate must end a valid template definition!");
+				} else {
+					WallTemplate temp = new WallTemplate();
+					temp.xTiles = currentWall.xTiles;
+					temp.yTiles = currentWall.yTiles;
+					temp.texname = lastDefinedTexName;
+					lastDefinedTexName = null;
+					
+					wallTemplates.put(currentTemplateName, temp);
 				}
 				continue;
 			}
@@ -222,6 +282,24 @@ public class MapLoader {
 		}
 		
 		map = new RaycastMap(width,height,finalSectors).definePortals(finalPortals);
+	}
+	
+	private void error(Object ... args) {
+		String description = "";
+		for (Object o : args) {
+			description += o;
+		}
+		Logger.log(errorMessage + description);
+	}
+	
+	private class WallTemplate {
+		float xTiles = 1;
+		float yTiles = 1;
+		String texname = null;
+		
+		public WallTemplate() {
+			
+		}
 	}
 	
 	public RaycastMap finalMap() {
