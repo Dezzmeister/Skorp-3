@@ -81,7 +81,6 @@ public class MapLoader {
 				if (params.length == 5) {
 					String templateName = params[4];
 					WallTemplate template = wallTemplates.get(templateName);
-					System.out.println(templateName);
 					if (template == null) {
 						error("specified wall template does not exist!");
 					} else {
@@ -244,7 +243,7 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"walltemplate:")) {
+			if (beginsWith(s,"walltemplate")) {
 				if ("walltemplate  ".length() > s.length()) {
 					error("walltemplate definition requires a name!");
 				} else {
@@ -262,6 +261,7 @@ public class MapLoader {
 					temp.xTiles = currentWall.xTiles;
 					temp.yTiles = currentWall.yTiles;
 					temp.texname = lastDefinedTexName;
+
 					lastDefinedTexName = null;
 					
 					wallTemplates.put(currentTemplateName, temp);
