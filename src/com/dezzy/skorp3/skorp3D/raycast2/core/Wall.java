@@ -10,7 +10,7 @@ public class Wall implements Linetype {
 	/**
 	 * A number specifying how many different shades to use when shading walls.
 	 */
-	public static final int SHADE_COUNT = 4;
+	public static final int SHADE_COUNT = 3;
 	
 	public Vector2 v0;
 	public Vector2 v1;
@@ -57,12 +57,12 @@ public class Wall implements Linetype {
 	}
 	
 	public Wall preShade() {
-		int angle = (int)RenderUtils.angleBetweenLines(this, RaycastMap.AXIS);
+		int angle = (int)(Math.toDegrees(RenderUtils.angleBetweenLines(this, RaycastMap.AXIS)) % 180);
 		
 		//Little absolute value hack
 		int mask = angle >> 32 - 1;
 		angle = (angle + mask) ^ mask;
-		
+		System.out.println(angle);
 		int divBy = 180/SHADE_COUNT;
 		shadeValue = angle/divBy;
 		

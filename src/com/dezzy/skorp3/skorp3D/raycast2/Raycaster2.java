@@ -193,9 +193,10 @@ public class Raycaster2 implements Renderer {
 	    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
 	    					
 	    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
-	    				color = RenderUtils.darken(color,wall.shadeValue);
 	    				
 	    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
+	    					color = RenderUtils.darken(color,wall.shadeValue);
+	    					
 	    					img.setRGB(x, y, color);
 	    						
 	    					zbuf2[x + y * WIDTH] = distance;
