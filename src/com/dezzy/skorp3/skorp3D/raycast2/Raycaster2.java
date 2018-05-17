@@ -195,7 +195,7 @@ public class Raycaster2 implements Renderer {
 	    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
 	    				
 	    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
-	    					color = RenderUtils.darken(color,wall.shadeValue);
+	    					color = RenderUtils.darkenWithThreshold(color,wall.angleFromAxis);
 	    					
 	    					img.setRGB(x, y, color);
 	    						

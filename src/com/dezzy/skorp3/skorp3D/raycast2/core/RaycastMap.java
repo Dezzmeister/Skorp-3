@@ -34,7 +34,7 @@ public class RaycastMap {
 			Sector s = sectors[i];
 			for (int j = 0; j < s.walls.length; j++) {
 				Wall w = s.walls[j];
-				w.preShade();
+				w.updateAngleFromAxis();
 			}
 		}
 	}

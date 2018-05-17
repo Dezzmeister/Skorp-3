@@ -116,4 +116,17 @@ public final class RenderUtils {
 		
 		return new Color(red,green,blue);
 	}
+	
+	public static int darkenWithThreshold(int color, int angle) {
+		int darkenBy = (int)((angle/180f) * Wall.SHADE_THRESHOLD);
+		int red = (color >> 16) & 0xFF;
+		int green = (color >> 8) & 0xFF;
+		int blue = color & 0xFF;
+		
+		red -= (red - darkenBy >= 0) ? darkenBy : red;
+		green -= (green - darkenBy >= 0) ? darkenBy : green;
+		blue -= (blue - darkenBy >= 0) ? darkenBy : blue;
+		
+		return (red << 16) | (green << 8) | blue;
+	}
 }
