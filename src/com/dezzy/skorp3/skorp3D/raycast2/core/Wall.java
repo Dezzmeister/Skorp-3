@@ -7,7 +7,11 @@ import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Wall implements Linetype {
 	public static final Texture2 DEFAULT_TEXTURE = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
-
+	/**
+	 * A number specifying how many different shades to use when shading walls.
+	 */
+	public static final int SHADE_COUNT = 4;
+	
 	public Vector2 v0;
 	public Vector2 v1;
 	public float length;
@@ -49,16 +53,20 @@ public class Wall implements Linetype {
 	public Wall(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
 		v1 = _v1;
+		updateLength();
 	}
 	
-	private void preShade() {
+	public Wall preShade() {
 		int angle = (int)RenderUtils.angleBetweenLines(this, RaycastMap.AXIS);
 		
 		//Little absolute value hack
 		int mask = angle >> 32 - 1;
 		angle = (angle + mask) ^ mask;
 		
+		int divBy = 180/SHADE_COUNT;
+		shadeValue = angle/divBy;
 		
+		return this;
 	}
 	
 	public Wall makePortal() {
