@@ -176,11 +176,14 @@ public class Raycaster2 implements Renderer {
 	    			distance *= Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
 	    			//if (distance < zbuf[x]) {
 	    			int lineHeight = (int) (HEIGHT/distance);
+	    			
+	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
+	    			float heightOffset = heightDiff/distance;
 	    				
-	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - sector.floorHeight);
+	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
 	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - sector.floorHeight);
+	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
 	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    			float wallNorm = wall.getNorm(hit);

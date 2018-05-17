@@ -132,7 +132,7 @@ public final class Global {
 															   	   new Wall(4,7,4,8).setTexture(bars),
 															   	   new Wall(4,8,4,9.25f).setTexture(window),
 															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1))
-														   .setFloor(0);
+														   .setFloor(50);
 		
 		public static final Sector testSector = new Sector(new Vector2(0,0),
 														   new Vector2(0,10),
