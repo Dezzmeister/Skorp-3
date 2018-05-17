@@ -131,7 +131,9 @@ public final class Global {
 															       new Wall(4,4,4,7).setTexture(cartoonstones),
 															   	   new Wall(4,7,4,8).setTexture(bars),
 															   	   new Wall(4,8,4,9.25f).setTexture(window),
-															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1));
+															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1))
+														   .setFloor(0);
+		
 		public static final Sector testSector = new Sector(new Vector2(0,0),
 														   new Vector2(0,10),
 														   new Vector2(-10,10),
@@ -155,7 +157,7 @@ public final class Global {
 															 new Portal(0,0,0,10).setBorders(mainSector, testSector),
 															 new Portal(-10,0,-10,10).setBorders(testSector, testSector2));
 		
-		public static RaycastMap loadedmap = new MapLoader("C:/Users/Joe Junior/git/Skorp-3/levels/test.lol").finalMap();
+		//public static RaycastMap loadedmap = new MapLoader("C:/Users/Joe Junior/git/Skorp-3/levels/test.lol").finalMap();
 	}
 	
 	public static class Raycast {

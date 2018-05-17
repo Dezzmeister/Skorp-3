@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
+import java.awt.Color;
+
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 
 public final class RenderUtils {
@@ -68,5 +70,50 @@ public final class RenderUtils {
 		}
 		
 		return oddNodes;
+	}
+	
+	/**
+	 * Recursively darkens a color with bitwise operations.
+	 * 
+	 * @param color RGB int
+	 * @param times how many times to darken
+	 * @return a color with same hue as color that has been darkened "times" times
+	 */
+	public static int darken(int color, int times) {
+		if (times == 0) {
+			return color;
+		}
+		
+		return (darken(color,times-1) >> 1) & 8355711;
+	}
+	
+	/**
+	 * Returns the angle between two Walls, in radians.
+	 * 
+	 * @param wall1 first wall
+	 * @param wall2 second wall
+	 * @return angle in radians
+	 */
+	public static float angleBetweenLines(Linetype wall1, Linetype wall2) {
+		float angle1 = (float) Math.atan2(wall1.v0().y - wall1.v1().y, wall1.v0().x - wall1.v1().x);
+		float angle2 = (float) Math.atan2(wall2.v0().y - wall2.v1().y, wall2.v0().x - wall2.v1().x);
+		  
+		return Math.abs(angle1-angle2);
+	}
+	
+	public static int getIntFromRGB(Color color) {
+		int rgb = color.getRed();
+		rgb = (rgb << 8) + color.getGreen();
+		rgb = (rgb << 8) + color.getBlue();
+		
+		return rgb;
+	}
+	
+	public static Color getRGBFromInt(int col) {
+		int red = (col >> 16) & 0xFF;
+		int green = (col >> 8) & 0xFF;
+		int blue = col & 0xFF;
+		
+		return new Color(red,green,blue);
 	}
 }

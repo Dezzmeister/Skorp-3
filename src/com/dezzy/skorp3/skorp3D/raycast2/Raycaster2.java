@@ -129,6 +129,7 @@ public class Raycaster2 implements Renderer {
 	private Vector2 hit;
 	private Wall ray;
 	private Wall wall;
+	private int offset;
 	
 	public void renderSector(Sector sector, int startX, int endX) {	    
 	    pos = camera.pos;
@@ -172,14 +173,14 @@ public class Raycaster2 implements Renderer {
 	    			}
 	    			
 	    			//TODO Change this!!! No cosine!!
-	    			distance *= Math.cos(Wall.angleBetweenLines(perpWall, ray));
+	    			distance *= Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
 	    			//if (distance < zbuf[x]) {
 	    			int lineHeight = (int) (HEIGHT/distance);
 	    				
-	    			int trueDrawStart = (int)((HEIGHT >> 1) - (lineHeight >> 1));
+	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - sector.floorHeight);
 	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    			int trueDrawEnd = (int)((HEIGHT >> 1) + (lineHeight >> 1));
+	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - sector.floorHeight);
 	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    			float wallNorm = wall.getNorm(hit);
@@ -192,6 +193,7 @@ public class Raycaster2 implements Renderer {
 	    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
 	    					
 	    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
+	    				color = RenderUtils.darken(color,wall.shadeValue);
 	    				
 	    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
 	    					img.setRGB(x, y, color);

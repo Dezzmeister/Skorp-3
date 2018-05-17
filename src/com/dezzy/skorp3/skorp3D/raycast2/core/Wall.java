@@ -22,7 +22,7 @@ public class Wall implements Linetype {
 	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
 		v1 = _v1;
-		color = getIntFromRGB(_color);
+		color = RenderUtils.getIntFromRGB(_color);
 		updateLength();
 	}
 	
@@ -36,7 +36,7 @@ public class Wall implements Linetype {
 	public Wall(float x1, float y1, float x2, float y2, Color _color) {
 		v0 = new Vector2(x1,y1);
 		v1 = new Vector2(x2,y2);
-		color = getIntFromRGB(_color);
+		color = RenderUtils.getIntFromRGB(_color);
 		updateLength();
 	}
 	
@@ -49,6 +49,16 @@ public class Wall implements Linetype {
 	public Wall(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
 		v1 = _v1;
+	}
+	
+	private void preShade() {
+		int angle = (int)RenderUtils.angleBetweenLines(this, RaycastMap.AXIS);
+		
+		//Little absolute value hack
+		int mask = angle >> 32 - 1;
+		angle = (angle + mask) ^ mask;
+		
+		
 	}
 	
 	public Wall makePortal() {
@@ -83,43 +93,13 @@ public class Wall implements Linetype {
 	}
 	
 	public void setColor(Color _color) {
-		color = getIntFromRGB(_color);
+		color = RenderUtils.getIntFromRGB(_color);
 	}
 	
 	public Color getColor() {
 		int red = (color >> 16) & 0xFF;
 		int green = (color >> 8) & 0xFF;
 		int blue = color & 0xFF;
-		
-		return new Color(red,green,blue);
-	}
-	
-	/**
-	 * Returns the angle between two Walls, in radians.
-	 * 
-	 * @param wall1 first wall
-	 * @param wall2 second wall
-	 * @return angle in radians
-	 */
-	public static float angleBetweenLines(Wall wall1, Wall wall2) {
-		float angle1 = (float) Math.atan2(wall1.v0.y - wall1.v1.y, wall1.v0.x - wall1.v1.x);
-		float angle2 = (float) Math.atan2(wall2.v0.y - wall2.v1.y, wall2.v0.x - wall2.v1.x);
-		  
-		return Math.abs(angle1-angle2);
-	}
-	
-	public static int getIntFromRGB(Color color) {
-		int rgb = color.getRed();
-		rgb = (rgb << 8) + color.getGreen();
-		rgb = (rgb << 8) + color.getBlue();
-		
-		return rgb;
-	}
-	
-	public static Color getRGBFromInt(int col) {
-		int red = (col >> 16) & 0xFF;
-		int green = (col >> 8) & 0xFF;
-		int blue = col & 0xFF;
 		
 		return new Color(red,green,blue);
 	}
@@ -133,7 +113,7 @@ public class Wall implements Linetype {
 				int green = c.getGreen()-darkenBy;
 				int blue = c.getBlue()-darkenBy;
 				Color newcolor = new Color(red >= 0 ? red : 0, green >= 0 ? green : 0, blue >= 0 ? blue : 0);
-				texture.pixels[i] = getIntFromRGB(newcolor);
+				texture.pixels[i] = RenderUtils.getIntFromRGB(newcolor);
 			}
 		}
 		return this;

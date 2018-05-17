@@ -18,8 +18,8 @@ public class Sector {
 	public float floorXTiles = 1;
 	public float floorYTiles = 1;
 	
-	public float floorHeight = 1;
-	public float ceilHeight = 1;
+	public float floorHeight = 0;
+	public float ceilHeight = 1.5f;
 	
 	private boolean rendered = false;
 	
