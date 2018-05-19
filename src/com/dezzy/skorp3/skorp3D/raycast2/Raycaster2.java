@@ -53,10 +53,11 @@ public class Raycaster2 implements Renderer {
 	 * The purpose of this z-buffer is to speed up resetting by using System.arraycopy() instead of a for loop.
 	 */
 	private float[] emptyZBuffer;
+	
 	/**
-	 * Holds a number for each vertical stripe on the screen, telling how many portals lie on that stripe
+	 * Speeds up fisheye correction by using a table for every x value instead of a cosine calculation.
 	 */
-	private int[] portalbuf;
+	private float[] cosineTable;
 	/**
 	 * A z-buffer for portals.
 	 */
@@ -94,6 +95,8 @@ public class Raycaster2 implements Renderer {
 		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		updateCurrentSector();
+		
+		populateCosineTable();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -156,7 +159,7 @@ public class Raycaster2 implements Renderer {
 	    		if (hit != null) {
 	    			ray = new Wall(pos,hit);
 	    			
-	    			float distance = Vector2.distance(pos, hit);
+	    			float distance = ray.length;
 	    			
 	    			if (wall.isPortal()) {
 	    				if (!wall.getPortal().otherSector(sector).hasBeenRendered()) {
@@ -172,9 +175,8 @@ public class Raycaster2 implements Renderer {
 	    				
 	    			}
 	    			
-	    			//TODO Change this!!! No cosine!!
-	    			distance *= Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
-	    			//if (distance < zbuf[x]) {
+	    			distance *= cosineTable[x];
+	    			
 	    			int lineHeight = (int) (HEIGHT/distance);
 	    			
 	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
@@ -189,7 +191,6 @@ public class Raycaster2 implements Renderer {
 	    			float wallNorm = wall.getNorm(hit);
 	    				
 	    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
-	    			//makeTransparent = (l.texture.pixels[texX]==Texture2.ALPHA);
 	    			
 	    			for (int y = drawStart; y < drawEnd; y++) {
 	    				float normY = (y-trueDrawStart)/(float)lineHeight;
@@ -207,26 +208,49 @@ public class Raycaster2 implements Renderer {
 	    				}
 	    			}
 	    			
-	    			//Draw blue sky
-	    			for (int y = 0; y < drawStart; y++) {
-	    				if (distance < zbuf2[x + y * WIDTH]) {
-	    					img.setRGB(x,y,0xFF0000FF);
-	    						
-	    					zbuf2[x + y * WIDTH] = distance;
-	    				}
-	    			}
-	    			
-	    			//Draw brown floor
-	    			for (int y = drawEnd; y < HEIGHT; y++) {
-	    				if (distance < zbuf2[x + y * WIDTH]) {
-	    					img.setRGB(x, y, 0xFF8B4513);
-	    					
-	    					zbuf2[x + y * WIDTH] = distance;
-	    				}
-	    			}
+	    			drawCeilingAndFloor(x, drawStart, drawEnd, distance);
 	    		}
 	    	}
 	    }
+	}
+	
+	private void populateCosineTable() {
+		cosineTable = new float[WIDTH];
+		pos = camera.pos;
+	    dir = camera.dir;
+	    plane = camera.plane;
+	    perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
+	    System.out.println(pos);
+	    System.out.println(dir);
+	    System.out.println(plane);
+		for (int x = 0; x < WIDTH; x++) {
+			float norm = (2 * (x/(float)WIDTH)) - 1;
+			rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+			ray = new Wall(pos,rayendp);
+			
+			cosineTable[x] = (float) Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
+			System.out.println(cosineTable[x]);
+		}
+	}
+	
+	private void drawCeilingAndFloor(int x, int drawStart, int drawEnd, float distance) {
+		//Draw blue sky
+		for (int y = 0; y < drawStart; y++) {
+			if (distance < zbuf2[x + y * WIDTH]) {
+				img.setRGB(x,y,0xFF0000FF);
+					
+				zbuf2[x + y * WIDTH] = distance;
+			}
+		}
+		
+		//Draw brown floor
+		for (int y = drawEnd; y < HEIGHT; y++) {
+			if (distance < zbuf2[x + y * WIDTH]) {
+				img.setRGB(x, y, 0xFF8B4513);
+				
+				zbuf2[x + y * WIDTH] = distance;
+			}
+		}
 	}
 	
 	private void testWall(Wall w, int x, Sector sector, Wall norm, Wall rayendp) {
