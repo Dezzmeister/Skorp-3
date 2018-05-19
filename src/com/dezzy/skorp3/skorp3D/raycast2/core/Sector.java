@@ -19,7 +19,7 @@ public class Sector {
 	public float floorYTiles = 1;
 	
 	public float floorHeight = 0;
-	public float ceilHeight = 1.5f;
+	public float ceilHeight = 1.0f;
 	
 	private boolean rendered = false;
 	

@@ -161,7 +161,21 @@ public class Raycaster2 implements Renderer {
 	    			
 	    			float distance = ray.length;
 	    			
+	    			distance *= cosineTable[x];
+	    			
+	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
+	    			float heightOffset = heightDiff/distance;
+	    			
+	    			int lineHeight = (int) ((HEIGHT/distance));
+	    				
+	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
+	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
+	    				
+	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
+	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
+	    			
 	    			if (wall.isPortal()) {
+	    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
 	    				if (!wall.getPortal().otherSector(sector).hasBeenRendered()) {
 	    					for (int y = 0; y < HEIGHT; y++) {
 		    					if (zbuf2[x + y * WIDTH] > distance) {
@@ -174,19 +188,6 @@ public class Raycaster2 implements Renderer {
 	    			} else {
 	    				
 	    			}
-	    			
-	    			distance *= cosineTable[x];
-	    			
-	    			int lineHeight = (int) (HEIGHT/distance);
-	    			
-	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
-	    			float heightOffset = heightDiff/distance;
-	    				
-	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
-	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
-	    				
-	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
-	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
 	    				
 	    			float wallNorm = wall.getNorm(hit);
 	    				
@@ -220,16 +221,13 @@ public class Raycaster2 implements Renderer {
 	    dir = camera.dir;
 	    plane = camera.plane;
 	    perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
-	    System.out.println(pos);
-	    System.out.println(dir);
-	    System.out.println(plane);
+	    
 		for (int x = 0; x < WIDTH; x++) {
 			float norm = (2 * (x/(float)WIDTH)) - 1;
 			rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 			ray = new Wall(pos,rayendp);
 			
 			cosineTable[x] = (float) Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
-			System.out.println(cosineTable[x]);
 		}
 	}
 	
