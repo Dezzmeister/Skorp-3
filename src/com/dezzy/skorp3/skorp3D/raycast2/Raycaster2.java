@@ -134,14 +134,7 @@ public class Raycaster2 implements Renderer {
 	private Wall wall;
 	private int offset;
 	
-	public void renderSector(Sector sector, int startX, int endX) {	    
-	    pos = camera.pos;
-	    dir = camera.dir;
-	    plane = camera.plane;
-	    
-	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
-    	perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
-    	
+	public void renderSector(Sector sector, int startX, int endX) {    	
 	    for (int x = startX; x < endX; x++) {
 	    	sector.markAsRendered();
 	    	//Map the x value to a range of -1 to 1
@@ -213,6 +206,15 @@ public class Raycaster2 implements Renderer {
 	    		}
 	    	}
 	    }
+	}
+	
+	private void updateVars() {
+		pos = camera.pos;
+	    dir = camera.dir;
+	    plane = camera.plane;
+	    
+	    //The correct wall (distance not affected by fisheye), perpendicular from center of screen
+    	perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
 	}
 	
 	private void populateCosineTable() {
@@ -303,6 +305,8 @@ public class Raycaster2 implements Renderer {
 	public void preRender() {
 		g2 = (Graphics2D) g;
 		g2.setBackground(Color.BLACK);
+		
+		updateVars();
 		//g2.clearRect(0, 0, panel.getWidth(), panel.getHeight());	
 	}
 	
