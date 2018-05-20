@@ -6,8 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
+import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
@@ -30,9 +32,10 @@ import com.dezzy.skorp3.skorp3D.render.Renderer;
 /**
  * The chief difference between this raycaster and the first is that this does not use digital differential analysis
  * like the first one does. The map is not represented as a grid of elements; it is represented as 
- * a collection of lines (sectors coming soon). Ray-line segment intersection math is used instead of DDA. This may be slower, but it 
+ * a collection of lines, sectors, and portals connecting sectors. Ray-line segment intersection math is used instead of DDA. This may be slower, but it 
  * gives much more flexibility. For example, this new raycaster allows for non-orthogonal walls and walls
- * of varying heights. However, using this new system makes other tasks more difficult, such as collision detection.
+ * of varying heights. However, using this new system makes other tasks more difficult, such as collision detection. Although I might use dot product
+ * or something for that when I get around to it.
  * 
  * @author Dezzmeister
  *
@@ -73,11 +76,12 @@ public class Raycaster2 implements Renderer {
 	private Stack<PortalRenderObject> PROs;
 	private Stack<Portal> PBO = new Stack<Portal>();
 	
-	private int rendererCount = 5;
+	private int rendererCount = 15;
 	private ThreadRenderer[] renderers;
 	private Thread[] rendererThreads;
 	private AtomicBoolean shouldRender[];
-	private ExecutorService executor;
+	private ThreadPoolExecutor executor;
+	private LatchRef latchref;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -116,54 +120,51 @@ public class Raycaster2 implements Renderer {
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
-	private void createRenderers() {
-		
-		//Ensure that rendererCount is a factor of WIDTH
-		while (WIDTH % rendererCount != 0) {
-			rendererCount--;
+	private void createThreadPoolRenderers() {
+		if (rendererCount > WIDTH) {
+			Logger.warn("It is impossible to have more thread renderers than stripes on the screen!");
+			stopAndExit();
 		}
+		
+		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(rendererCount);
 		renderers = new ThreadRenderer[rendererCount];
-		shouldRender = new AtomicBoolean[rendererCount];
-		rendererThreads = new Thread[rendererCount];
+		latchref = new LatchRef();
 		
-		int interval = WIDTH/rendererCount;
-		for (int x = 0; x < WIDTH; x += interval) {
-			int i = x/interval;
-			shouldRender[i] = new AtomicBoolean(false);
-			renderers[i] = new ThreadRenderer(x,x + interval,shouldRender[i]);
-			rendererThreads[i] = new Thread(renderers[i], "Skorp3 Render Thread " + i);
-			//rendererThreads[i].start();
+		int interval = (WIDTH - (WIDTH % rendererCount))/rendererCount;
+		
+		int step = 0;
+		
+		while (step+interval < WIDTH) {
+			int i = step/interval;
+			renderers[i] = new ThreadRenderer(step,step+interval,latchref);
+			
+			step += interval;
 		}
+		step -= interval;
+		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref);
+		
 	}
 	
-	private void createThreadPoolRenderers() {
-		while (WIDTH % rendererCount != 0) {
-			rendererCount--;
+	private void renderAndBlock() {
+		latchref.latch = new CountDownLatch(rendererCount);
+		for (int i = 0; i < renderers.length; i++) {
+			executor.execute(renderers[i]);
 		}
-		executor = Executors.newFixedThreadPool(rendererCount);
+		
+		try {
+			latchref.latch.await();
+		} catch (Exception e) {
+			e.printStackTrace(Logger.log);
+			e.printStackTrace();
+		}
 	}
 	
 	private void reset2DZBuffer() {		
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
-	private void enableRender() {
-		for (int i = 0; i < shouldRender.length; i++) {
-			shouldRender[i].set(true);
-		}
-	}
-	
-	private boolean finishedRendering() {
-		for (int i = 0; i < shouldRender.length; i++) {
-			if (shouldRender[i].get()) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public void render() {
+	//@Override
+	public void oldrender() {
 		preRender();	
 		handleRotation();
 		handleMovement();
@@ -173,17 +174,14 @@ public class Raycaster2 implements Renderer {
 		postRender();
 	}
 	
-	//@Override
-	public void oldrender() {
+	@Override
+	public void render() {
 		preRender();
 		handleRotation();
 		handleMovement();
 		handleMiscKeys();
 		updateCurrentSector();
-		enableRender();
-		for (int i = 0; i < rendererThreads.length; i++) {
-			rendererThreads[i].run();
-		}
+		renderAndBlock();
 		postRender();
 	}
 	
@@ -191,12 +189,10 @@ public class Raycaster2 implements Renderer {
 	private Vector2 dir;
 	private Vector2 plane;
 	private Vector2 rayendp;
-	private Wall lastDrawn;
 	private Wall perpWall;
 	private Vector2 hit;
 	private Wall ray;
 	private Wall wall;
-	private int offset;
 	
 	public void renderSector(Sector sector, int startX, int endX) {    	
 	    for (int x = startX; x < endX; x++) {
@@ -262,7 +258,6 @@ public class Raycaster2 implements Renderer {
 	    					img.setRGB(x, y, color);
 	    						
 	    					zbuf2[x + y * WIDTH] = distance;
-	    					lastDrawn = wall;
 	    				}
 	    			}
 	    			
@@ -272,25 +267,29 @@ public class Raycaster2 implements Renderer {
 	    }
 	}
 	
+	private class LatchRef {
+		public CountDownLatch latch;
+	}
+	
 	private class ThreadRenderer implements Runnable {
 		int startX;
 		int endX;
-		final AtomicBoolean shouldRender;
 		private Vector2 rayendp;
 		private Wall ray;
 		private Wall wall;
 		private Vector2 hit;
+		private LatchRef latch;
 		
-		public ThreadRenderer(int _startX, int _endX, AtomicBoolean _shouldRender) {
+		public ThreadRenderer(int _startX, int _endX, LatchRef _latch) {
 			startX = _startX;
 			endX = _endX;
-			shouldRender = _shouldRender;
+			latch = _latch;
 		}
 		
 		@Override
 		public void run() {
 			this.renderSector(currentSector,startX,endX);
-			//shouldRender.set(false);
+			latch.latch.countDown();
 		}
 		
 		public void renderSector(Sector sector, int startX, int endX) {    	
@@ -360,7 +359,6 @@ public class Raycaster2 implements Renderer {
 		    					img.setRGB(x, y, color);
 		    						
 		    					zbuf2[x + y * WIDTH] = distance;
-		    					lastDrawn = wall;
 		    				}
 		    			}
 		    			
@@ -500,6 +498,7 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	private void stopAndExit() {
+		executor.shutdownNow();
 		System.exit(0);
 	}
 	

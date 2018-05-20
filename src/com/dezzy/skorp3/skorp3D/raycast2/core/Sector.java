@@ -85,7 +85,7 @@ public class Sector {
 		return this;
 	}
 	
-	public void markAsRendered() {
+	public synchronized void markAsRendered() {
 		rendered.set(true);
 	}
 	
@@ -93,7 +93,7 @@ public class Sector {
 		rendered.set(false);
 	}
 	
-	public boolean hasBeenRendered() {
+	public synchronized boolean hasBeenRendered() {
 		return rendered.get();
 	}
 }

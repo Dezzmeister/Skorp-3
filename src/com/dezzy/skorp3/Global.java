@@ -45,7 +45,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
  */
 @SuppressWarnings("unused")
 public final class Global {
-	private static final int SIZE = 300;
+	private static final int SIZE = 700;
 	/**
 	 * X resolution of the rendered image
 	 */
