@@ -6,6 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -70,6 +73,12 @@ public class Raycaster2 implements Renderer {
 	private Stack<PortalRenderObject> PROs;
 	private Stack<Portal> PBO = new Stack<Portal>();
 	
+	private int rendererCount = 5;
+	private ThreadRenderer[] renderers;
+	private Thread[] rendererThreads;
+	private AtomicBoolean shouldRender[];
+	private ExecutorService executor;
+	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
 		HEIGHT = _height;
@@ -98,6 +107,8 @@ public class Raycaster2 implements Renderer {
 		
 		populateCosineTable();
 		
+		createThreadPoolRenderers();
+		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
 		
@@ -105,12 +116,50 @@ public class Raycaster2 implements Renderer {
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
+	private void createRenderers() {
+		
+		//Ensure that rendererCount is a factor of WIDTH
+		while (WIDTH % rendererCount != 0) {
+			rendererCount--;
+		}
+		renderers = new ThreadRenderer[rendererCount];
+		shouldRender = new AtomicBoolean[rendererCount];
+		rendererThreads = new Thread[rendererCount];
+		
+		int interval = WIDTH/rendererCount;
+		for (int x = 0; x < WIDTH; x += interval) {
+			int i = x/interval;
+			shouldRender[i] = new AtomicBoolean(false);
+			renderers[i] = new ThreadRenderer(x,x + interval,shouldRender[i]);
+			rendererThreads[i] = new Thread(renderers[i], "Skorp3 Render Thread " + i);
+			//rendererThreads[i].start();
+		}
+	}
+	
+	private void createThreadPoolRenderers() {
+		while (WIDTH % rendererCount != 0) {
+			rendererCount--;
+		}
+		executor = Executors.newFixedThreadPool(rendererCount);
+	}
+	
 	private void reset2DZBuffer() {		
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
-	private void reset2DPortalZBuffer() {
-		System.arraycopy(emptyZBuffer, 0, portalzbuf2, 0, WIDTH * HEIGHT);
+	private void enableRender() {
+		for (int i = 0; i < shouldRender.length; i++) {
+			shouldRender[i].set(true);
+		}
+	}
+	
+	private boolean finishedRendering() {
+		for (int i = 0; i < shouldRender.length; i++) {
+			if (shouldRender[i].get()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -118,8 +167,23 @@ public class Raycaster2 implements Renderer {
 		preRender();	
 		handleRotation();
 		handleMovement();
+		handleMiscKeys();
 		updateCurrentSector();
 		renderSector(currentSector,0,WIDTH);
+		postRender();
+	}
+	
+	//@Override
+	public void oldrender() {
+		preRender();
+		handleRotation();
+		handleMovement();
+		handleMiscKeys();
+		updateCurrentSector();
+		enableRender();
+		for (int i = 0; i < rendererThreads.length; i++) {
+			rendererThreads[i].run();
+		}
 		postRender();
 	}
 	
@@ -206,6 +270,105 @@ public class Raycaster2 implements Renderer {
 	    		}
 	    	}
 	    }
+	}
+	
+	private class ThreadRenderer implements Runnable {
+		int startX;
+		int endX;
+		final AtomicBoolean shouldRender;
+		private Vector2 rayendp;
+		private Wall ray;
+		private Wall wall;
+		private Vector2 hit;
+		
+		public ThreadRenderer(int _startX, int _endX, AtomicBoolean _shouldRender) {
+			startX = _startX;
+			endX = _endX;
+			shouldRender = _shouldRender;
+		}
+		
+		@Override
+		public void run() {
+			this.renderSector(currentSector,startX,endX);
+			//shouldRender.set(false);
+		}
+		
+		public void renderSector(Sector sector, int startX, int endX) {    	
+		    for (int x = startX; x < endX; x++) {
+		    	sector.markAsRendered();
+		    	//Map the x value to a range of -1 to 1
+		    	float norm = (2 * (x/(float)WIDTH)) - 1;
+		    	
+		    	//The direction vector of the ray
+		    	rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+		    	
+		    	//TODO Add sectors and use those instead of just testing all the walls.
+		    	for (int i = 0; i < sector.walls.length; i++) {
+		    		wall = sector.walls[i];
+		    		
+		    		hit = RenderUtils.rayHitSegment(pos,rayendp,wall);
+		    		
+		    		if (hit != null) {
+		    			ray = new Wall(pos,hit);
+		    			
+		    			float distance = ray.length;
+		    			
+		    			distance *= cosineTable[x];
+		    			
+		    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
+		    			float heightOffset = heightDiff/distance;
+		    			
+		    			int lineHeight = (int) ((HEIGHT/distance));
+		    				
+		    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
+		    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
+		    				
+		    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
+		    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
+		    			
+		    			if (wall.isPortal()) {
+		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
+		    				//Portal boundaries
+		    				//img.setRGB(x, drawStart, 0);
+		    				//img.setRGB(x, drawEnd, 0);
+		    				if (!wall.getPortal().otherSector(sector).hasBeenRendered()) {
+		    					for (int y = 0; y < HEIGHT; y++) {
+			    					if (zbuf2[x + y * WIDTH] > distance) {
+			    						renderSector(wall.getPortal().otherSector(sector),x,WIDTH);
+			    						break;
+			    					}
+			    				}
+		    				}
+		    				continue;
+		    			} else {
+		    				
+		    			}
+		    				
+		    			float wallNorm = wall.getNorm(hit);
+		    				
+		    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
+		    			
+		    			for (int y = drawStart; y < drawEnd; y++) {
+		    				float normY = (y-trueDrawStart)/(float)lineHeight;
+		    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
+		    					
+		    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
+		    				
+		    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
+		    					color = RenderUtils.darkenWithThreshold(color,wall.angleFromAxis);
+		    					
+		    					img.setRGB(x, y, color);
+		    						
+		    					zbuf2[x + y * WIDTH] = distance;
+		    					lastDrawn = wall;
+		    				}
+		    			}
+		    			
+		    			drawCeilingAndFloor(x, drawStart, drawEnd, distance);
+		    		}
+		    	}
+		    }
+		}
 	}
 	
 	private void updateVars() {
@@ -328,6 +491,16 @@ public class Raycaster2 implements Renderer {
 	    if (keys['D'] || keys[KeyEvent.VK_RIGHT]) {
 	    	camera.moveRight(sprintfactor);
 	    }
+	}
+	
+	public void handleMiscKeys() {
+		if (keys['P']) {
+			stopAndExit();
+		}
+	}
+	
+	private void stopAndExit() {
+		System.exit(0);
 	}
 	
 	public void handleRotation() {

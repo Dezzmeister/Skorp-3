@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
@@ -21,7 +23,7 @@ public class Sector {
 	public float floorHeight = 0;
 	public float ceilHeight = 1.0f;
 	
-	private boolean rendered = false;
+	private final AtomicBoolean rendered = new AtomicBoolean(false);
 	
 	/**
 	 * Floor texture uv coordinates. 
@@ -84,14 +86,14 @@ public class Sector {
 	}
 	
 	public void markAsRendered() {
-		rendered = true;
+		rendered.set(true);
 	}
 	
 	public void markAsUnrendered() {
-		rendered = false;
+		rendered.set(false);
 	}
 	
 	public boolean hasBeenRendered() {
-		return rendered;
+		return rendered.get();
 	}
 }
