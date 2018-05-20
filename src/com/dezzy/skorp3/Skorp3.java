@@ -10,8 +10,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-import com.dezzy.skorp3.math3D.Matrix3;
-import com.dezzy.skorp3.math3D.Matrix4;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanel;
 import com.dezzy.skorp3.skorp3D.render.SkorpPanelSupplier;
 
@@ -26,7 +24,7 @@ public class Skorp3 {
 		pane.add(renderPanel, BorderLayout.CENTER);
 		Timer timer = new Timer(0, new AbstractAction() {
 			private static final long serialVersionUID = -3111030517304106245L;
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				long beginTime;

@@ -63,7 +63,7 @@ public class Raycaster2 implements Renderer {
 	/**
 	 * Speeds up fisheye correction by using a table for every x value instead of a cosine calculation.
 	 */
-	private float[] cosineTable;
+	private float[] fisheyeLUT;
 	/**
 	 * A z-buffer for portals.
 	 */
@@ -76,7 +76,7 @@ public class Raycaster2 implements Renderer {
 	private Stack<PortalRenderObject> PROs;
 	private Stack<Portal> PBO = new Stack<Portal>();
 	
-	private int rendererCount = 15;
+	private int rendererCount = 10;
 	private ThreadRenderer[] renderers;
 	private Thread[] rendererThreads;
 	private AtomicBoolean shouldRender[];
@@ -109,7 +109,7 @@ public class Raycaster2 implements Renderer {
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		updateCurrentSector();
 		
-		populateCosineTable();
+		populateFisheyeLUT();
 		
 		createThreadPoolRenderers();
 		
@@ -137,8 +137,6 @@ public class Raycaster2 implements Renderer {
 		while (step+interval < WIDTH) {
 			int i = step/interval;
 			renderers[i] = new ThreadRenderer(step,step+interval,latchref);
-			
-			step += interval;
 		}
 		step -= interval;
 		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref);
@@ -163,8 +161,8 @@ public class Raycaster2 implements Renderer {
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
-	//@Override
-	public void oldrender() {
+	@Override
+	public void render() {
 		preRender();	
 		handleRotation();
 		handleMovement();
@@ -174,8 +172,8 @@ public class Raycaster2 implements Renderer {
 		postRender();
 	}
 	
-	@Override
-	public void render() {
+	//@Override
+	public void oldrender() {
 		preRender();
 		handleRotation();
 		handleMovement();
@@ -214,7 +212,7 @@ public class Raycaster2 implements Renderer {
 	    			
 	    			float distance = ray.length;
 	    			
-	    			distance *= cosineTable[x];
+	    			distance *= fisheyeLUT[x];
 	    			
 	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
 	    			float heightOffset = heightDiff/distance;
@@ -312,7 +310,7 @@ public class Raycaster2 implements Renderer {
 		    			
 		    			float distance = ray.length;
 		    			
-		    			distance *= cosineTable[x];
+		    			distance *= fisheyeLUT[x];
 		    			
 		    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
 		    			float heightOffset = heightDiff/distance;
@@ -324,7 +322,7 @@ public class Raycaster2 implements Renderer {
 		    				
 		    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
 		    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
-		    			
+		    			/*
 		    			if (wall.isPortal()) {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
 		    				//Portal boundaries
@@ -341,6 +339,16 @@ public class Raycaster2 implements Renderer {
 		    				continue;
 		    			} else {
 		    				
+		    			}
+		    			*/
+		    			if (wall.isPortal()) {
+		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
+		    				for (int y = 0; y < HEIGHT; y++) {
+		    					if (zbuf2[x + y * WIDTH] > distance) {
+		    						renderSector(wall.getPortal().otherSector(sector),x,x+1);
+		    						break;
+		    					}
+		    				}
 		    			}
 		    				
 		    			float wallNorm = wall.getNorm(hit);
@@ -378,8 +386,8 @@ public class Raycaster2 implements Renderer {
     	perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
 	}
 	
-	private void populateCosineTable() {
-		cosineTable = new float[WIDTH];
+	private void populateFisheyeLUT() {
+		fisheyeLUT = new float[WIDTH];
 		pos = camera.pos;
 	    dir = camera.dir;
 	    plane = camera.plane;
@@ -390,7 +398,7 @@ public class Raycaster2 implements Renderer {
 			rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 			ray = new Wall(pos,rayendp);
 			
-			cosineTable[x] = (float) Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
+			fisheyeLUT[x] = (float) Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
 		}
 	}
 	
