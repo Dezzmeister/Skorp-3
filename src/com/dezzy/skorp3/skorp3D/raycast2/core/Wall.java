@@ -8,7 +8,7 @@ import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 public class Wall implements Linetype {
 	public static final Texture2 DEFAULT_TEXTURE = new Texture2("assets/raycast/textures/darkbricks.png",512,512);
 	/**
-	 * A number specifying how many different shades to use when shading walls.
+	 * The difference in darkness between an unshaded wall and a wall with maximum possible shading.
 	 */
 	public static final int SHADE_THRESHOLD = 25;
 	

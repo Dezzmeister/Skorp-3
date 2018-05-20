@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.dezzy.skorp3.UI.Mouse;
-import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.game3D.Data3D;
 import com.dezzy.skorp3.game3D.Renderer;

@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
@@ -41,6 +43,8 @@ import com.dezzy.skorp3.skorp3D.render.Renderer;
  *
  */
 public class Raycaster2 implements Renderer {
+	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY;	
+	
 	private volatile Graphics g;
 	private volatile RaycastMap map;
 	private volatile Mouse mouse;
@@ -76,17 +80,19 @@ public class Raycaster2 implements Renderer {
 	private Stack<PortalRenderObject> PROs;
 	private Stack<Portal> PBO = new Stack<Portal>();
 	
-	private int rendererCount = 10;
+	/**
+	 * The number of threads that will be working to render the image.
+	 */
+	private int rendererCount = 20;
 	private ThreadRenderer[] renderers;
-	private Thread[] rendererThreads;
-	private AtomicBoolean shouldRender[];
 	private ThreadPoolExecutor executor;
 	private LatchRef latchref;
+	
+	private boolean initialized = false;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
 		HEIGHT = _height;
-		
 		map = _map;
 		mouse = _mouse;
 		panel = _panel;
@@ -111,7 +117,11 @@ public class Raycaster2 implements Renderer {
 		
 		populateFisheyeLUT();
 		
-		createThreadPoolRenderers();
+		EMPTY_PORTAL_STRIPE_ARRAY = new boolean[WIDTH];
+		
+		initEmptyArray();
+		createAllPortalStripeArrays();
+		//createThreadPoolRenderers();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -120,7 +130,33 @@ public class Raycaster2 implements Renderer {
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
 	}
 	
+	private void initEmptyArray() {
+		for (int i = 0; i < WIDTH; i++) {
+			EMPTY_PORTAL_STRIPE_ARRAY[i] = false;
+		}
+	}
+	
+	public void resetPortalStripeArrays() {
+		for (int i = 0; i < map.portals.length; i++) {
+			System.arraycopy(EMPTY_PORTAL_STRIPE_ARRAY, 0, map.portals[i].renderedStripes, 0, WIDTH);
+		}
+	}
+	
+	private void createAllPortalStripeArrays() {
+		for (int i = 0; i < map.portals.length; i++) {
+			map.portals[i].initializeRenderedStripes(WIDTH);
+		}
+	}
+	
+	private void initOnce() {
+		if (!initialized) {
+			createThreadPoolRenderers();
+			initialized = true;
+		}
+	}
+	
 	private void createThreadPoolRenderers() {
+		System.out.println(SwingUtilities.isEventDispatchThread());
 		if (rendererCount > WIDTH) {
 			Logger.warn("It is impossible to have more thread renderers than stripes on the screen!");
 			stopAndExit();
@@ -136,9 +172,11 @@ public class Raycaster2 implements Renderer {
 		
 		while (step+interval < WIDTH) {
 			int i = step/interval;
+			
 			renderers[i] = new ThreadRenderer(step,step+interval,latchref);
+			step += interval;
 		}
-		step -= interval;
+
 		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref);
 		
 	}
@@ -161,8 +199,9 @@ public class Raycaster2 implements Renderer {
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
 	
-	@Override
-	public void render() {
+	//@Override
+	public void oldrender() {
+		initOnce();
 		preRender();	
 		handleRotation();
 		handleMovement();
@@ -172,8 +211,9 @@ public class Raycaster2 implements Renderer {
 		postRender();
 	}
 	
-	//@Override
-	public void oldrender() {
+	@Override
+	public void render() {
+		initOnce();
 		preRender();
 		handleRotation();
 		handleMovement();
@@ -272,10 +312,6 @@ public class Raycaster2 implements Renderer {
 	private class ThreadRenderer implements Runnable {
 		int startX;
 		int endX;
-		private Vector2 rayendp;
-		private Wall ray;
-		private Wall wall;
-		private Vector2 hit;
 		private LatchRef latch;
 		
 		public ThreadRenderer(int _startX, int _endX, LatchRef _latch) {
@@ -292,21 +328,20 @@ public class Raycaster2 implements Renderer {
 		
 		public void renderSector(Sector sector, int startX, int endX) {    	
 		    for (int x = startX; x < endX; x++) {
-		    	sector.markAsRendered();
 		    	//Map the x value to a range of -1 to 1
 		    	float norm = (2 * (x/(float)WIDTH)) - 1;
 		    	
 		    	//The direction vector of the ray
-		    	rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+		    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 		    	
 		    	//TODO Add sectors and use those instead of just testing all the walls.
 		    	for (int i = 0; i < sector.walls.length; i++) {
-		    		wall = sector.walls[i];
+		    		Wall wall = sector.walls[i];
 		    		
-		    		hit = RenderUtils.rayHitSegment(pos,rayendp,wall);
+		    		Vector2 hit = RenderUtils.rayHitSegment(pos,rayendp,wall);
 		    		
 		    		if (hit != null) {
-		    			ray = new Wall(pos,hit);
+		    			Wall ray = new Wall(pos,hit);
 		    			
 		    			float distance = ray.length;
 		    			
@@ -344,13 +379,16 @@ public class Raycaster2 implements Renderer {
 		    			if (wall.isPortal()) {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
 		    				for (int y = 0; y < HEIGHT; y++) {
-		    					if (zbuf2[x + y * WIDTH] > distance) {
+		    					
+		    					if (!wall.getPortal().renderedStripes[x] && zbuf2[x + y * WIDTH] > distance) {
+		    						wall.getPortal().renderedStripes[x] = true;
 		    						renderSector(wall.getPortal().otherSector(sector),x,x+1);
 		    						break;
 		    					}
 		    				}
+		    				continue;
 		    			}
-		    				
+		    			
 		    			float wallNorm = wall.getNorm(hit);
 		    				
 		    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
@@ -420,11 +458,6 @@ public class Raycaster2 implements Renderer {
 				zbuf2[x + y * WIDTH] = distance;
 			}
 		}
-	}
-	
-	private void testWall(Wall w, int x, Sector sector, Wall norm, Wall rayendp) {
-		
-    			
 	}
 	
 	/**
@@ -524,7 +557,8 @@ public class Raycaster2 implements Renderer {
 	public void postRender() {
 		reset2DZBuffer();
 		clearPROStack();
-		unrenderSectors();
+		//unrenderSectors();
+		resetPortalStripeArrays();
 		//reset2DPortalZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}

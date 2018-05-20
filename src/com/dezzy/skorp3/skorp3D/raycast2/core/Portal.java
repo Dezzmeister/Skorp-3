@@ -2,12 +2,14 @@ package com.dezzy.skorp3.skorp3D.raycast2.core;
 
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 
-public class Portal implements Linetype {
+public class Portal implements Linetype {	
 	public Vector2 v0;
 	public Vector2 v1;
 	public Sector border1;
 	public Sector border2;
 	public float length;
+	
+	public boolean[] renderedStripes;
 	
 	public Portal(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
@@ -31,6 +33,10 @@ public class Portal implements Linetype {
 	
 	public void updateLength() {
 		length = Vector2.distance(v0, v1);
+	}
+	
+	public void initializeRenderedStripes(int width) {
+		renderedStripes = new boolean[width];
 	}
 	
 	/**

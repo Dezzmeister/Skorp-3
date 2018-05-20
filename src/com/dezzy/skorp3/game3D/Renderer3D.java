@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 import com.dezzy.skorp3.UI.Mouse;
-import com.dezzy.skorp3.UI.MouseData;
 import com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer;
 
 public class Renderer3D {	
