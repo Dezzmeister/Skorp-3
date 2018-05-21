@@ -42,9 +42,7 @@ import com.dezzy.skorp3.skorp3D.render.Renderer;
  * @author Dezzmeister
  *
  */
-public class Raycaster2 implements Renderer {
-	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY;	
-	
+public class Raycaster2 implements Renderer {	
 	private volatile Graphics g;
 	private volatile RaycastMap map;
 	private volatile Mouse mouse;
@@ -83,7 +81,8 @@ public class Raycaster2 implements Renderer {
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 20;
+	private int rendererCount = 10;
+	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
 	private LatchRef latchref;
@@ -117,11 +116,9 @@ public class Raycaster2 implements Renderer {
 		
 		populateFisheyeLUT();
 		
-		EMPTY_PORTAL_STRIPE_ARRAY = new boolean[WIDTH];
-		
 		initEmptyArray();
 		createAllPortalStripeArrays();
-		//createThreadPoolRenderers();
+		createThreadPoolRenderers();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -131,26 +128,26 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	private void initEmptyArray() {
-		for (int i = 0; i < WIDTH; i++) {
+		for (int i = 0; i < rendererCount; i++) {
 			EMPTY_PORTAL_STRIPE_ARRAY[i] = false;
 		}
 	}
 	
 	public void resetPortalStripeArrays() {
 		for (int i = 0; i < map.portals.length; i++) {
-			System.arraycopy(EMPTY_PORTAL_STRIPE_ARRAY, 0, map.portals[i].renderedStripes, 0, WIDTH);
+			System.arraycopy(EMPTY_PORTAL_STRIPE_ARRAY, 0, map.portals[i].renderedStripes, 0, rendererCount);
 		}
 	}
 	
 	private void createAllPortalStripeArrays() {
 		for (int i = 0; i < map.portals.length; i++) {
-			map.portals[i].initializeRenderedStripes(WIDTH);
+			map.portals[i].initializeRenderedStripes(rendererCount);
 		}
 	}
 	
 	private void initOnce() {
 		if (!initialized) {
-			createThreadPoolRenderers();
+			//createThreadPoolRenderers();
 			initialized = true;
 		}
 	}
@@ -173,11 +170,11 @@ public class Raycaster2 implements Renderer {
 		while (step+interval < WIDTH) {
 			int i = step/interval;
 			
-			renderers[i] = new ThreadRenderer(step,step+interval,latchref);
+			renderers[i] = new ThreadRenderer(step,step+interval,latchref,i);
 			step += interval;
 		}
 
-		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref);
+		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref,rendererCount-1);
 		
 	}
 	
@@ -198,10 +195,9 @@ public class Raycaster2 implements Renderer {
 	private void reset2DZBuffer() {		
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
-	
-	//@Override
-	public void oldrender() {
-		initOnce();
+
+	public void singleThreadRender() {
+		//initOnce();
 		preRender();	
 		handleRotation();
 		handleMovement();
@@ -210,10 +206,9 @@ public class Raycaster2 implements Renderer {
 		renderSector(currentSector,0,WIDTH);
 		postRender();
 	}
-	
-	@Override
-	public void render() {
-		initOnce();
+
+	public void multiThreadRender() {
+		//initOnce();
 		preRender();
 		handleRotation();
 		handleMovement();
@@ -221,6 +216,11 @@ public class Raycaster2 implements Renderer {
 		updateCurrentSector();
 		renderAndBlock();
 		postRender();
+	}
+	
+	@Override
+	public void render() {
+		multiThreadRender();
 	}
 	
 	private Vector2 pos;
@@ -313,11 +313,13 @@ public class Raycaster2 implements Renderer {
 		int startX;
 		int endX;
 		private LatchRef latch;
+		private int id;
 		
-		public ThreadRenderer(int _startX, int _endX, LatchRef _latch) {
+		public ThreadRenderer(int _startX, int _endX, LatchRef _latch, int _id) {
 			startX = _startX;
 			endX = _endX;
 			latch = _latch;
+			id = _id;
 		}
 		
 		@Override
@@ -380,9 +382,9 @@ public class Raycaster2 implements Renderer {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
 		    				for (int y = 0; y < HEIGHT; y++) {
 		    					
-		    					if (!wall.getPortal().renderedStripes[x] && zbuf2[x + y * WIDTH] > distance) {
-		    						wall.getPortal().renderedStripes[x] = true;
-		    						renderSector(wall.getPortal().otherSector(sector),x,x+1);
+		    					if (!wall.getPortal().renderedStripes[id] && zbuf2[x + y * WIDTH] > distance) {
+		    						wall.getPortal().renderedStripes[id] = true;
+		    						renderSector(wall.getPortal().otherSector(sector),startX,endX);
 		    						break;
 		    					}
 		    				}
@@ -557,7 +559,7 @@ public class Raycaster2 implements Renderer {
 	public void postRender() {
 		reset2DZBuffer();
 		clearPROStack();
-		//unrenderSectors();
+		unrenderSectors();
 		resetPortalStripeArrays();
 		//reset2DPortalZBuffer();
 	    g2.drawImage(img, 0, 0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
