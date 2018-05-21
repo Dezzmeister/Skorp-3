@@ -28,20 +28,18 @@ public class Skorp3 {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				long beginTime;
-				long timeDiff;
-				int sleepTime;
-				int fps = 1000 / 60;
+				int timeDiff;
+				int fps = 1000000 / 60;
 				
-				beginTime = System.nanoTime() / 1000000;
+				beginTime = System.nanoTime();
 				
 				renderPanel.repaint();
 				
-				timeDiff = System.nanoTime() / 1000000 - beginTime;
-
-		        sleepTime = fps - (int) (timeDiff);
-		        
-		        if (sleepTime > 0) {
-		        	((Timer)e.getSource()).setDelay(sleepTime);
+				timeDiff = (int) (System.nanoTime() - beginTime);
+				int diff = fps - timeDiff;
+		        //Global.calculateFrameTimeFactor(timeDiff);
+		        if (timeDiff < fps) {
+		        	
 		        }
 			}
 		});

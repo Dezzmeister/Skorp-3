@@ -14,13 +14,13 @@ public class Logger {
 			System.err.println("Log could not be created.");
 			e.printStackTrace();
 		}
-		log.println("Time in ms\tEvent");
+		log.println("Time in ns\tEvent");
 		log.println();
 		log("Log created");
 	}
 	
 	public static void log(Object ... objects) {
-		log.print(System.currentTimeMillis() + "\t");
+		log.print(System.nanoTime() + "\t");
 		for (Object o : objects) {
 			log.print(o);
 		}
@@ -28,7 +28,7 @@ public class Logger {
 	}
 	
 	public static void warn(Object ... objects) {
-		log.print(System.currentTimeMillis() + "\tWARNING: ");
+		log.print(System.nanoTime() + "\tWARNING: ");
 		for (Object o : objects) {
 			log.print(o);
 		}

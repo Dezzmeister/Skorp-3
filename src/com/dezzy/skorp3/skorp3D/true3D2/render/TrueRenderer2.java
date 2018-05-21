@@ -15,6 +15,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.Mesh;
 import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
 import com.dezzy.skorp3.skorp3D.true3D2.core.Vector4;
 
+@SuppressWarnings("unused")
 public class TrueRenderer2 implements Renderer {
 	private volatile Graphics g;
 	private volatile Mouse mouse;

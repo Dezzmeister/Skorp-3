@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.KeyStroke;
 
-import com.aparapi.Kernel;
 import com.aparapi.Range;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
@@ -39,7 +38,7 @@ public class GPURaycaster implements RaycastRenderer {
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
 		
 		//BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		int[] img = new int[WIDTH * HEIGHT];
+		//int[] img = new int[WIDTH * HEIGHT];
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {

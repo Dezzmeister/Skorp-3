@@ -5,29 +5,22 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.UI.Mouse;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
-import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
-import com.dezzy.skorp3.skorp3D.raycast2.core.Portal;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastMap;
 import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Sector;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
-import com.dezzy.skorp3.skorp3D.raycast2.gpu.RaycastTask;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 import com.dezzy.skorp3.skorp3D.render.Renderer;
 
@@ -66,22 +59,16 @@ public class Raycaster2 implements Renderer {
 	 * Speeds up fisheye correction by using a table for every x value instead of a cosine calculation.
 	 */
 	private float[] fisheyeLUT;
-	/**
-	 * A z-buffer for portals.
-	 */
-	private float[] portalzbuf2;
-	private BufferedImage floor;
+	
 	private Sector currentSector;
 	private BufferedImage img;
 	private Graphics2D g2;
-	private RaycastTask gpu;
-	private Stack<PortalRenderObject> PROs;
-	private Stack<Portal> PBO = new Stack<Portal>();
+	//private RaycastTask gpu;
 	
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 10;
+	private int rendererCount = 1000;
 	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
@@ -103,14 +90,10 @@ public class Raycaster2 implements Renderer {
 			emptyZBuffer[i] = Float.MAX_VALUE;
 		}
 		
-		PROs = new Stack<PortalRenderObject>();
-		
 		zbuf2 = new float[WIDTH * HEIGHT];
 		reset2DZBuffer();
 
 		zbuf2 = new float[WIDTH * HEIGHT];
-		portalzbuf2 = new float[WIDTH * HEIGHT];
-		floor = Raycaster.makeFloor(WIDTH, HEIGHT);
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		updateCurrentSector();
 		
@@ -145,6 +128,7 @@ public class Raycaster2 implements Renderer {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void initOnce() {
 		if (!initialized) {
 			//createThreadPoolRenderers();
@@ -153,13 +137,20 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	private void createThreadPoolRenderers() {
-		System.out.println(SwingUtilities.isEventDispatchThread());
 		if (rendererCount > WIDTH) {
-			Logger.warn("It is impossible to have more thread renderers than stripes on the screen!");
+			String error = "It is impossible to have more thread renderers than stripes on the screen!";
+			System.err.println(error);
+			Logger.warn(error);
 			stopAndExit();
 		}
 		
 		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(rendererCount);
+		Logger.log(executor.getCorePoolSize() + " threads created for thread renderers.");
+		Logger.log("Maximum threads allowed: " + executor.getMaximumPoolSize());
+		
+		//In case the executor could not make all the threads we wanted
+		rendererCount = executor.getCorePoolSize();
+		
 		renderers = new ThreadRenderer[rendererCount];
 		latchref = new LatchRef();
 		
@@ -176,6 +167,7 @@ public class Raycaster2 implements Renderer {
 
 		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref,rendererCount-1);
 		
+		Logger.log(rendererCount + " thread renderers created.");
 	}
 	
 	private void renderAndBlock() {
@@ -195,7 +187,11 @@ public class Raycaster2 implements Renderer {
 	private void reset2DZBuffer() {		
 		System.arraycopy(emptyZBuffer, 0, zbuf2, 0, WIDTH * HEIGHT);
 	}
-
+	
+	/**
+	 * Uses the Swing Event Dispatch thread to render everything.
+	 * Renders each vertical stripe sequentially, starting from the left of the image.
+	 */
 	public void singleThreadRender() {
 		//initOnce();
 		preRender();	
@@ -206,7 +202,12 @@ public class Raycaster2 implements Renderer {
 		renderSector(currentSector,0,WIDTH);
 		postRender();
 	}
-
+	
+	/**
+	 * Uses <code>rendererCount</code> worker threads in a thread pool to render everything.
+	 * All threads (except potentially the last thread and excluding the event dispatch thread)
+	 * work on even sections of the image until the entire scene is rendered.
+	 */
 	public void multiThreadRender() {
 		//initOnce();
 		preRender();
@@ -462,37 +463,6 @@ public class Raycaster2 implements Renderer {
 		}
 	}
 	
-	/**
-	 * An intermediate class used in rendering sectors. 
-	 * 
-	 * @author Dezzmeister
-	 *
-	 */
-	private class PortalRenderObject {
-		public Portal portal;
-		public int startX;
-		public int endX = -1;
-		
-		public PortalRenderObject setPortal(Portal _portal) {
-			portal = _portal;
-			return this;
-		}
-		
-		public PortalRenderObject startAt(int x) {
-			startX = x;
-			return this;
-		}
-		
-		public PortalRenderObject endAt(int x) {
-			endX = x;
-			return this;
-		}		
-	}
-	
-	private void clearPROStack() {
-		PROs.clear();
-	}
-	
 	public void updateCurrentSector() {
 		for (int i = 0; i < map.sectors.length; i++) {
 			boolean inSector = RenderUtils.vectorInSector(camera.pos, map.sectors[i]);
@@ -515,7 +485,8 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	public void handleMovement() {
-	    int sprintfactor = (keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    float sprintfactor = (keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
+	    //sprintfactor *= Global.frameTimeFactor;
 	    
 	    if (keys['W'] || keys[KeyEvent.VK_UP]) {
 	    	camera.moveForward(sprintfactor);
@@ -541,7 +512,9 @@ public class Raycaster2 implements Renderer {
 	}
 	
 	private void stopAndExit() {
-		executor.shutdownNow();
+		if (executor != null) {
+			executor.shutdownNow();
+		}
 		System.exit(0);
 	}
 	
@@ -558,7 +531,6 @@ public class Raycaster2 implements Renderer {
 	 */
 	public void postRender() {
 		reset2DZBuffer();
-		clearPROStack();
 		unrenderSectors();
 		resetPortalStripeArrays();
 		//reset2DPortalZBuffer();

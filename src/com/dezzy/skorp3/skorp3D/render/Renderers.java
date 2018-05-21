@@ -4,8 +4,6 @@ import com.dezzy.skorp3.skorp3D.data.GraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastRenderer;
 import com.dezzy.skorp3.skorp3D.raycast.render.Raycaster;
-import com.dezzy.skorp3.skorp3D.raycast2.Raycaster2;
-import com.dezzy.skorp3.skorp3D.raycast2.core.RaycastContainer2;
 
 public class Renderers {
 	

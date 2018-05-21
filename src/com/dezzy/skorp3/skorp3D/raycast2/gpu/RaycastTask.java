@@ -1,11 +1,12 @@
 package com.dezzy.skorp3.skorp3D.raycast2.gpu;
 
 import com.aparapi.Kernel;
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
+import com.dezzy.skorp3.annotations.urgency.Urgency;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
-import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
+@SuppressWarnings("unused")
+@Urgency(3)
 public class RaycastTask extends Kernel {
 	private int WIDTH;
 	private int HEIGHT;

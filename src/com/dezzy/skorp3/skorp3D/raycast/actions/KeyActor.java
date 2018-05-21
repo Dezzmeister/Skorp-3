@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+@SuppressWarnings("unused")
 public class KeyActor extends AbstractAction {
 	private static final long serialVersionUID = -7150422517961856546L;
 	

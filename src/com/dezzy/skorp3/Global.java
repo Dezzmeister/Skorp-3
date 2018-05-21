@@ -45,7 +45,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
  */
 @SuppressWarnings("unused")
 public final class Global {
-	private static final int SIZE = 700;
+	private static final int SIZE = 1000;
 	/**
 	 * X resolution of the rendered image
 	 */
@@ -62,6 +62,12 @@ public final class Global {
 	 * Y resolution of the displayed image
 	 */
 	public static final int SCREENHEIGHT = 1000;
+	/**
+	 * An arbitrary time constant that plays a part in player speed/movement.
+	 */
+	public static final float TIME_CONST = 25000;
+	
+	public static float frameTimeFactor;
 	
 	public static final VBO3D mainVBO = new VBO3D("main");
 	
@@ -85,7 +91,7 @@ public final class Global {
 	}
 	
 	private Global() {
-
+		throw new RuntimeException();
 	}
 	
 	public static class True3D {
@@ -264,5 +270,10 @@ public final class Global {
 			mainMap.addSprite(angrydude);
 			mainMap.addSprite(weirdThing);
 		}
+	}
+	
+	public static void calculateFrameTimeFactor(int timeDiff) {
+		frameTimeFactor = timeDiff/TIME_CONST;
+		System.out.println(frameTimeFactor);
 	}
 }

@@ -1,8 +1,5 @@
 package com.dezzy.skorp3.skorp3D.raycast2.gpu;
 
-import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
-import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
-
 public class GPURenderUtils {
 	
 	/*

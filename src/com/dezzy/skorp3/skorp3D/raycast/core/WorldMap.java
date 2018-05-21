@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.dezzy.skorp3.game.Pair;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
 import com.dezzy.skorp3.skorp3D.raycast.render.Camera;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;

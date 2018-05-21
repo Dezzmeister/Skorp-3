@@ -3,9 +3,7 @@ package com.dezzy.skorp3.skorp3D.raycast.gpu;
 import java.awt.image.BufferedImage;
 
 import com.aparapi.Kernel;
-import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.render.RaycastGraphicsContainer;
-import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
 public class RaycastTask extends Kernel {
 	private final int WIDTH;

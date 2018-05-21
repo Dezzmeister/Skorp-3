@@ -21,6 +21,8 @@ public abstract class SkorpPanel extends JPanel implements MouseMotionListener, 
 
 	private static final long serialVersionUID = 118236244530832266L;
 	
+	public static final double TIME_CONST = 25000;
+	
 	private Mouse mouseData;
 	@SuppressWarnings("unused")
 	private Container pane;

@@ -7,6 +7,7 @@ import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 
+@SuppressWarnings("unused")
 public class TopDownMap {
 	public BufferedImage map;
 	private int width;
