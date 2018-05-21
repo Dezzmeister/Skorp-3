@@ -68,13 +68,14 @@ public class Raycaster2 implements Renderer {
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 1000;
+	private int rendererCount = 10;
 	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
 	private LatchRef latchref;
 	
 	private boolean initialized = false;
+	private boolean multiThreading = true;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -101,7 +102,10 @@ public class Raycaster2 implements Renderer {
 		
 		initEmptyArray();
 		createAllPortalStripeArrays();
-		createThreadPoolRenderers();
+		
+		if (multiThreading) {
+			createThreadPoolRenderers();
+		}
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
