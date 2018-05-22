@@ -129,4 +129,14 @@ public final class RenderUtils {
 		
 		return (red << 16) | (green << 8) | blue;
 	}
+	
+	public static double clamp(float val, float minVal, float maxVal) {
+		if (val < minVal) {
+			return minVal;
+		}
+		if (val > maxVal) {
+			return maxVal;
+		}
+		return val;
+	}
 }

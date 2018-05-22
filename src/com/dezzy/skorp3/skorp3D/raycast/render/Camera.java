@@ -1,7 +1,11 @@
 package com.dezzy.skorp3.skorp3D.raycast.render;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.core.WorldMap;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
 
 public class Camera {
 	public Vector2 pos;
@@ -12,7 +16,16 @@ public class Camera {
 	private float moveSpeed = 0.055f;
 	private float rotSpeed = 0.005f;
 	
-	public double fogDistance = 10;
+	public float fogDistance = 10;
+	
+	public int yOffset = 0;
+	
+	private static final float HALF_PI = (float)Math.PI/2.0f;
+	private static final float TWO_PI = (float)Math.PI*2.0f;
+	/**
+	 * I love lookup tables.
+	 */
+	private Map<Float,Float> preComputedSineLUT = new HashMap<Float,Float>();
 	
 	public Camera setPos(Vector2 _pos) {
 		pos = _pos;
@@ -46,13 +59,71 @@ public class Camera {
 		moveSpeed = speed;
 	}
 	
-	private void computeSideDir() {
-		float t = (float) (Math.PI/2.0);
-		
-		float x = (float) (dir.x*Math.cos(t) - dir.y*Math.sin(t));
-		float y = (float) (dir.x*Math.sin(t) + dir.y*Math.cos(t));
+	private static final float COS_T = (float) Math.cos(Math.PI/2.0);
+	private static final float SIN_T = (float) Math.sin(Math.PI/2.0);
+	
+	private void computeSideDir() {		
+		float x = (float) (dir.x*COS_T - dir.y*SIN_T);
+		float y = (float) (dir.x*SIN_T + dir.y*COS_T);
 		
 		sidedir = new Vector2(x,y);
+	}
+	
+	/**
+	 * Used with LUT rotation methods. This method takes a potential rotation factor and computes
+	 * sine, cosine, and negative sine. It puts these values in a lookup table to avoid computing them 
+	 * in real time. The lookup table returns the sine of the key: to get cosine, use (HALF_PI+key); to get negative sine,
+	 * use (TWO_PI-speed).
+	 * 
+	 * @param factor
+	 */
+	public void preComputeFactor(float factor) {
+		float speed = factor * this.rotSpeed;
+		preComputedSineLUT.put(speed, (float)Math.sin(speed));
+		preComputedSineLUT.put(HALF_PI+speed, (float)Math.cos(speed));
+		preComputedSineLUT.put(TWO_PI-speed, -(float)Math.sin(speed));
+	}
+	
+	public void clearRotationLUT() {
+		preComputedSineLUT.clear();
+	}
+	
+	/**
+	 * A faster implementation of <code>rotateLeft()</code> that uses a lookup table. Use in conjunction with
+	 * <code>preComputeFactor()</code>.
+	 * 
+	 * @param factor multiplied by internal rotation speed and used to rotate
+	 */
+	public void rotateLeftLUT(float factor) {
+		float speed = factor * this.rotSpeed;
+		
+		float oldDirX = dir.x;
+		float cr = preComputedSineLUT.get(HALF_PI + speed);
+		float sr = preComputedSineLUT.get(speed);
+		dir.x = dir.x * cr - dir.y * sr;
+	    dir.y = oldDirX * sr + dir.y * cr;
+	    float oldPlaneX = plane.x;
+	    plane.x = plane.x * cr - plane.y * sr;
+	    plane.y = oldPlaneX * sr + plane.y * cr;
+	}
+	
+	/**
+	 * A faster implementation of <code>rotateRight()</code> that uses a lookup table. Use in conjunction with
+	 * <code>preComputeFactor()</code>.
+	 * 
+	 * @param factor multiplied by internal rotation speed and used to multiply
+	 */
+	public void rotateRightLUT(float factor) {
+		float speed = factor * this.rotSpeed;
+		
+		float oldDirX = dir.x;
+		float cr = preComputedSineLUT.get(HALF_PI + speed);
+		float sr = preComputedSineLUT.get(TWO_PI - speed);
+	    dir.x = dir.x * cr - dir.y * sr;
+	    dir.y = oldDirX * sr + dir.y * cr;
+	    float oldPlaneX = plane.x;
+	    plane.x = plane.x * cr - plane.y * sr;
+	    plane.y = oldPlaneX * sr + plane.y * cr;
 	}
 	
 	/**
@@ -89,6 +160,20 @@ public class Camera {
 	    float oldPlaneX = plane.x;
 	    plane.x = plane.x * cr - plane.y * sr;
 	    plane.y = oldPlaneX * sr + plane.y * cr;
+	}
+	
+	public void cheapRotateUp(float factor, int height) {
+		float speed = factor * this.rotSpeed;
+
+		yOffset += (int)(speed * height);
+		yOffset = (int)RenderUtils.clamp(yOffset, -(height/8), (height/8));
+	}
+	
+	public void cheapRotateDown(float factor, int height) {
+		float speed = factor * this.rotSpeed;
+		
+		yOffset -= (int)(speed * height);
+		yOffset = (int)RenderUtils.clamp(yOffset, -(height/8), (height/8));
 	}
 	
 	public void moveForward(WorldMap map, float factor) {

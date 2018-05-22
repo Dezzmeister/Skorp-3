@@ -20,8 +20,9 @@ public class Sector {
 	public float floorXTiles = 1;
 	public float floorYTiles = 1;
 	
-	public float floorHeight = 0;
-	public float ceilHeight = 1.0f;
+	public float yOffset = 0.0f;
+	
+	public float wallHeight = 1.0f;
 	
 	private final AtomicBoolean rendered = new AtomicBoolean(false);
 	
@@ -63,13 +64,13 @@ public class Sector {
 		return this;
 	}
 	
-	public Sector setFloor(float height) {
-		floorHeight = height;
+	public Sector moveUp(float _yOffset) {
+		yOffset = _yOffset;
 		return this;
 	}
 	
-	public Sector setCeiling(float height) {
-		ceilHeight = height;
+	public Sector setWallHeight(float _wallHeight) {
+		wallHeight = _wallHeight;
 		return this;
 	}
 	

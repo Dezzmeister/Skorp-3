@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -35,7 +37,7 @@ import com.dezzy.skorp3.skorp3D.render.Renderer;
  * @author Dezzmeister
  *
  */
-public class Raycaster2 implements Renderer {	
+public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThreadedRenderer {	
 	private volatile Graphics g;
 	private volatile RaycastMap map;
 	private volatile Mouse mouse;
@@ -68,7 +70,7 @@ public class Raycaster2 implements Renderer {
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 10;
+	private int rendererCount = 4;
 	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
@@ -76,6 +78,8 @@ public class Raycaster2 implements Renderer {
 	
 	private boolean initialized = false;
 	private boolean multiThreading = true;
+	
+	private Method renderMethod;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -103,15 +107,32 @@ public class Raycaster2 implements Renderer {
 		initEmptyArray();
 		createAllPortalStripeArrays();
 		
+		initRenderMethod();
+		
 		if (multiThreading) {
 			createThreadPoolRenderers();
 		}
+		
+		preComputeCameraRotationLUT();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
+	}
+	
+	private void initRenderMethod() {
+		try {
+			if (multiThreading) {
+				renderMethod = this.getClass().getDeclaredMethod("multiThreadRender", (Class<?>[]) null);
+			} else {
+				renderMethod = this.getClass().getDeclaredMethod("singleThreadRender", (Class<?>[]) null);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			e.printStackTrace(Logger.log);
+		}
 	}
 	
 	private void initEmptyArray() {
@@ -196,6 +217,7 @@ public class Raycaster2 implements Renderer {
 	 * Uses the Swing Event Dispatch thread to render everything.
 	 * Renders each vertical stripe sequentially, starting from the left of the image.
 	 */
+	@Override
 	public void singleThreadRender() {
 		//initOnce();
 		preRender();	
@@ -212,6 +234,7 @@ public class Raycaster2 implements Renderer {
 	 * All threads (except potentially the last thread and excluding the event dispatch thread)
 	 * work on even sections of the image until the entire scene is rendered.
 	 */
+	@Override
 	public void multiThreadRender() {
 		//initOnce();
 		preRender();
@@ -259,16 +282,16 @@ public class Raycaster2 implements Renderer {
 	    			
 	    			distance *= fisheyeLUT[x];
 	    			
-	    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
+	    			float heightDiff = ((sector.yOffset*HEIGHT) - (currentSector.yOffset*HEIGHT));
 	    			float heightOffset = heightDiff/distance;
 	    			
 	    			int lineHeight = (int) ((HEIGHT/distance));
 	    				
 	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
-	    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
+	    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
 	    				
 	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
-	    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
+	    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
 	    			
 	    			if (wall.isPortal()) {
 	    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
@@ -354,35 +377,26 @@ public class Raycaster2 implements Renderer {
 		    			
 		    			distance *= fisheyeLUT[x];
 		    			
-		    			float heightDiff = (sector.floorHeight - currentSector.floorHeight);
+		    			float effectiveHeight = HEIGHT*sector.wallHeight;
+		    			float effectiveOffset = currentSector.yOffset*HEIGHT;
+		    			
+		    			float heightDiff = ((sector.yOffset*HEIGHT) - effectiveOffset);
 		    			float heightOffset = heightDiff/distance;
 		    			
-		    			int lineHeight = (int) ((HEIGHT/distance));
+		    			int lineHeight = (int) ((effectiveHeight/distance));
 		    				
 		    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
-		    			int drawStart = (int)clamp(trueDrawStart,0,HEIGHT-1);
+		    			//trueDrawStart -= effectiveOffset;
+		    			trueDrawStart += camera.yOffset;
+		    			
+		    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
 		    				
 		    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
-		    			int drawEnd = (int)clamp(trueDrawEnd,0,HEIGHT-1);
-		    			/*
-		    			if (wall.isPortal()) {
-		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
-		    				//Portal boundaries
-		    				//img.setRGB(x, drawStart, 0);
-		    				//img.setRGB(x, drawEnd, 0);
-		    				if (!wall.getPortal().otherSector(sector).hasBeenRendered()) {
-		    					for (int y = 0; y < HEIGHT; y++) {
-			    					if (zbuf2[x + y * WIDTH] > distance) {
-			    						renderSector(wall.getPortal().otherSector(sector),x,WIDTH);
-			    						break;
-			    					}
-			    				}
-		    				}
-		    				continue;
-		    			} else {
-		    				
-		    			}
-		    			*/
+		    			//trueDrawEnd -= effectiveOffset;
+		    			trueDrawEnd += camera.yOffset;
+		    			
+		    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
+		    			
 		    			if (wall.isPortal()) {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
 		    				for (int y = 0; y < HEIGHT; y++) {
@@ -522,12 +536,24 @@ public class Raycaster2 implements Renderer {
 		System.exit(0);
 	}
 	
+	private void preComputeCameraRotationLUT() {
+		for (int i = 0; i < WIDTH; i++) {
+			camera.preComputeFactor(i);
+		}
+	}
+	
 	public void handleRotation() {
 		if (mouse.dx() < 0) {
-	    	camera.rotateLeft(Math.abs(mouse.dx()));
+	    	camera.rotateLeftLUT(Math.abs(mouse.dx()));
 	    } else if (mouse.dx() > 0) {
-	    	camera.rotateRight(mouse.dx());
+	    	camera.rotateRightLUT(mouse.dx());
 	    }
+		
+		if (mouse.dy() < 0) {
+			camera.cheapRotateUp(Math.abs(mouse.dy()), HEIGHT);
+		} else if (mouse.dy() > 0) {
+			camera.cheapRotateDown(mouse.dy(), HEIGHT);
+		}
 	}
 	
 	/**
@@ -545,16 +571,6 @@ public class Raycaster2 implements Renderer {
 		for (int i = 0; i < map.sectors.length; i++) {
 			map.sectors[i].markAsUnrendered();
 		}
-	}
-	
-	public static double clamp(float val, float minVal, float maxVal) {
-		if (val < minVal) {
-			return minVal;
-		}
-		if (val > maxVal) {
-			return maxVal;
-		}
-		return val;
 	}
 
 	@Override
