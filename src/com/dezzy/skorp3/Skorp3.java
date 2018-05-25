@@ -15,6 +15,7 @@ import com.dezzy.skorp3.skorp3D.render.SkorpPanelSupplier;
 
 public class Skorp3 {
 	public static void main(String ... args) {
+		//launch(SkorpPanel::createStandardTrue3D2);
 		launch(SkorpPanel::createStandardRaycast2);
 	}
 	

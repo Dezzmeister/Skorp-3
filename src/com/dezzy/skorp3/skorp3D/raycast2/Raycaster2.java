@@ -80,6 +80,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	private boolean multiThreading = true;
 	
 	private Method renderMethod;
+	private int sectorDrawOffset;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
@@ -114,6 +115,8 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		}
 		
 		preComputeCameraRotationLUT();
+		
+		disableUpDownRotation();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -225,6 +228,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		handleMovement();
 		handleMiscKeys();
 		updateCurrentSector();
+		findSectorDrawOffset();
 		renderSector(currentSector,0,WIDTH);
 		postRender();
 	}
@@ -242,6 +246,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		handleMovement();
 		handleMiscKeys();
 		updateCurrentSector();
+		findSectorDrawOffset();
 		renderAndBlock();
 		postRender();
 	}
@@ -386,7 +391,9 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			int lineHeight = (int) ((effectiveHeight/distance));
 		    				
 		    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
+		    			
 		    			//trueDrawStart -= effectiveOffset;
+		    			
 		    			trueDrawStart += camera.yOffset;
 		    			
 		    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
@@ -396,6 +403,12 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			trueDrawEnd += camera.yOffset;
 		    			
 		    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
+		    			
+		    			/*
+		    			if (startX == WIDTH/2) {
+		    				System.out.println(trueDrawStart);
+		    			}
+		    			*/
 		    			
 		    			if (wall.isPortal()) {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
@@ -434,6 +447,13 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    	}
 		    }
 		}
+	}
+	
+	private void findSectorDrawOffset() {
+		float wallh = currentSector.wallHeight;
+		float scale = 1.0f/(wallh*2.0f);
+
+		sectorDrawOffset = (int)(HEIGHT*scale);
 	}
 	
 	private void updateVars() {
@@ -542,18 +562,41 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		}
 	}
 	
+	/**
+	 * Bitwise flags that either enable or disable side-to-side/up-down rotation.
+	 * Booleans could be used, but it is faster to & the rotation values with these instead.
+	 */
+	private int upDownEnabled = 0xFFFFFFFF;
+	private int sideEnabled = 0xFFFFFFFF;
+	
 	public void handleRotation() {
 		if (mouse.dx() < 0) {
-	    	camera.rotateLeftLUT(Math.abs(mouse.dx()));
+	    	camera.rotateLeftLUT(Math.abs(mouse.dx()) & sideEnabled);
 	    } else if (mouse.dx() > 0) {
-	    	camera.rotateRightLUT(mouse.dx());
+	    	camera.rotateRightLUT(mouse.dx() & sideEnabled);
 	    }
 		
 		if (mouse.dy() < 0) {
-			camera.cheapRotateUp(Math.abs(mouse.dy()), HEIGHT);
+			camera.cheapRotateUp(Math.abs(mouse.dy()) & upDownEnabled, HEIGHT);
 		} else if (mouse.dy() > 0) {
-			camera.cheapRotateDown(mouse.dy(), HEIGHT);
+			camera.cheapRotateDown(mouse.dy() & upDownEnabled, HEIGHT);
 		}
+	}
+	
+	public void enableUpDownRotation() {
+		upDownEnabled = 0xFFFFFFFF;
+	}
+	
+	public void disableUpDownRotation() {
+		upDownEnabled = 0;
+	}
+	
+	public void enableSideToSideRotation() {
+		sideEnabled = 0xFFFFFFFF;
+	}
+	
+	public void disableSideToSideRotation() {
+		sideEnabled = 0;
 	}
 	
 	/**
