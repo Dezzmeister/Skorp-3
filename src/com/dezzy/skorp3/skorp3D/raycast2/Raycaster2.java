@@ -47,6 +47,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	
 	private final int WIDTH;
 	private final int HEIGHT;
+	private final int HALF_HEIGHT;
 	/**
 	 * A 2D z-buffer, used instead of a 1D z-buffer to support transparent sections in walls. Represented as a 1D array
 	 * for speed. (It actually is significantly faster.)
@@ -85,6 +86,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
 		WIDTH = _width;
 		HEIGHT = _height;
+		HALF_HEIGHT = HEIGHT >> 1;
 		map = _map;
 		mouse = _mouse;
 		panel = _panel;
@@ -292,10 +294,10 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	    			
 	    			int lineHeight = (int) ((HEIGHT/distance));
 	    				
-	    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
+	    			int trueDrawStart = (int)((HALF_HEIGHT - (lineHeight >> 1)) - heightOffset);
 	    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
 	    				
-	    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
+	    			int trueDrawEnd = (int)((HALF_HEIGHT + (lineHeight >> 1)) - heightOffset);
 	    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
 	    			
 	    			if (wall.isPortal()) {
@@ -369,7 +371,6 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    	//The direction vector of the ray
 		    	Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
 		    	
-		    	//TODO Add sectors and use those instead of just testing all the walls.
 		    	for (int i = 0; i < sector.walls.length; i++) {
 		    		Wall wall = sector.walls[i];
 		    		
@@ -389,8 +390,10 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			float heightOffset = heightDiff/distance;
 		    			
 		    			int lineHeight = (int) ((effectiveHeight/distance));
+		    			
+		    			int halfLineHeight = lineHeight >> 1;
 		    				
-		    			int trueDrawStart = (int)(((HEIGHT >> 1) - (lineHeight >> 1)) - heightOffset);
+		    			int trueDrawStart = (int)((HALF_HEIGHT - halfLineHeight) - heightOffset);
 		    			
 		    			//trueDrawStart -= effectiveOffset;
 		    			
@@ -398,7 +401,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			
 		    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
 		    				
-		    			int trueDrawEnd = (int)(((HEIGHT >> 1) + (lineHeight >> 1)) - heightOffset);
+		    			int trueDrawEnd = (int)((HALF_HEIGHT + halfLineHeight) - heightOffset);
 		    			//trueDrawEnd -= effectiveOffset;
 		    			trueDrawEnd += camera.yOffset;
 		    			
