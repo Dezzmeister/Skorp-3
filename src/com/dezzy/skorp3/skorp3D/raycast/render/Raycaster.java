@@ -6,11 +6,15 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.Global;
 import com.dezzy.skorp3.field.Line;
+import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.RaycastContainer;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
@@ -21,6 +25,19 @@ public class Raycaster implements RaycastRenderer {
 	private int WIDTH, HEIGHT;
 	private double[] zbuf;
 	private Sprite[] sprites;
+	private Vector2 pos;
+	private Vector2 dir;
+	private Vector2 plane;
+	private BufferedImage img;
+	private Graphics2D g2;
+	
+	/**
+	 * The number of threads that will be working to render the image.
+	 */
+	private int rendererCount = 4;
+	private ThreadRenderer[] renderers;
+	private ThreadPoolExecutor executor;
+	private LatchRef latchref;
 	/**
 	 * Meant for static floors (without texturing).
 	 */	
@@ -31,11 +48,68 @@ public class Raycaster implements RaycastRenderer {
 		zbuf = new double[WIDTH];
 		sprites = container.map.getSprites();
 		
+		createThreadPoolRenderers();
+		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
+	}
+	
+	private void stopAndExit() {
+		if (executor != null) {
+			executor.shutdownNow();
+		}
+		System.exit(0);
+	}
+	
+	private void createThreadPoolRenderers() {
+		if (rendererCount > WIDTH) {
+			String error = "It is impossible to have more thread renderers than stripes on the screen!";
+			System.err.println(error);
+			Logger.warn(error);
+			stopAndExit();
+		}
+		
+		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(rendererCount);
+		Logger.log(executor.getCorePoolSize() + " threads created for thread renderers.");
+		Logger.log("Maximum threads allowed: " + executor.getMaximumPoolSize());
+		
+		//In case the executor could not make all the threads we wanted
+		rendererCount = executor.getCorePoolSize();
+		
+		renderers = new ThreadRenderer[rendererCount];
+		latchref = new LatchRef();
+		
+		int interval = (WIDTH - (WIDTH % rendererCount))/rendererCount;
+		
+		int step = 0;
+		
+		while (step+interval < WIDTH) {
+			int i = step/interval;
+			
+			renderers[i] = new ThreadRenderer(step,step+interval,latchref,i);
+			step += interval;
+		}
+
+		renderers[renderers.length-1] = new ThreadRenderer(step,WIDTH,latchref,rendererCount-1);
+		
+		Logger.log(rendererCount + " thread renderers created.");
+	}
+	
+	private void renderAndBlock() {
+		latchref.latch = new CountDownLatch(rendererCount);
+		for (int i = 0; i < renderers.length; i++) {
+			executor.execute(renderers[i]);
+		}
+		
+		try {
+			latchref.latch.await();
+		} catch (Exception e) {
+			e.printStackTrace(Logger.log);
+			e.printStackTrace();
+		}
 	}
 	
 	public static BufferedImage makeFloor(int width, int height) {
@@ -70,11 +144,11 @@ public class Raycaster implements RaycastRenderer {
 	
 	@Override
 	public void render() {
-		Graphics2D g2 = (Graphics2D) container.g;
+		g2 = (Graphics2D) container.g;
 		g2.setBackground(Color.BLACK);
 		g2.clearRect(0, 0, container.panel.getWidth(), container.panel.getHeight());
 		
-		BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);		
+		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);		
 	    
 	    //Rotate left/right
 	    if (container.mouse.dx() < 0) {
@@ -99,12 +173,81 @@ public class Raycaster implements RaycastRenderer {
 	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
 	    	container.camera.moveLeft(container.map,sprintfactor);
 	    }
+	    if (container.keys['D'] || container.keys[KeyEvent.VK_LEFT]) {
+	    	container.camera.moveRight(container.map,sprintfactor);
+	    }
 	    
-	    Vector2 pos = container.camera.pos;
-	    Vector2 dir = container.camera.dir;
-	    Vector2 plane = container.camera.plane;
+	    pos = container.camera.pos;
+	    dir = container.camera.dir;
+	    plane = container.camera.plane;  
 	    
-	    for (int x = 0; x < WIDTH; x++) {
+	    //renderFrom(0,WIDTH);
+	    renderAndBlock();
+	    renderSprites();
+	    
+	    //g2.drawImage(floor, 0, 0, null);
+	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
+	}
+	
+	public void renderSprites() {
+		for (int i = 0; i < sprites.length; i++) {
+	    	sprites[i].order = i;
+	    	sprites[i].distance = ((pos.x - sprites[i].x) * (pos.x - sprites[i].x) + (pos.y - sprites[i].y) * (pos.y - sprites[i].y));
+	    }
+	    Arrays.sort(sprites);
+		
+		for (int i = 0; i < sprites.length; i++) {
+	    	double spriteX = sprites[sprites[i].order].x - pos.x;
+	    	double spriteY = sprites[sprites[i].order].y - pos.y;
+	    	
+	    	double invDet = 1.0 / (plane.x * dir.y - dir.x * plane.y);
+	    	double transformX = invDet * (dir.y * spriteX - dir.x * spriteY);
+	    	double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY);
+	    	
+	    	int spriteScreenX = (int)((WIDTH >> 1) * (1 + transformX / transformY));
+	    	
+	    	int spriteHeight = Math.abs((int)(HEIGHT / transformY));
+	    	int drawStartY = -(spriteHeight >> 1) + (HEIGHT >> 1);
+	    	if (drawStartY < 0) {
+	    		drawStartY = 0;
+	    	}
+	    	int drawEndY = (spriteHeight >> 1) + (HEIGHT >> 1);
+	    	if (drawEndY >= HEIGHT) {
+	    		drawEndY = HEIGHT - 1;
+	    	}
+	    	
+	    	int spriteWidth = Math.abs((int)(HEIGHT / transformY));
+	    	int drawStartX = -(spriteWidth >> 1) + spriteScreenX;
+	    	if (drawStartX < 0) {
+	    		drawStartX = 0;
+	    	}
+	    	int drawEndX = (spriteWidth >> 1) + spriteScreenX;
+	    	if (drawEndX >= WIDTH) {
+	    		drawEndX = WIDTH - 1;
+	    	}
+	    	
+	    	
+	    	int texWidth = sprites[i].width();
+	    	int texHeight = sprites[i].height();
+	    	for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
+	    		int texX = (int)(((stripe - ((-spriteWidth >> 1) + spriteScreenX)) << 8) * texWidth / spriteWidth) >> 8;
+	    		if (transformY > 0 && stripe > 0 && stripe < WIDTH && transformY < zbuf[stripe]) {
+	    			for (int y = drawStartY; y < drawEndY; y++) {
+	    				int d = (y << 8) - (HEIGHT << 7)  + (spriteHeight << 7);
+	    				int texY = ((d * texHeight)/spriteHeight) >> 8;
+	    				int	color = sprites[sprites[i].order].pixels[texX + texWidth * texY];
+	    				if ((color & ~sprites[i].alpha) != 0) {
+	    					img.setRGB(stripe, y, color);
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	}
+	
+	public void renderFrom(int startX, int endX) {
+		
+    	for (int x = startX; x < endX; x++) {
 	    	Element element = null;
 	    	
 	    	double camX = 2 * x/(double)WIDTH - 1.0;
@@ -250,64 +393,182 @@ public class Raycaster implements RaycastRenderer {
 	        }
 	        
 	    }
-	    
-	    //Draw sprites
-	    for (int i = 0; i < sprites.length; i++) {
-	    	sprites[i].order = i;
-	    	sprites[i].distance = ((pos.x - sprites[i].x) * (pos.x - sprites[i].x) + (pos.y - sprites[i].y) * (pos.y - sprites[i].y));
+    }
+	
+	private class LatchRef {
+		public CountDownLatch latch;
+	}
+	
+	private class ThreadRenderer implements Runnable {
+		int startX;
+		int endX;
+		private LatchRef latch;
+		private int id;
+		
+		public ThreadRenderer(int _startX, int _endX, LatchRef _latch, int _id) {
+			startX = _startX;
+			endX = _endX;
+			latch = _latch;
+			id = _id;
+		}
+		
+		@Override
+		public void run() {
+			this.renderFrom(startX,endX);
+			latch.latch.countDown();
+		}
+		
+		private void renderFrom(int startX, int endX) {
+			
+	    	for (int x = startX; x < endX; x++) {
+		    	Element element = null;
+		    	
+		    	double camX = 2 * x/(double)WIDTH - 1.0;
+		        double rposx = pos.x;
+		        double rposy = pos.y;
+		        double rdirx = dir.x + plane.x * camX;
+		        double rdiry = dir.y + plane.y * camX;
+		        
+		        int mapX = (int)rposx;
+		        int mapY = (int)rposy;
+		        
+		        double sideDistX;
+		        double sideDistY;
+		        
+		        double deltaDistX = Math.sqrt(1 + (rdiry * rdiry)/(rdirx * rdirx));
+		        double deltaDistY = Math.sqrt(1 + (rdirx * rdirx)/(rdiry * rdiry));
+		        double perpWallDist;
+		        
+		        int stepX;
+		        int stepY;
+		        
+		        boolean hit = false;
+		        boolean side = false;
+		        
+		        if (rdirx < 0) {
+		            stepX = -1;
+		            sideDistX = (rposx - mapX) * deltaDistX;
+		        } else {
+		        	stepX = 1;
+		        	sideDistX = (mapX + 1.0 - rposx) * deltaDistX;
+		        }
+		          
+		        if (rdiry < 0) {
+		        	stepY = -1;
+		        	sideDistY = (rposy - mapY) * deltaDistY;
+		        } else {
+		        	stepY = 1;
+		        	sideDistY = (mapY + 1.0 - rposy) * deltaDistY;
+		        }
+		        //DDA
+		        while (!hit) {
+		        	if (sideDistX < sideDistY) {
+		        	    sideDistX += deltaDistX;
+		        		mapX += stepX;
+		        		side = false;
+		        	} else {
+		        		sideDistY += deltaDistY;
+		        		mapY += stepY;
+		        		side = true;
+		        	}
+		            element = container.map.get(mapX, mapY);
+		        	if (element != Element.SPACE) {
+		        		hit = true;
+		        	}
+		        }
+		        //System.out.println(mapX + " " + rdirx);
+		          
+		        if (!side) {
+		        	perpWallDist = (mapX - rposx + (1 - stepX)/2)/rdirx;
+		        } else {
+		        	perpWallDist = (mapY - rposy + (1 - stepY)/2)/rdiry;
+		        }
+		        
+		        int lineHeight = (int)(HEIGHT/perpWallDist);
+		          
+		        int drawStart = -(lineHeight >> 1) + (HEIGHT >> 1);
+		        if (drawStart < 0) {
+		        	  drawStart = 0;
+		        }
+		        int drawEnd = (lineHeight >> 1) + (HEIGHT >> 1);
+		        if (drawEnd >= HEIGHT) {
+		        	  drawEnd = HEIGHT -1;
+		        }
+		        
+		        //Texturing
+		        double wallX;
+		        if (side) {
+		        	wallX = (pos.x + ((mapY - pos.y + (1 - stepY)/2)/rdiry) * rdirx);
+		        } else {
+		        	wallX = (pos.y + ((mapX - pos.x + (1 - stepX)/2)/rdirx) * rdiry);
+		        }
+		        
+		        wallX -= Math.floor(wallX);
+		        
+		        int texX = (int)(wallX * element.frontTexture().SIZE);
+		        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
+		        
+		        for (int y = drawStart; y < drawEnd; y++) {
+		        	int texY = ((((y << 1) - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight) >> 1;
+		        	int color;
+		        	if (!side && (texX + (texY * element.frontTexture().SIZE)) < element.frontTexture().pixels.length && (texX + (texY * element.frontTexture().SIZE)) >= 0) {
+		        		color = element.frontTexture().pixels[(int) (texX + (texY * element.frontTexture().SIZE))];
+		        	} else if ((texX + (texY * element.sideTexture().SIZE)) < element.sideTexture().pixels.length && (texX + (texY * element.sideTexture().SIZE)) >= 0){
+		        		color = (element.sideTexture().pixels[(int) (texX + (texY * element.sideTexture().SIZE))]);
+		        	} else {
+		        		color = 0;
+		        	}
+		        	img.setRGB(x, y, color);
+		        }
+		        
+		        zbuf[x] = perpWallDist;
+		        
+		        //Floor casting
+		        double floorXWall;
+		        double floorYWall;
+		        
+		        if (!side && rdirx > 0) {
+		        	floorXWall = mapX;
+		        	floorYWall = mapY + wallX;
+		        } else if (!side && rdirx < 0) {
+		        	floorXWall = mapX + 1.0;
+		        	floorYWall = mapY + wallX;
+		        } else if(side && rdiry > 0) {
+		        	floorXWall = mapX + wallX;
+		        	floorYWall = mapY;
+		        } else {
+		        	floorXWall = mapX + wallX;
+		        	floorYWall = mapY + 1.0;
+		        }
+		        
+		        double currentDist;
+		        
+		        if (drawEnd < 0) drawEnd = HEIGHT;
+		        
+		        Texture floortex = container.map.floorTexture();
+		        Texture ceilingtex = container.map.ceilingTexture();
+		        
+		        for (int y = drawEnd + 1; y < HEIGHT; y++) {
+		        	currentDist = HEIGHT/((2.0 * y) - HEIGHT);
+		        	
+		        	double weight = (currentDist)/(perpWallDist);
+		        	
+		        	double currentFloorX = weight * floorXWall + (1.0 - weight) * pos.x;
+		        	double currentFloorY = weight * floorYWall + (1.0 - weight) * pos.y;
+		        	
+		        	int floorTexX;
+		        	int floorTexY;
+		        	floorTexX = (int)(currentFloorX * floortex.SIZE) % floortex.SIZE;
+		        	floorTexY = (int)(currentFloorY * floortex.SIZE) % floortex.SIZE;
+		        	
+		        	int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
+		        	int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
+		        	img.setRGB(x, y, color);
+		        	img.setRGB(x, (HEIGHT - y), ceilColor);
+		        }
+		        
+		    }
 	    }
-	    Arrays.sort(sprites);
-	    
-	    for (int i = 0; i < sprites.length; i++) {
-	    	double spriteX = sprites[sprites[i].order].x - pos.x;
-	    	double spriteY = sprites[sprites[i].order].y - pos.y;
-	    	
-	    	double invDet = 1.0 / (plane.x * dir.y - dir.x * plane.y);
-	    	double transformX = invDet * (dir.y * spriteX - dir.x * spriteY);
-	    	double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY);
-	    	
-	    	int spriteScreenX = (int)((WIDTH >> 1) * (1 + transformX / transformY));
-	    	
-	    	int spriteHeight = Math.abs((int)(HEIGHT / transformY));
-	    	int drawStartY = -(spriteHeight >> 1) + (HEIGHT >> 1);
-	    	if (drawStartY < 0) {
-	    		drawStartY = 0;
-	    	}
-	    	int drawEndY = (spriteHeight >> 1) + (HEIGHT >> 1);
-	    	if (drawEndY >= HEIGHT) {
-	    		drawEndY = HEIGHT - 1;
-	    	}
-	    	
-	    	int spriteWidth = Math.abs((int)(HEIGHT / transformY));
-	    	int drawStartX = -(spriteWidth >> 1) + spriteScreenX;
-	    	if (drawStartX < 0) {
-	    		drawStartX = 0;
-	    	}
-	    	int drawEndX = (spriteWidth >> 1) + spriteScreenX;
-	    	if (drawEndX >= WIDTH) {
-	    		drawEndX = WIDTH - 1;
-	    	}
-	    	
-	    	
-	    	int texWidth = sprites[i].width();
-	    	int texHeight = sprites[i].height();
-	    	for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
-	    		int texX = (int)(((stripe - ((-spriteWidth >> 1) + spriteScreenX)) << 8) * texWidth / spriteWidth) >> 8;
-	    		if (transformY > 0 && stripe > 0 && stripe < WIDTH && transformY < zbuf[stripe]) {
-	    			for (int y = drawStartY; y < drawEndY; y++) {
-	    				int d = (y << 8) - (HEIGHT << 7)  + (spriteHeight << 7);
-	    				int texY = ((d * texHeight)/spriteHeight) >> 8;
-	    				int	color = sprites[sprites[i].order].pixels[texX + texWidth * texY];
-	    				if ((color & ~sprites[i].alpha) != 0) {
-	    					img.setRGB(stripe, y, color);
-	    				}
-	    			}
-	    		}
-	    	}
-	    }
-	    
-	    //g2.drawImage(floor, 0, 0, null);
-	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
 	}
 	
 	public static Vector2 rayHitSegment(Line ray, Line seg) {

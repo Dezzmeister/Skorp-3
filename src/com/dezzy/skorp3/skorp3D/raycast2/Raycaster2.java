@@ -79,8 +79,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	
 	private boolean initialized = false;
 	private boolean multiThreading = true;
-	
-	private Method renderMethod;
+
 	private int sectorDrawOffset;
 	
 	public Raycaster2(int _width, int _height, RaycastMap _map, Mouse _mouse, JPanel _panel, Camera _camera, boolean[] _keys) {
@@ -92,6 +91,8 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		panel = _panel;
 		camera = _camera;
 		keys = _keys;
+		
+		camera.setUpDownClamp(HEIGHT/8);
 		
 		emptyZBuffer = new float[WIDTH * HEIGHT];
 		for (int i = 0; i < emptyZBuffer.length; i++) {
@@ -110,8 +111,6 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		initEmptyArray();
 		createAllPortalStripeArrays();
 		
-		initRenderMethod();
-		
 		if (multiThreading) {
 			createThreadPoolRenderers();
 		}
@@ -125,19 +124,6 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released UP"), "stopMovingForward");
-	}
-	
-	private void initRenderMethod() {
-		try {
-			if (multiThreading) {
-				renderMethod = this.getClass().getDeclaredMethod("multiThreadRender", (Class<?>[]) null);
-			} else {
-				renderMethod = this.getClass().getDeclaredMethod("singleThreadRender", (Class<?>[]) null);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			e.printStackTrace(Logger.log);
-		}
 	}
 	
 	private void initEmptyArray() {
@@ -389,11 +375,16 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			float heightDiff = ((sector.yOffset*HEIGHT) - effectiveOffset);
 		    			float heightOffset = heightDiff/distance;
 		    			
-		    			int lineHeight = (int) ((effectiveHeight/distance));
+		    			float quarterHeight = sector.wallHeight/2.0f;
+		    			int quarterOffset = (int) ((quarterHeight*HEIGHT)/distance);
 		    			
+		    			int correctionOffset = (int) (HEIGHT/(2*distance));
+		    			
+		    			int lineHeight = (int) ((effectiveHeight/distance));
+
 		    			int halfLineHeight = lineHeight >> 1;
 		    				
-		    			int trueDrawStart = (int)((HALF_HEIGHT - halfLineHeight) - heightOffset);
+		    			int trueDrawStart = (int)((HALF_HEIGHT - halfLineHeight) - heightOffset) - quarterOffset + correctionOffset;
 		    			
 		    			//trueDrawStart -= effectiveOffset;
 		    			
@@ -401,7 +392,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			
 		    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
 		    				
-		    			int trueDrawEnd = (int)((HALF_HEIGHT + halfLineHeight) - heightOffset);
+		    			int trueDrawEnd = (int)((HALF_HEIGHT + halfLineHeight) - heightOffset) - quarterOffset + correctionOffset;
 		    			//trueDrawEnd -= effectiveOffset;
 		    			trueDrawEnd += camera.yOffset;
 		    			

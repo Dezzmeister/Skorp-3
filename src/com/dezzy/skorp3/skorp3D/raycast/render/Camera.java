@@ -162,44 +162,84 @@ public class Camera {
 	    plane.y = oldPlaneX * sr + plane.y * cr;
 	}
 	
+	private int upDownLimit;
+	
+	public void setUpDownClamp(int limit) {
+		upDownLimit = limit;
+	}
+	
 	public void cheapRotateUp(float factor, int height) {
 		float speed = factor * this.rotSpeed;
-
+		
 		yOffset += (int)(speed * height);
-		yOffset = (int)RenderUtils.clamp(yOffset, -(height/8), (height/8));
+		yOffset = (int)RenderUtils.clamp(yOffset, -upDownLimit, upDownLimit);
 	}
 	
 	public void cheapRotateDown(float factor, int height) {
 		float speed = factor * this.rotSpeed;
 		
 		yOffset -= (int)(speed * height);
-		yOffset = (int)RenderUtils.clamp(yOffset, -(height/8), (height/8));
+		yOffset = (int)RenderUtils.clamp(yOffset, -upDownLimit, upDownLimit);
 	}
 	
 	public void moveForward(WorldMap map, float factor) {
 		float speed = factor * moveSpeed;
 		
-		if (map.get((int)(pos.x + dir.x * speed), (int)pos.y).id() == 0) {
-			pos.x += dir.x * speed;
+		float xTimesSpeed = dir.x * speed;
+		float yTimesSpeed = dir.y * speed;
+		
+		if (map.get((int)(pos.x + xTimesSpeed), (int)pos.y).id() == 0) {
+			pos.x += xTimesSpeed;
 		}
-		if (map.get((int)pos.x,(int)(pos.y + dir.y * speed)).id() == 0) {
-			pos.y += dir.y * speed;
+		if (map.get((int)pos.x,(int)(pos.y + yTimesSpeed)).id() == 0) {
+			pos.y += yTimesSpeed;
 		}
 	}
 	
 	public void moveBackward(WorldMap map, float factor) {
 		float speed = factor * moveSpeed;
 		
-		if (map.get((int)(pos.x - dir.x * speed),(int)pos.y).id() == 0) {
-			pos.x -= dir.x * speed;
+		float xTimesSpeed = dir.x * speed;
+		float yTimesSpeed = dir.y * speed;
+		
+		if (map.get((int)(pos.x - xTimesSpeed),(int)pos.y).id() == 0) {
+			pos.x -= xTimesSpeed;
 		}
-	    if (map.get((int)pos.x,(int)(pos.y - dir.y * speed)).id() == 0) {
-	    	pos.y -= dir.y * speed;
+	    if (map.get((int)pos.x,(int)(pos.y - yTimesSpeed)).id() == 0) {
+	    	pos.y -= yTimesSpeed;
 	    }
 	}
 	
 	public void moveLeft(WorldMap map, float factor) {
+		computeSideDir();
 		
+		float speed = factor * moveSpeed;
+		
+		float xTimesSpeed = sidedir.x * speed;
+		float yTimesSpeed = sidedir.y * speed;
+		
+		if (map.get((int)(pos.x + xTimesSpeed), (int)pos.y).id() == 0) {
+			pos.x += xTimesSpeed;
+		}
+		if (map.get((int)pos.x,(int)(pos.y + yTimesSpeed)).id() == 0) {
+			pos.y += yTimesSpeed;
+		}
+	}
+	
+	public void moveRight(WorldMap map, float factor) {
+		computeSideDir();
+		
+		float speed = factor * moveSpeed;
+		
+		float xTimesSpeed = sidedir.x * speed;
+		float yTimesSpeed = sidedir.y * speed;
+		
+		if (map.get((int)(pos.x - xTimesSpeed),(int)pos.y).id() == 0) {
+			pos.x -= xTimesSpeed;
+		}
+	    if (map.get((int)pos.x,(int)(pos.y - yTimesSpeed)).id() == 0) {
+	    	pos.y -= yTimesSpeed;
+	    }
 	}
 	
 	public void moveForward(float factor) {

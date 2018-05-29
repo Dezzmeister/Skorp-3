@@ -45,7 +45,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
  */
 @SuppressWarnings("unused")
 public final class Global {
-	private static final int SIZE = 500;
+	private static final int SIZE = 700;
 	/**
 	 * X resolution of the rendered image
 	 */
@@ -138,7 +138,7 @@ public final class Global {
 															   	   new Wall(4,7,4,8).setTexture(bars),
 															   	   new Wall(4,8,4,9.25f).setTexture(window),
 															   	   new Wall(4,9.25f,9,9.25f).setTexture(window).tile(4, 1))
-														   .moveUp(0.5f)
+														   .moveUp(0.1f)
 														   .setWallHeight(2.0f);
 		
 		public static final Sector testSector = new Sector(new Vector2(0,0),
