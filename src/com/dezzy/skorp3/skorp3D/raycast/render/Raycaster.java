@@ -160,10 +160,6 @@ public class Raycaster implements RaycastRenderer {
 	    //Move
 	    int sprintfactor = (container.keys[KeyEvent.VK_SHIFT]) ? 2 : 1;
 	    
-	    if (!container.keys['W'] && !container.keys[KeyEvent.VK_UP] && !container.keys['S'] && !container.keys[KeyEvent.VK_DOWN]) {
-	    	sprintfactor = 0;
-	    }
-	    
 	    if (container.keys['W'] || container.keys[KeyEvent.VK_UP]) {
 	    	container.camera.moveForward(container.map,sprintfactor);
 	    }
@@ -173,13 +169,15 @@ public class Raycaster implements RaycastRenderer {
 	    if (container.keys['A'] || container.keys[KeyEvent.VK_LEFT]) {
 	    	container.camera.moveLeft(container.map,sprintfactor);
 	    }
-	    if (container.keys['D'] || container.keys[KeyEvent.VK_LEFT]) {
+	    if (container.keys['D'] || container.keys[KeyEvent.VK_RIGHT]) {
 	    	container.camera.moveRight(container.map,sprintfactor);
 	    }
 	    
 	    pos = container.camera.pos;
 	    dir = container.camera.dir;
-	    plane = container.camera.plane;  
+	    plane = container.camera.plane;
+	    //System.out.println("DIR: "+dir);
+	    //System.out.println("POS: "+pos);
 	    
 	    //renderFrom(0,WIDTH);
 	    renderAndBlock();
