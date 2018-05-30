@@ -45,7 +45,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
  */
 @SuppressWarnings("unused")
 public final class Global {
-	private static final int SIZE = 700;
+	private static final int SIZE = 500;
 	/**
 	 * X resolution of the rendered image
 	 */
@@ -158,13 +158,14 @@ public final class Global {
 																	new Wall(-10,0,-20,0).tile(8, 1).setTexture(rockface),
 																	new Wall(-20,0,-20,10).tile(8, 1).setTexture(rockface),
 																	new Wall(-20,10,-10,10).tile(8, 1).setTexture(rockface));
-		
+		/*
 		public static RaycastMap map = new RaycastMap(10,10,mainSector,testSector,testSector2)
 													 .definePortals(
 															 new Portal(0,0,0,10).setBorders(mainSector, testSector),
 															 new Portal(-10,0,-10,10).setBorders(testSector, testSector2));
+		*/
 		
-		//public static RaycastMap loadedmap = new MapLoader("C:/Users/Joe Junior/git/Skorp-3/levels/test.lol").finalMap();
+		public static RaycastMap map = new MapLoader("C:/Users/Joe Junior/git2/Skorp-3/levels/test.lol").finalMap();
 	}
 	
 	public static class Raycast {

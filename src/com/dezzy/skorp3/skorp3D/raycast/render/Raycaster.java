@@ -34,7 +34,7 @@ public class Raycaster implements RaycastRenderer {
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 4;
+	private int rendererCount = 10;
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
 	private LatchRef latchref;

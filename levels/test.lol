@@ -1,15 +1,13 @@
 Dezzy
 
-deftex: darkbricks,assets/raycast/textures/darkbricks.png,512,512
-deftex: cartoonstones,assets/raycast/textures/cartoonstones.png,512,512
-deftex: bars,assets/raycast/textures/bars.png,16,16
+import texturedefs stdtex: levels/standardtextures.tex
 
 mapwidth: 10
 mapdepth: 10
 
 walltemplate cartoonwall:
 	tile: 8,1
-	settex: cartoonstones
+	settex: stdtex.cartoonstones
 endtemplate
 
 sector main:
@@ -20,8 +18,8 @@ sector main:
 		pt: 10,0
 	enddefpts
 	
-	wallheight: 2.0
-	sectorheight: 0.2
+	wallheight: 1.3
+	sectorheight: 0.15
 	
 	wall: 0,0,10,0
 		tile: 8,1
@@ -34,23 +32,23 @@ sector main:
 	wall: 0,10,10,10,cartoonwall
 	
 	wall: 0,1,1,1
-		settex: cartoonstones
+		settex: stdtex.cartoonstones
 	endwall
 	
 	wall: 1,1,4,4
-		settex: cartoonstones
+		settex: stdtex.cartoonstones
 	endwall
 	
 	wall: 4,4,4,7
-		settex: cartoonstones
+		settex: stdtex.cartoonstones
 	endwall
 	
 	wall: 4,7,4,8
-		settex: bars
+		settex: stdtex.bars
 	endwall
 	
 	wall: 4,8,4,9.25
-		settex: cartoonstones
+		settex: stdtex.cartoonstones
 	endwall
 endsector
 
@@ -63,17 +61,17 @@ sector secondary:
 	enddefpts
 	
 	wall: 0,0,-10,0
-		settex: darkbricks
+		settex: stdtex.darkbricks
 		tile: 8,1
 	endwall
 	
 	wall: -10,0,-10,10
-		settex: darkbricks
+		settex: stdtex.darkbricks
 		tile: 8,1
 	endwall
 	
 	wall: -10,10,0,10
-		settex: cartoonstones
+		settex: stdtex.cartoonstones
 		tile: 8,1
 	endwall
 endsector

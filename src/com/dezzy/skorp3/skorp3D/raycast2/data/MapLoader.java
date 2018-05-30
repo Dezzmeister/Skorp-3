@@ -24,6 +24,23 @@ public class MapLoader {
 		loadAndProcessMap(path);
 	}
 	
+	Map<String,Sector> pendingSectors = new HashMap<String,Sector>();
+	List<Wall> pendingWalls = new ArrayList<Wall>();
+	List<Vector2> sectorPoints = new ArrayList<Vector2>();
+	Map<String,Texture2> textures = new HashMap<String,Texture2>();
+	List<Portal> portals = new ArrayList<Portal>();
+	Map<String,WallTemplate> wallTemplates = new HashMap<String,WallTemplate>();
+	
+	Texture2 defaultTexture = Wall.DEFAULT_TEXTURE;
+	
+	Wall currentWall = null;
+	
+	Sector currentSector = null;
+	String currentSectorName = null;
+	String currentTemplateName = null;
+	
+	String lastDefinedTexName = null;
+	
 	private void loadAndProcessMap(String path) {
 		Stream<String> fileStream = Load.load(path);
 		List<String> file = new ArrayList<String>();
@@ -36,23 +53,6 @@ public class MapLoader {
 			Logger.log("CRITICAL ERROR: First line in level must be \"Dezzy\"!");
 			System.exit(0);
 		}
-		
-		Map<String,Sector> pendingSectors = new HashMap<String,Sector>();
-		List<Wall> pendingWalls = new ArrayList<Wall>();
-		List<Vector2> sectorPoints = new ArrayList<Vector2>();
-		Map<String,Texture2> textures = new HashMap<String,Texture2>();
-		List<Portal> portals = new ArrayList<Portal>();
-		Map<String,WallTemplate> wallTemplates = new HashMap<String,WallTemplate>();
-		
-		Texture2 defaultTexture = Wall.DEFAULT_TEXTURE;
-		
-		Wall currentWall = null;
-		
-		Sector currentSector = null;
-		String currentSectorName = null;
-		String currentTemplateName = null;
-		
-		String lastDefinedTexName = null;
 		
 		int line = -1;
 		for (String s : file) {
@@ -159,7 +159,7 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"sector")) {
+			if (beginsWith(s,"sector") && !beginsWith(s,"sectorheight")) {
 				if (s.indexOf(" ") == -1 || s.lastIndexOf(":") == -1) {
 					error("\"sector\" should be followed by space, sector name, then colon!");
 				} else {
@@ -269,7 +269,7 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"wallheight")) {
+			if (beginsWith(s,"wallheight:")) {
 				if (currentSector == null) {
 					error("wallheight must be used in a sector definition!");
 				} else {
@@ -283,7 +283,7 @@ public class MapLoader {
 				continue;
 			}
 			
-			if (beginsWith(s,"sectorheight")) {
+			if (beginsWith(s,"sectorheight:")) {
 				if (currentSector == null) {
 					error("sectorheight must be used in a sector definition!");
 				} else {
@@ -295,7 +295,32 @@ public class MapLoader {
 					}
 				}
 				continue;
-			}			
+			}
+			
+			if (beginsWith(s,"import texturedefs ")) {
+				if (s.indexOf(": ") != -1 && s.length() > s.indexOf(": ")+2) {
+					String[] args = s.split(" ");
+					String namespace = null;
+					if (args[2].indexOf(":") != -1) {
+						namespace = args[2].substring(0,args[2].indexOf(":"));
+						//Recursion!
+						Map<String,Texture2> loadedTextures = new MapLoader(args[3]).finalTextureMap();
+						for (Entry<String,Texture2> e : loadedTextures.entrySet()) {
+							if (beginsWith(e.getKey(),namespace + ".")) {
+								error("namespace " + namespace + " is already in use!");
+								break;
+							} else {
+								textures.put(namespace + "." + e.getKey(), e.getValue());
+							}
+						}
+					} else {
+						error("import texturedefs statement is formatted incorrectly!");
+					}
+				} else {
+					error("import texturedefs statement is formatted incorrectly!");
+				}
+				continue;
+			}
 		}
 		
 		Sector[] finalSectors = new Sector[pendingSectors.size()];
@@ -332,6 +357,10 @@ public class MapLoader {
 	
 	public RaycastMap finalMap() {
 		return map;
+	}
+	
+	public Map<String,Texture2> finalTextureMap() {
+		return textures;
 	}
 	
 	/**

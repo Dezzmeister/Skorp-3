@@ -71,7 +71,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 4;
+	private int rendererCount = 8;
 	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
@@ -160,11 +160,15 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 			stopAndExit();
 		}
 		
+		while (WIDTH % rendererCount != 0) {
+			rendererCount--;
+		}
+		
 		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(rendererCount);
 		Logger.log(executor.getCorePoolSize() + " threads created for thread renderers.");
 		Logger.log("Maximum threads allowed: " + executor.getMaximumPoolSize());
 		
-		//In case the executor could not make all the threads we wanted
+		//In case the executor could not make all the threads I wanted
 		rendererCount = executor.getCorePoolSize();
 		
 		renderers = new ThreadRenderer[rendererCount];
@@ -551,7 +555,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	}
 	
 	private void preComputeCameraRotationLUT() {
-		for (int i = 0; i < WIDTH; i++) {
+		for (int i = -WIDTH; i < WIDTH; i++) {
 			camera.preComputeFactor(i);
 		}
 	}
