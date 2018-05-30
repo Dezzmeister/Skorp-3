@@ -20,8 +20,8 @@ sector main:
 		pt: 10,0
 	enddefpts
 	
-	floorheight: 0
-	ceilheight: 1.25
+	wallheight: 2.0
+	sectorheight: 0.2
 	
 	wall: 0,0,10,0
 		tile: 8,1

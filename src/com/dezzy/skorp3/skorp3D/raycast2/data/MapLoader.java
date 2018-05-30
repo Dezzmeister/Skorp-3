@@ -268,6 +268,34 @@ public class MapLoader {
 				}
 				continue;
 			}
+			
+			if (beginsWith(s,"wallheight")) {
+				if (currentSector == null) {
+					error("wallheight must be used in a sector definition!");
+				} else {
+					if (s.indexOf(": ") != -1 && s.indexOf(": ")+2 < s.length()) {
+						float wallHeight = Float.parseFloat(s.substring(s.indexOf(": ")+2));
+						currentSector.setWallHeight(wallHeight);
+					} else {
+						error("wallheight definition is not formatted correctly!");
+					}
+				}
+				continue;
+			}
+			
+			if (beginsWith(s,"sectorheight")) {
+				if (currentSector == null) {
+					error("sectorheight must be used in a sector definition!");
+				} else {
+					if (s.indexOf(": ") != -1 && s.indexOf(": ")+2 < s.length()) {
+						float sectorOffset = Float.parseFloat(s.substring(s.indexOf(": ")+2));
+						currentSector.moveUp(sectorOffset);
+					} else {
+						error("sectorheight definition is not formatted correctly!");
+					}
+				}
+				continue;
+			}			
 		}
 		
 		Sector[] finalSectors = new Sector[pendingSectors.size()];
