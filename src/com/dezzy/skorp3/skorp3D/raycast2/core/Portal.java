@@ -1,6 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
+import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
 public class Portal implements Linetype {	
 	public Vector2 v0;
@@ -10,6 +11,8 @@ public class Portal implements Linetype {
 	public float length;
 	
 	public boolean[] renderedStripes;
+	
+	public Texture2 texture;
 	
 	public Portal(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;
@@ -37,6 +40,11 @@ public class Portal implements Linetype {
 	
 	public void initializeRenderedStripes(int width) {
 		renderedStripes = new boolean[width];
+	}
+	
+	public Portal setTexture(Texture2 _texture) {
+		texture = _texture;
+		return this;
 	}
 	
 	/**

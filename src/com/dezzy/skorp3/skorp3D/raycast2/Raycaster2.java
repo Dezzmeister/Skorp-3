@@ -379,34 +379,17 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			float heightDiff = ((sector.yOffset*HEIGHT) - effectiveOffset);
 		    			float heightOffset = heightDiff/distance;
 		    			
-		    			float quarterHeight = sector.wallHeight/2.0f;
-		    			int quarterOffset = (int) ((quarterHeight*HEIGHT)/distance);
-		    			
-		    			int correctionOffset = (int) (HEIGHT/(2*distance));
-		    			
 		    			int lineHeight = (int) ((effectiveHeight/distance));
-
-		    			int halfLineHeight = lineHeight >> 1;
-		    				
-		    			int trueDrawStart = (int)((HALF_HEIGHT - halfLineHeight) - heightOffset) - quarterOffset + correctionOffset;
 		    			
-		    			//trueDrawStart -= effectiveOffset;
+		    			int halfHeightOverDistance = (int) (HALF_HEIGHT/distance);
 		    			
-		    			trueDrawStart += camera.yOffset;
+		    			int trueDrawEnd = (int) (HALF_HEIGHT - heightOffset + halfHeightOverDistance + camera.yOffset);
+		    			
+		    			int trueDrawStart = trueDrawEnd - lineHeight;   			
 		    			
 		    			int drawStart = (int)RenderUtils.clamp(trueDrawStart,0,HEIGHT-1);
-		    				
-		    			int trueDrawEnd = (int)((HALF_HEIGHT + halfLineHeight) - heightOffset) - quarterOffset + correctionOffset;
-		    			//trueDrawEnd -= effectiveOffset;
-		    			trueDrawEnd += camera.yOffset;
 		    			
 		    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
-		    			
-		    			/*
-		    			if (startX == WIDTH/2) {
-		    				System.out.println(trueDrawStart);
-		    			}
-		    			*/
 		    			
 		    			if (wall.isPortal()) {
 		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
