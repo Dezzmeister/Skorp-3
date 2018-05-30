@@ -373,15 +373,16 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			
 		    			distance *= fisheyeLUT[x];
 		    			
-		    			float effectiveHeight = HEIGHT*sector.wallHeight;
+		    			float heightOverDistance = HEIGHT/distance;
+		    			
 		    			float effectiveOffset = currentSector.yOffset*HEIGHT;
 		    			
 		    			float heightDiff = ((sector.yOffset*HEIGHT) - effectiveOffset);
 		    			float heightOffset = heightDiff/distance;
 		    			
-		    			int lineHeight = (int) ((effectiveHeight/distance));
+		    			int lineHeight = (int)(heightOverDistance * sector.wallHeight);
 		    			
-		    			int halfHeightOverDistance = (int) (HALF_HEIGHT/distance);
+		    			float halfHeightOverDistance = (heightOverDistance/2.0f);
 		    			
 		    			int trueDrawEnd = (int) (HALF_HEIGHT - heightOffset + halfHeightOverDistance + camera.yOffset);
 		    			
