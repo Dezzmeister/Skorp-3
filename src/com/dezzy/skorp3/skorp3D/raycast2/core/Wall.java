@@ -34,6 +34,7 @@ public class Wall implements Linetype {
 		v0 = line.v0();
 		v1 = line.v1();
 		portal = line;
+		texture = portal.texture;
 		updateLength();
 	}
 	

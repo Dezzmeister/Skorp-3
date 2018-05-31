@@ -71,7 +71,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
-	private int rendererCount = 8;
+	private int rendererCount = 4;
 	public final boolean[] EMPTY_PORTAL_STRIPE_ARRAY = new boolean[rendererCount];
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
@@ -117,7 +117,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		
 		preComputeCameraRotationLUT();
 		
-		disableUpDownRotation();
+		//disableUpDownRotation();
 		
 		panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		panel.getInputMap().put(KeyStroke.getKeyStroke("released W"), "stopMovingForward");
@@ -353,7 +353,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 			latch.latch.countDown();
 		}
 		
-		public void renderSector(Sector sector, int startX, int endX) {    	
+		public void renderSector(Sector sector, int startX, int endX) {
 		    for (int x = startX; x < endX; x++) {
 		    	//Map the x value to a range of -1 to 1
 		    	float norm = (2 * (x/(float)WIDTH)) - 1;
@@ -393,15 +393,46 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
 		    			
 		    			if (wall.isPortal()) {
-		    				drawCeilingAndFloor(x,drawStart,drawEnd,distance);
+		    				Sector other = wall.getPortal().otherSector(sector);
+    						
+    						//Current sector is lower than their sector and can see small portion of wall from their floor to ours
+    						if (sector.yOffset < other.yOffset) {
+    							int offsetDiff = (int)(((other.yOffset-sector.yOffset)*HEIGHT)/distance);
+    							int trueOffsetDrawEnd = trueDrawEnd - offsetDiff;
+    							int offsetDrawEnd = (int)RenderUtils.clamp(trueOffsetDrawEnd, 0, HEIGHT-1);
+    							
+    							float wallNorm = wall.getNorm(hit);
+    		    				
+    			    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
+    			    			for (int y = drawEnd; y > offsetDrawEnd; y--) {
+    			    				
+    			    				//TODO: Use correct lineHeight accounting for sector height differences
+    			    				float normY = (y-trueDrawStart)/(float)lineHeight;
+    			    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
+    			    					
+    			    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
+    			    				
+    			    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
+    			    					color = RenderUtils.darkenWithThreshold(color,wall.angleFromAxis);
+    			    					
+    			    					img.setRGB(x, y, color);
+    			    						
+    			    					zbuf2[x + y * WIDTH] = distance;
+    			    				}
+    			    			}
+    			    			drawCeilingAndFloor(x,drawStart,offsetDrawEnd,distance);
+    						}
+    						
 		    				for (int y = 0; y < HEIGHT; y++) {
 		    					
 		    					if (!wall.getPortal().renderedStripes[id] && zbuf2[x + y * WIDTH] > distance) {
 		    						wall.getPortal().renderedStripes[id] = true;
-		    						renderSector(wall.getPortal().otherSector(sector),startX,endX);
+	    						
+		    						renderSector(other,startX,endX);
 		    						break;
 		    					}
 		    				}
+		    				
 		    				continue;
 		    			}
 		    			

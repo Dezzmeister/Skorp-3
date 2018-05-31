@@ -12,7 +12,7 @@ public class Portal implements Linetype {
 	
 	public boolean[] renderedStripes;
 	
-	public Texture2 texture;
+	public Texture2 texture = Wall.DEFAULT_TEXTURE;
 	
 	public Portal(Vector2 _v0, Vector2 _v1) {
 		v0 = _v0;

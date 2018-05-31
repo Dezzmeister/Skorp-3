@@ -165,7 +165,7 @@ public final class Global {
 															 new Portal(-10,0,-10,10).setBorders(testSector, testSector2));
 		*/
 		
-		public static RaycastMap map = new MapLoader("C:/Users/Joe Junior/git2/Skorp-3/levels/test.lol").finalMap();
+		public static RaycastMap map = new MapLoader("C:/Users/Joe Junior/git2/Skorp-3/levels/roomlevel.lol").finalMap();
 	}
 	
 	public static class Raycast {

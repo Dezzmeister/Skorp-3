@@ -13,8 +13,8 @@ public class Texture2 {
 	 * (242,35,248)
 	 * <p>
 	 * The alpha mask for any transparency in a texture. If a texture has a pixel of this color
-	 * in the top row, then that entire column will be transparent. This will be changed in the future so that
-	 * transparency can be applied without being restricted to the entire stripe.
+	 * that pixel will not be rendered and whatever lies behind that pixel will remain. Use it to create windows and other
+	 * things (like bars) within sectors.
 	 */
 	public static final int ALPHA = 0xFFF223F8;
 	
