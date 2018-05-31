@@ -401,6 +401,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     						if (currentSector.yOffset < other.yOffset) {
     							int offsetDiff = (int)(((other.yOffset-sector.yOffset)*HEIGHT)/distance);
     							
+    							//TODO test ceiling for this
     							int trueOffsetDrawEnd = trueDrawEnd - offsetDiff;
     							int offsetDrawEnd = (int)RenderUtils.clamp(trueOffsetDrawEnd, 0, HEIGHT-1);
     							if (drawEnd-offsetDrawEnd < 0) {
