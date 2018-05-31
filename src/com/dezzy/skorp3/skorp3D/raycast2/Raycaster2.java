@@ -392,6 +392,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    			
 		    			int drawEnd = (int)RenderUtils.clamp(trueDrawEnd,0,HEIGHT-1);
 		    			
+		    			//TODO: factor texturing code into a method
 		    			if (wall.isPortal()) {
 		    				Sector other = wall.getPortal().otherSector(sector);
     						
@@ -420,7 +421,38 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     			    					zbuf2[x + y * WIDTH] = distance;
     			    				}
     			    			}
-    			    			drawCeilingAndFloor(x,drawStart,offsetDrawEnd,distance);
+    			    			drawFloor(x,drawStart,offsetDrawEnd,distance);
+    						}
+    						
+    						float currentSectorCeilHeight = currentSector.yOffset + currentSector.wallHeight;
+    						float sectorCeilHeight = sector.yOffset + sector.wallHeight;
+    						float otherCeilHeight = other.yOffset + other.wallHeight;
+    						
+    						if (currentSectorCeilHeight > sectorCeilHeight) {
+    							int offsetDiff = (int)(((otherCeilHeight - sectorCeilHeight)*HEIGHT)/distance);
+    							int trueOffsetDrawStart = trueDrawStart - offsetDiff;
+    							int offsetDrawStart = (int)RenderUtils.clamp(trueOffsetDrawStart, 0, HEIGHT-1);
+    							
+    							float wallNorm = wall.getNorm(hit);
+    		    				
+    			    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
+    			    			for (int y = offsetDrawStart; y < drawStart; y++) {
+    			    				
+    			    				//TODO: Use correct lineHeight accounting for sector height differences
+    			    				float normY = (y-trueOffsetDrawStart)/(float)lineHeight;
+    			    				int texY = (int) ((normY*(wall.texture.height)) * wall.yTiles) % wall.texture.height;
+    			    					
+    			    				int color = wall.texture.pixels[texX + (texY * wall.texture.width)];
+    			    				
+    			    				if (distance < zbuf2[x + y * WIDTH] && color != Texture2.ALPHA) {
+    			    					color = RenderUtils.darkenWithThreshold(color,wall.angleFromAxis);
+    			    					
+    			    					img.setRGB(x, y, color);
+    			    						
+    			    					zbuf2[x + y * WIDTH] = distance;
+    			    				}
+    			    			}
+    			    			drawCeiling(x,offsetDrawStart,drawStart,distance);
     						}
     						
 		    				for (int y = 0; y < HEIGHT; y++) {
@@ -509,6 +541,26 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 			if (distance < zbuf2[x + y * WIDTH]) {
 				img.setRGB(x, y, 0xFF8B4513);
 				
+				zbuf2[x + y * WIDTH] = distance;
+			}
+		}
+	}
+	
+	private void drawFloor(int x, int drawStart, int drawEnd, float distance) {
+		for (int y = drawEnd; y < HEIGHT; y++) {
+			if (distance < zbuf2[x + y * WIDTH]) {
+				img.setRGB(x, y, 0xFF8B4513);
+				
+				zbuf2[x + y * WIDTH] = distance;
+			}
+		}
+	}
+	
+	private void drawCeiling(int x, int drawStart, int drawEnd, float distance) {
+		for (int y = 0; y < drawStart; y++) {
+			if (distance < zbuf2[x + y * WIDTH]) {
+				img.setRGB(x,y,0xFF0000FF);
+					
 				zbuf2[x + y * WIDTH] = distance;
 			}
 		}
