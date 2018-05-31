@@ -396,7 +396,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    				Sector other = wall.getPortal().otherSector(sector);
     						
     						//Current sector is lower than their sector and can see small portion of wall from their floor to ours
-    						if (sector.yOffset < other.yOffset) {
+    						if (currentSector.yOffset < other.yOffset) {
     							int offsetDiff = (int)(((other.yOffset-sector.yOffset)*HEIGHT)/distance);
     							int trueOffsetDrawEnd = trueDrawEnd - offsetDiff;
     							int offsetDrawEnd = (int)RenderUtils.clamp(trueOffsetDrawEnd, 0, HEIGHT-1);
