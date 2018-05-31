@@ -182,6 +182,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 			int i = step/interval;
 			
 			renderers[i] = new ThreadRenderer(step,step+interval,latchref,i);
+			Logger.log("ThreadRenderer created to render from " + step + " to " + (step + interval));
 			step += interval;
 		}
 
@@ -399,12 +400,18 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     						//Current sector is lower than their sector and can see small portion of wall from their floor to ours
     						if (currentSector.yOffset < other.yOffset) {
     							int offsetDiff = (int)(((other.yOffset-sector.yOffset)*HEIGHT)/distance);
+    							
     							int trueOffsetDrawEnd = trueDrawEnd - offsetDiff;
     							int offsetDrawEnd = (int)RenderUtils.clamp(trueOffsetDrawEnd, 0, HEIGHT-1);
-    							
+    							if (drawEnd-offsetDrawEnd < 0) {
+    								drawEnd ^= offsetDrawEnd;
+    								offsetDrawEnd ^= drawEnd;
+    								drawEnd ^= offsetDrawEnd;
+    							}
     							float wallNorm = wall.getNorm(hit);
     		    				
     			    			int texX = (int) ((wallNorm * wall.texture.width) * wall.xTiles) % wall.texture.width;
+    			    			//System.out.println(((x == 250) ? "sector: " : "") + (drawEnd-offsetDrawEnd));
     			    			for (int y = drawEnd; y > offsetDrawEnd; y--) {
     			    				
     			    				//TODO: Use correct lineHeight accounting for sector height differences

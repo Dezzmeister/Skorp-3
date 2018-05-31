@@ -29,8 +29,16 @@ sector main:
 	//Sector border walls
 	wall: 0,0,0,20,border
 	//wall: 0,20,20,20,border
-	wall: 0,20,8,20,border
-	wall: 12,20,20,20,border
+	wall: 0,20,8,20
+		tile: 6.4,1
+		settex: rooms.stdwall
+	endwall
+	
+	wall: 12,20,20,20
+		tile: 6.4,1
+		settex: rooms.stdwall
+	endwall
+	
 	wall: 20,20,20,0,border
 	wall: 20,0,0,0,border
 	
