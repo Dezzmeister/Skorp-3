@@ -356,6 +356,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		
 		public void renderSector(Sector sector, int startX, int endX) {
 		    for (int x = startX; x < endX; x++) {
+		    	
 		    	//Map the x value to a range of -1 to 1
 		    	float norm = (2 * (x/(float)WIDTH)) - 1;
 		    	
