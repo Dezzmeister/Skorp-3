@@ -437,7 +437,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     						float sectorCeilHeight = sector.yOffset + sector.wallHeight;
     						float otherCeilHeight = other.yOffset + other.wallHeight;
     						
-    						if (currentSectorCeilHeight > sectorCeilHeight) {
+    						if ((currentSectorCeilHeight > sectorCeilHeight && sectorCeilHeight < otherCeilHeight) || (currentSectorCeilHeight > sectorCeilHeight && currentSector == other)) {
     							int offsetDiff = (int)(((otherCeilHeight - sectorCeilHeight)*HEIGHT)/distance);
     							int trueOffsetDrawStart = trueDrawStart - offsetDiff;
     							int offsetDrawStart = (int)RenderUtils.clamp(trueOffsetDrawStart, 0, HEIGHT-1);
