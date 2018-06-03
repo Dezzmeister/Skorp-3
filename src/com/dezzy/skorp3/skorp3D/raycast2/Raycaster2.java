@@ -5,11 +5,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -399,7 +398,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 		    				Sector other = wall.getPortal().otherSector(sector);
     						
     						//Current sector is lower than their sector and can see small portion of wall from their floor to ours
-    						if (currentSector.yOffset < other.yOffset) {
+    						if ((currentSector.yOffset < sector.yOffset && sector.yOffset < other.yOffset) || (other == currentSector && currentSector.yOffset < sector.yOffset)) {
     							int offsetDiff = (int)(((other.yOffset-sector.yOffset)*HEIGHT)/distance);
     							
     							//TODO test ceiling for this
@@ -430,6 +429,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     			    					zbuf2[x + y * WIDTH] = distance;
     			    				}
     			    			}
+    			    			
     			    			drawFloor(x,drawStart,offsetDrawEnd,distance);
     						}
     						
@@ -461,6 +461,7 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
     			    					zbuf2[x + y * WIDTH] = distance;
     			    				}
     			    			}
+    			    			
     			    			drawCeiling(x,offsetDrawStart,drawStart,distance);
     						}
     						

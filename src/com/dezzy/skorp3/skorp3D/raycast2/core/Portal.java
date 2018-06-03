@@ -1,5 +1,7 @@
 package com.dezzy.skorp3.skorp3D.raycast2.core;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast2.image.Texture2;
 
