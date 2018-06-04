@@ -321,6 +321,13 @@ public class MapLoader {
 				}
 				continue;
 			}
+			
+			if (beginsWith(s,"color:")) {
+				int col = Integer.parseInt(s.substring(s.indexOf(": ")+2));
+				if (currentSector != null) {
+					currentSector.color = col;
+				}
+			}
 		}
 		
 		Sector[] finalSectors = new Sector[pendingSectors.size()];

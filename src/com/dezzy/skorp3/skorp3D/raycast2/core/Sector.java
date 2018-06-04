@@ -26,6 +26,8 @@ public class Sector {
 	
 	private final AtomicBoolean rendered = new AtomicBoolean(false);
 	
+	public int color;
+	
 	/**
 	 * Floor texture uv coordinates. 
 	 */

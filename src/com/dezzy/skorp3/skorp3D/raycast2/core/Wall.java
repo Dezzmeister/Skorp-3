@@ -22,12 +22,23 @@ public class Wall implements Linetype {
 	public float yTiles = 1;
 	private boolean isPortal = false;
 	private Portal portal = null;
+	private boolean isPillar;
+	public float radius = -1f;
 	
 	public Wall(Vector2 _v0, Vector2 _v1, Color _color) {
 		v0 = _v0;
 		v1 = _v1;
 		color = RenderUtils.getIntFromRGB(_color);
 		updateLength();
+	}
+	
+	public Wall() {
+		
+	}
+	
+	public Wall(Vector2 _v0, float _radius) {
+		isPillar = true;
+		radius = _radius;
 	}
 	
 	public Wall(Portal line) {
@@ -146,6 +157,10 @@ public class Wall implements Linetype {
 	
 	public Portal getPortal() {
 		return portal;
+	}
+	
+	public boolean isPillar() {
+		return isPillar;
 	}
 	
 	@Override

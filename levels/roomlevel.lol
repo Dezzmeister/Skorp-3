@@ -26,6 +26,8 @@ sector main:
 	wallheight: 1.25
 	sectorheight: 0
 	
+	color: 16711680
+	
 	//Sector border walls
 	wall: 0,0,0,20,border
 	//wall: 0,20,20,20,border
@@ -72,6 +74,8 @@ sector stair0:
 		
 	wallheight: 1.25
 	sectorheight: 0.15
+	
+	color: 65280
 		
 	wall: 8,20,8,21.5,stairborder
 	wall: 12,20,12,21.5,stairborder
@@ -88,6 +92,8 @@ sector stair1:
 	wallheight: 1.25
 	sectorheight: 0.3
 	
+	color: 255
+	
 	wall: 8,21.5,8,23,stairborder
 	wall: 12,21.5,12,23,stairborder
 endsector
@@ -103,6 +109,8 @@ sector stair2:
 	wallheight: 1.25
 	sectorheight: 0.45
 	
+	color: 65535
+	
 	wall: 8,23,8,24.5,stairborder
 	wall: 12,23,12,24.5,stairborder
 endsector
@@ -117,6 +125,8 @@ sector stair3:
 	
 	wallheight: 1.25
 	sectorheight: 0.6
+	
+	color: 16711935
 	
 	wall: 8,24.5,8,26,stairborder
 	wall: 12,24.5,12,26,stairborder

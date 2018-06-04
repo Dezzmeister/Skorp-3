@@ -30,6 +30,13 @@ public final class RenderUtils {
 		return null;
 	}
 	
+	public static Vector2 rayHitPillar(Vector2 rayStart, Vector2 rayDirection, Wall pillar) {
+		Vector2 v0 = pillar.v0;
+		float radius = pillar.radius;
+		
+		return null;
+	}
+	
 	public static Vector2 segmentHitSegment(Linetype segment1, Linetype segment2) {
 		Vector2 r0 = segment1.v0();
 		Vector2 r1 = segment1.v1();
@@ -119,6 +126,19 @@ public final class RenderUtils {
 	
 	public static int darkenWithThreshold(int color, int angle) {
 		int darkenBy = (int)((angle/180f) * Wall.SHADE_THRESHOLD);
+		int red = (color >> 16) & 0xFF;
+		int green = (color >> 8) & 0xFF;
+		int blue = color & 0xFF;
+		
+		red -= (red - darkenBy >= 0) ? darkenBy : red;
+		green -= (green - darkenBy >= 0) ? darkenBy : green;
+		blue -= (blue - darkenBy >= 0) ? darkenBy : blue;
+		
+		return (red << 16) | (green << 8) | blue;
+	}
+	
+	public static int darkenWithThreshold(int color, float normValue, int threshold) {
+		int darkenBy = (int)(normValue * threshold);
 		int red = (color >> 16) & 0xFF;
 		int green = (color >> 8) & 0xFF;
 		int blue = color & 0xFF;

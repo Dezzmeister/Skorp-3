@@ -1,7 +1,7 @@
 Time in ns	Event
 
-329680704160745	Log created
-329680704230276	Received config entry Dezzy
+417708563275184	Log created
+417708563406739	Received config entry Dezzy
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -20,7 +20,7 @@ java.lang.NullPointerException
 	at com.dezzy.skorp3.Global.<clinit>(Global.java:82)
 	at com.dezzy.skorp3.Skorp3.launch(Skorp3.java:23)
 	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:19)
-329680706560742	Received config entry 10221
+417708565577996	Received config entry 10221
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -39,7 +39,7 @@ java.lang.NullPointerException
 	at com.dezzy.skorp3.Global.<clinit>(Global.java:82)
 	at com.dezzy.skorp3.Skorp3.launch(Skorp3.java:23)
 	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:19)
-329680708333777	Received config entry 10.0.0.9
+417708566955179	Received config entry 10.0.0.9
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -58,8 +58,8 @@ java.lang.NullPointerException
 	at com.dezzy.skorp3.Global.<clinit>(Global.java:82)
 	at com.dezzy.skorp3.Skorp3.launch(Skorp3.java:23)
 	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:19)
-329680709974467	Config created with config/config.txt
-329680710380195	Received config entry t
+417708568206338	Config created with config/config.txt
+417708568510931	Received config entry t
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -78,7 +78,7 @@ java.lang.NullPointerException
 	at com.dezzy.skorp3.Global.<clinit>(Global.java:82)
 	at com.dezzy.skorp3.Skorp3.launch(Skorp3.java:23)
 	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:19)
-329680711450811	Received config entry i
+417708569924065	Received config entry i
 java.lang.NullPointerException
 	at com.dezzy.skorp3.file.Config.formatAndStoreConfigEntry(Config.java:74)
 	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
@@ -97,18 +97,18 @@ java.lang.NullPointerException
 	at com.dezzy.skorp3.Global.<clinit>(Global.java:82)
 	at com.dezzy.skorp3.Skorp3.launch(Skorp3.java:23)
 	at com.dezzy.skorp3.Skorp3.main(Skorp3.java:19)
-329680713245574	Config created with config/keyconfig.txt
-329680961423058	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!
-329680973329414	WARNING: encode in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and SHOULD be fixed/completed soon!
-329680973421463	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
-329680973463340	WARNING: applyTransformations in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
-329680973504426	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.Composite is important and NEEDS to be fixed/completed now!
-329680973551043	WARNING: com.dezzy.skorp3.file.Config is important and NEEDS to be fixed/completed now!
-329680973668772	WARNING: com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer is important and NEEDS to be fixed/completed now!
-329680974054351	WARNING: com.dezzy.skorp3.skorp3D.raycast2.gpu.RaycastTask is important and SHOULD be fixed/completed soon!
-329680989017692	4 threads created for thread renderers.
-329680989076161	Maximum threads allowed: 4
-329680989116062	ThreadRenderer created to render from 0 to 125
-329680989141346	ThreadRenderer created to render from 125 to 250
-329680989160309	ThreadRenderer created to render from 250 to 375
-329680989179272	4 thread renderers created.
+417708571054335	Config created with config/keyconfig.txt
+417708787396992	WARNING: Method lineHitRectangle in class com.dezzy.skorp3.game.CollisionHandler needs testing!
+417708795871451	WARNING: encode in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and SHOULD be fixed/completed soon!
+417708796129426	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
+417708796172093	WARNING: applyTransformations in declaring class com.dezzy.skorp3.field3D.AARectPrism is important and NEEDS to be fixed/completed now!
+417708796219895	WARNING: getTransformedTriangles in declaring class com.dezzy.skorp3.field3D.Composite is important and NEEDS to be fixed/completed now!
+417708796328932	WARNING: com.dezzy.skorp3.file.Config is important and NEEDS to be fixed/completed now!
+417708796513821	WARNING: com.dezzy.skorp3.game3D.renderers.BarycentricVBORenderer is important and NEEDS to be fixed/completed now!
+417708797749968	WARNING: com.dezzy.skorp3.skorp3D.raycast2.gpu.RaycastTask is important and SHOULD be fixed/completed soon!
+417708809803682	4 threads created for thread renderers.
+417708809860966	Maximum threads allowed: 4
+417708809901262	ThreadRenderer created to render from 0 to 125
+417708809923780	ThreadRenderer created to render from 125 to 250
+417708809943138	ThreadRenderer created to render from 250 to 375
+417708809962891	4 thread renderers created.
