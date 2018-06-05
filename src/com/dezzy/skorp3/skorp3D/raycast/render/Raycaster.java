@@ -13,12 +13,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.swing.KeyStroke;
 
 import com.dezzy.skorp3.Global;
-import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.core.Element;
 import com.dezzy.skorp3.skorp3D.raycast.core.RaycastContainer;
 import com.dezzy.skorp3.skorp3D.raycast.core.Vector2;
 import com.dezzy.skorp3.skorp3D.raycast.image.Sprite;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
+import com.dezzy.skorp3.skorp3D.raycast2.core.RenderUtils;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
 public class Raycaster implements RaycastRenderer {
 	private RaycastGraphicsContainer container;
@@ -38,6 +40,8 @@ public class Raycaster implements RaycastRenderer {
 	private ThreadRenderer[] renderers;
 	private ThreadPoolExecutor executor;
 	private LatchRef latchref;
+	private Wall perpWall = new Wall();
+	private float[] fisheyeLUT;
 	/**
 	 * Meant for static floors (without texturing).
 	 */	
@@ -49,6 +53,7 @@ public class Raycaster implements RaycastRenderer {
 		sprites = container.map.getSprites();
 		
 		createThreadPoolRenderers();
+		populateFisheyeLUT();
 		
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held W"), "moveForward");
 		container.panel.getInputMap().put(KeyStroke.getKeyStroke("held UP"), "moveForward");
@@ -422,13 +427,12 @@ public class Raycaster implements RaycastRenderer {
 		    	Element element = null;
 		    	
 		    	double camX = 2 * x/(double)WIDTH - 1.0;
-		        double rposx = pos.x;
-		        double rposy = pos.y;
+		    	
 		        double rdirx = dir.x + plane.x * camX;
 		        double rdiry = dir.y + plane.y * camX;
 		        
-		        int mapX = (int)rposx;
-		        int mapY = (int)rposy;
+		        int mapX = (int)pos.x;
+		        int mapY = (int)pos.y;
 		        
 		        double sideDistX;
 		        double sideDistY;
@@ -445,21 +449,24 @@ public class Raycaster implements RaycastRenderer {
 		        
 		        if (rdirx < 0) {
 		            stepX = -1;
-		            sideDistX = (rposx - mapX) * deltaDistX;
+		            sideDistX = (pos.x - mapX) * deltaDistX;
 		        } else {
 		        	stepX = 1;
-		        	sideDistX = (mapX + 1.0 - rposx) * deltaDistX;
+		        	sideDistX = (mapX + 1.0 - pos.x) * deltaDistX;
 		        }
 		          
 		        if (rdiry < 0) {
 		        	stepY = -1;
-		        	sideDistY = (rposy - mapY) * deltaDistY;
+		        	sideDistY = (pos.y - mapY) * deltaDistY;
 		        } else {
 		        	stepY = 1;
-		        	sideDistY = (mapY + 1.0 - rposy) * deltaDistY;
+		        	sideDistY = (mapY + 1.0 - pos.y) * deltaDistY;
 		        }
+		        Vector2 currentLoc;
+		        Vector2 customHit = null;
+		        Linetype hitWall = null;
 		        //DDA
-		        while (!hit) {
+		        dda:  while (!hit) {
 		        	if (sideDistX < sideDistY) {
 		        	    sideDistX += deltaDistX;
 		        		mapX += stepX;
@@ -471,15 +478,36 @@ public class Raycaster implements RaycastRenderer {
 		        	}
 		            element = container.map.get(mapX, mapY);
 		        	if (element != Element.SPACE) {
-		        		hit = true;
+		        		if (element.isCustom()) {
+		        			currentLoc = new Vector2(mapX,mapY);
+		        			Vector2 rayDirection = new Vector2((float)rdirx + pos.x,(float)rdiry + pos.y);
+		        			for (Linetype l : element.lines) {
+		        				Linetype test = new Wall(l.v0().add(currentLoc),l.v1().add(currentLoc));
+		        				customHit = RenderUtils.rayHitSegment(pos, rayDirection, test);
+		        				if (customHit != null) {
+		        					hitWall = l;
+		        					break dda;
+		        				}
+		        			}
+		        		} else {
+		        			hit = true;
+		        		}
 		        	}
 		        }
 		        //System.out.println(mapX + " " + rdirx);
-		          
-		        if (!side) {
-		        	perpWallDist = (mapX - rposx + (1 - stepX)/2)/rdirx;
+		        if (customHit == null) {
+		        	if (!side) {
+		        		perpWallDist = ((mapX - pos.x + (1 - stepX)/2))/rdirx;
+		        	} else {
+		        		perpWallDist = ((mapY - pos.y + (1 - stepY)/2))/rdiry;
+		        	}
 		        } else {
-		        	perpWallDist = (mapY - rposy + (1 - stepY)/2)/rdiry;
+		        	//perpWallDist = Vector2.distance(pos, customHit);
+		        	if (!side) {
+		        		perpWallDist = ((customHit.x - pos.x + (1 - stepX)/2))/rdirx;
+		        	} else {
+		        		perpWallDist = ((customHit.y - pos.y + (1 - stepY)/2))/rdiry;
+		        	}
 		        }
 		        
 		        int lineHeight = (int)(HEIGHT/perpWallDist);
@@ -503,7 +531,13 @@ public class Raycaster implements RaycastRenderer {
 		        
 		        wallX -= Math.floor(wallX);
 		        
-		        int texX = (int)(wallX * element.frontTexture().SIZE);
+		        int texX;
+		        
+		        if (customHit == null) {
+		        	texX = (int)(wallX * element.frontTexture().SIZE);
+		        } else {
+		        	texX = (int)(element.frontTexture().SIZE * hitWall.getNorm(customHit));
+		        }
 		        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
 		        
 		        for (int y = drawStart; y < drawEnd; y++) {
@@ -559,8 +593,10 @@ public class Raycaster implements RaycastRenderer {
 		        	floorTexX = (int)(currentFloorX * floortex.SIZE) % floortex.SIZE;
 		        	floorTexY = (int)(currentFloorY * floortex.SIZE) % floortex.SIZE;
 		        	
-		        	int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
-		        	int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
+		        	//int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
+		        	int color = 0xFF323232;
+		        	//int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
+		        	int ceilColor = 0xFF505050;
 		        	img.setRGB(x, y, color);
 		        	img.setRGB(x, (HEIGHT - y), ceilColor);
 		        }
@@ -569,32 +605,20 @@ public class Raycaster implements RaycastRenderer {
 	    }
 	}
 	
-	public static Vector2 rayHitSegment(Line ray, Line seg) {
-		double m1 = ray.slope();
-		double b1 = ray.yIntercept();
-		
-		double m2 = seg.slope();
-		double b2 = seg.yIntercept();
-		
-		if (m1==m2) {
-			return null;
+	private void populateFisheyeLUT() {
+		fisheyeLUT = new float[WIDTH];
+		pos = container.camera.pos;
+	    dir = container.camera.dir;
+	    plane = container.camera.plane;
+	    perpWall = new Wall(pos.x,pos.y,pos.x+dir.x,pos.y+dir.y);
+	    
+		for (int x = 0; x < WIDTH; x++) {
+			float norm = (2 * (x/(float)WIDTH)) - 1;
+			Vector2 rayendp = new Vector2(pos.x+dir.x+(plane.x*norm),pos.y+dir.y+(plane.y*norm));
+			Wall ray = new Wall(pos,rayendp);
+			
+			fisheyeLUT[x] = (float) Math.cos(RenderUtils.angleBetweenLines(perpWall, ray));
 		}
-		
-		double bDiff = b1-b2;
-		double mDiff = m2-m1;
-		
-		double sharedX = (bDiff/mDiff);
-		double sharedY = (m1*sharedX)+b1;
-		
-		Vector2 p = new Vector2((float)sharedX,(float)sharedY);
-		double minX = Math.min(seg.point.x, seg.endpoint.x);
-		double maxX = Math.max(seg.point.x, seg.endpoint.x);
-		double minY = Math.min(seg.point.y, seg.endpoint.y);
-		double maxY = Math.max(seg.point.y, seg.endpoint.y);
-		if (p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) {
-			return p;
-		}
-		return null;
 	}
 
 	@Override

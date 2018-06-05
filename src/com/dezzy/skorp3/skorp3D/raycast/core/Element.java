@@ -5,9 +5,10 @@ import java.awt.Color;
 import com.dezzy.skorp3.field.Line;
 import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
 
 /**
- * Represents an element of a world map. In the game, this is seen as a colored block.
+ * Represents an element of a world map. In the game, this is seen as a textured block or a custom shape.
  * <p>
  * Elements have an ID, a name, and a Color.
  * <p>
@@ -26,6 +27,8 @@ public class Element implements Cloneable {
 	 */
 	public static final Element SPACE = new Element(0,"space",Color.PINK,true);
 	
+	public static final Texture DEFAULT_TEXTURE = new Texture("assets/raycast/textures/wall.png",16);
+	
 	private int id = 0;
 	
 	private String name;
@@ -39,6 +42,8 @@ public class Element implements Cloneable {
 	public Orientation orientation = Orientation.NOT_THIN;
 	
 	public Line segment;
+	
+	public Linetype[] lines = null;
 	
 	/**
 	 * Both textures must be the same size.
@@ -143,29 +148,25 @@ public class Element implements Cloneable {
 		color = _color;
 	}
 	
-	public Element makeThin(Orientation facing, Line _segment) {
-		thin = true;
-		if (facing == Orientation.NOT_THIN) {
-			System.out.println("Cannot make an Element thin and pass Orientation.NOT_THIN! Defaulting to Orientation.XPLANE.");
-			Logger.warn("Cannot make an Element thin and pass in Orientation.NOT_THIN! Defaulting to Orientation.XPLANE.");
-			orientation = Orientation.XPLANE;
-		} else {
-			orientation = facing;
-		}
-		segment = _segment;
+	public Element customize(Linetype ... customShape) {
+		lines = customShape;
 		return this;
+	}
+	
+	public boolean isCustom() {
+		return lines!=null;
 	}
 	
 	public boolean isThin() {
 		return thin;
 	}
 	
+	@Deprecated
 	@Override
 	public Element clone() {
 		Element element = new Element(id, name, color, changeable);
 		element.setFrontTexture(frontTexture);
 		element.setSideTexture(sideTexture);
-		element.makeThin(orientation,segment);
 		
 		return element;
 	}
