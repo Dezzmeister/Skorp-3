@@ -464,7 +464,7 @@ public class Raycaster implements RaycastRenderer {
 		        }
 		        Vector2 currentLoc;
 		        Vector2 customHit = null;
-		        Linetype hitWall = null;
+		        Wall hitWall = null;
 		        //DDA
 		        dda:  while (!hit) {
 		        	if (sideDistX < sideDistY) {
@@ -481,11 +481,12 @@ public class Raycaster implements RaycastRenderer {
 		        		if (element.isCustom()) {
 		        			currentLoc = new Vector2(mapX,mapY);
 		        			Vector2 rayDirection = new Vector2((float)rdirx + pos.x,(float)rdiry + pos.y);
-		        			for (Linetype l : element.lines) {
-		        				Linetype test = new Wall(l.v0().add(currentLoc),l.v1().add(currentLoc));
-		        				customHit = RenderUtils.rayHitSegment(pos, rayDirection, test);
+		        			for (Wall l : element.lines) {
+		        				Wall testing = new Wall(l.v0().add(currentLoc),l.v1().add(currentLoc));
+		        				customHit = RenderUtils.rayHitSegment(pos, rayDirection, testing);
 		        				if (customHit != null) {
-		        					hitWall = l;
+		        					testing.texture = l.texture;
+		        					hitWall = testing;
 		        					break dda;
 		        				}
 		        			}
@@ -504,29 +505,39 @@ public class Raycaster implements RaycastRenderer {
 		        } else {
 		        	//perpWallDist = Vector2.distance(pos, customHit);
 		        	if (!side) {
-		        		perpWallDist = ((customHit.x - pos.x + (1 - stepX)/2))/rdirx;
+		        		perpWallDist = ((customHit.x - pos.x + (1 - Math.abs(stepX))/2))/rdirx;
 		        	} else {
-		        		perpWallDist = ((customHit.y - pos.y + (1 - stepY)/2))/rdiry;
+		        		perpWallDist = ((customHit.y - pos.y + (1 - Math.abs(stepY))/2))/rdiry;
 		        	}
+		        	
 		        }
 		        
 		        int lineHeight = (int)(HEIGHT/perpWallDist);
 		          
 		        int drawStart = -(lineHeight >> 1) + (HEIGHT >> 1);
+		        int trueDrawStart = drawStart;
 		        if (drawStart < 0) {
 		        	  drawStart = 0;
 		        }
-		        int drawEnd = (lineHeight >> 1) + (HEIGHT >> 1);
+		        int drawEnd = (lineHeight + HEIGHT) >> 1;
 		        if (drawEnd >= HEIGHT) {
 		        	  drawEnd = HEIGHT -1;
 		        }
 		        
 		        //Texturing
 		        double wallX;
-		        if (side) {
-		        	wallX = (pos.x + ((mapY - pos.y + (1 - stepY)/2)/rdiry) * rdirx);
+		        if (customHit == null) {
+		        	if (side) {
+		        		wallX = (pos.x + ((mapY - pos.y + (1 - stepY)/2)/rdiry) * rdirx);
+		        	} else {
+		        		wallX = (pos.y + ((mapX - pos.x + (1 - stepX)/2)/rdirx) * rdiry);
+		        	}
 		        } else {
-		        	wallX = (pos.y + ((mapX - pos.x + (1 - stepX)/2)/rdirx) * rdiry);
+		        	if (side) {
+		        		wallX = (pos.x + ((customHit.y - pos.y + (1 - Math.abs(stepY))/2)/rdiry) * rdirx);
+		        	} else {
+		        		wallX = (pos.y + ((customHit.x - pos.x + (1 - Math.abs(stepX))/2)/rdirx) * rdiry);
+		        	}
 		        }
 		        
 		        wallX -= Math.floor(wallX);
@@ -541,7 +552,12 @@ public class Raycaster implements RaycastRenderer {
 		        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
 		        
 		        for (int y = drawStart; y < drawEnd; y++) {
-		        	int texY = ((((y << 1) - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight) >> 1;
+		        	int texY;
+		        	if (customHit == null) {
+		        		texY = ((((y << 1) - HEIGHT + lineHeight) * element.frontTexture().SIZE)/lineHeight) >> 1;
+		        	} else {
+		        		texY = (int) (((y - trueDrawStart)/(float)lineHeight) * element.frontTexture().SIZE);
+		        	}
 		        	int color;
 		        	if (!side && (texX + (texY * element.frontTexture().SIZE)) < element.frontTexture().pixels.length && (texX + (texY * element.frontTexture().SIZE)) >= 0) {
 		        		color = element.frontTexture().pixels[(int) (texX + (texY * element.frontTexture().SIZE))];
@@ -552,6 +568,8 @@ public class Raycaster implements RaycastRenderer {
 		        	}
 		        	img.setRGB(x, y, color);
 		        }
+		        img.setRGB(x, drawStart, 0xFFFF0000);
+		        img.setRGB(x, drawEnd, 0xFFFF0000);
 		        
 		        zbuf[x] = perpWallDist;
 		        
@@ -593,10 +611,10 @@ public class Raycaster implements RaycastRenderer {
 		        	floorTexX = (int)(currentFloorX * floortex.SIZE) % floortex.SIZE;
 		        	floorTexY = (int)(currentFloorY * floortex.SIZE) % floortex.SIZE;
 		        	
-		        	//int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
-		        	int color = 0xFF323232;
-		        	//int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
-		        	int ceilColor = 0xFF505050;
+		        	int color = (floortex.pixels[floortex.SIZE * floorTexY + floorTexX]);
+		        	//int color = 0xFF323232;
+		        	int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
+		        	//int ceilColor = 0xFF505050;
 		        	img.setRGB(x, y, color);
 		        	img.setRGB(x, (HEIGHT - y), ceilColor);
 		        }

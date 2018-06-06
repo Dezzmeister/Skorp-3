@@ -3,9 +3,9 @@ package com.dezzy.skorp3.skorp3D.raycast.core;
 import java.awt.Color;
 
 import com.dezzy.skorp3.field.Line;
-import com.dezzy.skorp3.log.Logger;
 import com.dezzy.skorp3.skorp3D.raycast.render.Texture;
 import com.dezzy.skorp3.skorp3D.raycast2.core.Linetype;
+import com.dezzy.skorp3.skorp3D.raycast2.core.Wall;
 
 /**
  * Represents an element of a world map. In the game, this is seen as a textured block or a custom shape.
@@ -43,7 +43,7 @@ public class Element implements Cloneable {
 	
 	public Line segment;
 	
-	public Linetype[] lines = null;
+	public Wall[] lines = null;
 	
 	/**
 	 * Both textures must be the same size.
@@ -148,7 +148,7 @@ public class Element implements Cloneable {
 		color = _color;
 	}
 	
-	public Element customize(Linetype ... customShape) {
+	public Element customize(Wall ... customShape) {
 		lines = customShape;
 		return this;
 	}

@@ -189,7 +189,7 @@ public final class Global {
 			table.add(new Element(3,"red",Color.RED,true).applyTexture(wood));
 			table.add(new Element(4,"magenta",Color.MAGENTA,true).applyTexture(metal));
 			table.add(new Element(5,"gold",Color.YELLOW,false).applyTexture(tiles));
-			table.add(new Element(6,"halftest",Color.GREEN,false).applyTexture(nicebricks).customize(new Wall(0,0,1,1)));
+			table.add(new Element(6,"halftest",Color.GREEN,false).applyTexture(metal).customize(new Wall(0.5f,0,0.5f,1)));
 			/**
 			int[][] map = {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
