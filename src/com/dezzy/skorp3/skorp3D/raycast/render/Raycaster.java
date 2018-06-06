@@ -447,6 +447,11 @@ public class Raycaster implements RaycastRenderer {
 		        boolean hit = false;
 		        boolean side = false;
 		        
+		        double adjMapX;
+		        double adjMapY;
+		        int adjStepX;
+		        int adjStepY;
+		        
 		        if (rdirx < 0) {
 		            stepX = -1;
 		            sideDistX = (pos.x - mapX) * deltaDistX;
@@ -465,7 +470,7 @@ public class Raycaster implements RaycastRenderer {
 		        Vector2 currentLoc;
 		        Vector2 customHit = null;
 		        Wall hitWall = null;
-		        //DDA
+		        
 		        dda:  while (!hit) {
 		        	if (sideDistX < sideDistY) {
 		        	    sideDistX += deltaDistX;
@@ -495,7 +500,24 @@ public class Raycaster implements RaycastRenderer {
 		        		}
 		        	}
 		        }
-		        //System.out.println(mapX + " " + rdirx);
+
+		        if (customHit != null) {
+		        	adjMapX = customHit.x;
+		        	adjMapY = customHit.y;
+		        	adjStepX = Math.abs(stepX);
+		        	adjStepY = Math.abs(stepY);
+		        } else {
+		        	adjMapX = mapX;
+		        	adjMapY = mapY;
+		        	adjStepX = stepX;
+		        	adjStepY = stepY;
+		        }
+		        
+		        if (!side) {
+	        		perpWallDist = ((adjMapX - pos.x + (1 - adjStepX)/2))/rdirx;
+	        	} else {
+	        		perpWallDist = ((mapY - pos.y + (1 - adjStepY)/2))/rdiry;
+	        	} /*
 		        if (customHit == null) {
 		        	if (!side) {
 		        		perpWallDist = ((mapX - pos.x + (1 - stepX)/2))/rdirx;
@@ -511,7 +533,7 @@ public class Raycaster implements RaycastRenderer {
 		        	}
 		        	
 		        }
-		        
+		        */
 		        int lineHeight = (int)(HEIGHT/perpWallDist);
 		          
 		        int drawStart = -(lineHeight >> 1) + (HEIGHT >> 1);
@@ -547,7 +569,8 @@ public class Raycaster implements RaycastRenderer {
 		        if (customHit == null) {
 		        	texX = (int)(wallX * element.frontTexture().SIZE);
 		        } else {
-		        	texX = (int)(element.frontTexture().SIZE * hitWall.getNorm(customHit));
+		        	//TODO change to wall texture
+		        	texX = (int)(element.frontTexture().SIZE * wallX);
 		        }
 		        if((!side && rdirx > 0) || (side && rdiry < 0)) texX = element.frontTexture().SIZE - texX - 1;
 		        
