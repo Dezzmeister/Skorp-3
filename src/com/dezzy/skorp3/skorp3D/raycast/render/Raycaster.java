@@ -33,6 +33,9 @@ public class Raycaster implements RaycastRenderer {
 	private BufferedImage img;
 	private Graphics2D g2;
 	
+	public static final float FULL_FOG_DISTANCE = 5f;
+	public static final int SHADE_THRESHOLD = 100;
+	
 	/**
 	 * The number of threads that will be working to render the image.
 	 */
@@ -240,6 +243,8 @@ public class Raycaster implements RaycastRenderer {
 	    				int texY = ((d * texHeight)/spriteHeight) >> 8;
 	    				int	color = sprites[sprites[i].order].pixels[texX + texWidth * texY];
 	    				if ((color & ~sprites[i].alpha) != 0) {
+	    					float normValue = (float) (sprites[i].distance/FULL_FOG_DISTANCE);
+	    					color = RenderUtils.darkenWithThreshold(color,normValue >= 1 ? 1 : normValue,SHADE_THRESHOLD);
 	    					img.setRGB(stripe, y, color);
 	    				}
 	    			}
@@ -516,7 +521,7 @@ public class Raycaster implements RaycastRenderer {
 		        if (!side) {
 	        		perpWallDist = ((adjMapX - pos.x + (1 - adjStepX)/2))/rdirx;
 	        	} else {
-	        		perpWallDist = ((mapY - pos.y + (1 - adjStepY)/2))/rdiry;
+	        		perpWallDist = ((adjMapY - pos.y + (1 - adjStepY)/2))/rdiry;
 	        	} /*
 		        if (customHit == null) {
 		        	if (!side) {
@@ -548,19 +553,11 @@ public class Raycaster implements RaycastRenderer {
 		        
 		        //Texturing
 		        double wallX;
-		        if (customHit == null) {
-		        	if (side) {
-		        		wallX = (pos.x + ((mapY - pos.y + (1 - stepY)/2)/rdiry) * rdirx);
-		        	} else {
-		        		wallX = (pos.y + ((mapX - pos.x + (1 - stepX)/2)/rdirx) * rdiry);
-		        	}
-		        } else {
-		        	if (side) {
-		        		wallX = (pos.x + ((customHit.y - pos.y + (1 - Math.abs(stepY))/2)/rdiry) * rdirx);
-		        	} else {
-		        		wallX = (pos.y + ((customHit.x - pos.x + (1 - Math.abs(stepX))/2)/rdirx) * rdiry);
-		        	}
-		        }
+		        if (side) {
+	        		wallX = (pos.x + ((adjMapY - pos.y + (1 - adjStepY)/2)/rdiry) * rdirx);
+	        	} else {
+	        		wallX = (pos.y + ((adjMapX - pos.x + (1 - adjStepX)/2)/rdirx) * rdiry);
+	        	}
 		        
 		        wallX -= Math.floor(wallX);
 		        
@@ -589,10 +586,12 @@ public class Raycaster implements RaycastRenderer {
 		        	} else {
 		        		color = 0;
 		        	}
+		        	float normValue = (float) (perpWallDist/FULL_FOG_DISTANCE);
+					color = RenderUtils.darkenWithThreshold(color,normValue >= 1 ? 1 : normValue,SHADE_THRESHOLD);
 		        	img.setRGB(x, y, color);
 		        }
-		        img.setRGB(x, drawStart, 0xFFFF0000);
-		        img.setRGB(x, drawEnd, 0xFFFF0000);
+		        //img.setRGB(x, drawStart, 0xFFFF0000);
+		        //img.setRGB(x, drawEnd, 0xFFFF0000);
 		        
 		        zbuf[x] = perpWallDist;
 		        
@@ -612,6 +611,11 @@ public class Raycaster implements RaycastRenderer {
 		        } else {
 		        	floorXWall = mapX + wallX;
 		        	floorYWall = mapY + 1.0;
+		        }
+		        
+		        if (customHit != null) {
+		        	floorXWall = adjMapX;
+		        	floorYWall = adjMapY;
 		        }
 		        
 		        double currentDist;
@@ -638,10 +642,13 @@ public class Raycaster implements RaycastRenderer {
 		        	//int color = 0xFF323232;
 		        	int ceilColor = (ceilingtex.pixels[ceilingtex.SIZE * floorTexY + floorTexX]);
 		        	//int ceilColor = 0xFF505050;
+		        	float normValue = (float) (currentDist/FULL_FOG_DISTANCE);
+					color = RenderUtils.darkenWithThreshold(color,normValue >= 1 ? 1 : normValue,SHADE_THRESHOLD);
+					ceilColor = RenderUtils.darkenWithThreshold(ceilColor,normValue >= 1 ? 1 : normValue,SHADE_THRESHOLD);
 		        	img.setRGB(x, y, color);
 		        	img.setRGB(x, (HEIGHT - y), ceilColor);
 		        }
-		        
+		        		        
 		    }
 	    }
 	}

@@ -44,6 +44,11 @@ public class Texture {
 		}
 	}
 	
+	/**
+	 * Good for pre-shading, though it uses a lot of memory
+	 * 
+	 * @return a darker variant of this Texture
+	 */
 	public Texture darken() {
 		int[] pix = new int[SIZE * SIZE];
 		

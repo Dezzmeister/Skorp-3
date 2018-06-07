@@ -353,10 +353,6 @@ public class Raycaster2 implements Renderer, MultiThreadedRenderer, SingleThread
 			latch.latch.countDown();
 		}
 		
-		public void textureLinearWall(Wall wall) {
-			
-		}
-		
 		public static final float FULL_FOG_DISTANCE = 10.0f;
 		public static final int SHADE_THRESHOLD = 75;
 		public void renderSector(Sector sector, int startX, int endX) {
