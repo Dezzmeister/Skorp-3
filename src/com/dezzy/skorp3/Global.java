@@ -190,6 +190,11 @@ public final class Global {
 			table.add(new Element(4,"magenta",Color.MAGENTA,true).applyTexture(metal));
 			table.add(new Element(5,"gold",Color.YELLOW,false).applyTexture(tiles));
 			table.add(new Element(6,"halftest",Color.GREEN,false).applyTexture(metal).customize(new Wall(0.5f,0,0.5f,1)));
+			table.add(new Element(7,"diagonaltest",Color.GREEN,false).applyTexture(metal).customize(new Wall(0.5f,0,1,0.5f)));
+			table.add(new Element(8,"pillar",Color.GREEN,false).applyTexture(nicebricks).customize(new Wall(0.25f,0.25f,0.75f,0.25f),
+																								   new Wall(0.75f,0.25f,0.75f,0.75f),
+																								   new Wall(0.75f,0.75f,0.25f,0.75f),
+																								   new Wall(0.25f,0.75f,0.25f,0.25f)));
 			/**
 			int[][] map = {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -250,10 +255,10 @@ public final class Global {
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
+					{1,0,0,0,0,8,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
-					{1,0,0,0,0,0,0,0,0,1},
-					{1,1,1,1,1,6,1,0,0,1},
+					{1,1,1,1,1,6,7,0,0,1},
 					{1,0,0,0,0,0,0,0,0,1},
 					{1,1,1,1,1,1,1,1,1,1}
 			};
