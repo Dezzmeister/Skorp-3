@@ -197,6 +197,9 @@ public class Raycaster implements RaycastRenderer {
 	    
 	    //g2.drawImage(floor, 0, 0, null);
 	    g2.drawImage(img,  0,  0, Global.SCREENWIDTH, Global.SCREENHEIGHT, null);
+	    container.g.setColor(Color.GREEN);
+	    container.g.drawString("x: "+pos.x,5, 20);
+	    container.g.drawString("y: "+pos.y,5, 35);
 	}
 	
 	public void renderSprites() {

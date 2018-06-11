@@ -6,7 +6,10 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.dezzy.skorp3.UI.Mouse;
@@ -45,7 +48,7 @@ import com.dezzy.skorp3.skorp3D.true3D2.core.MeshList;
  */
 @SuppressWarnings("unused")
 public final class Global {
-	private static final int SIZE = 500;
+	private static final int SIZE = 1000;
 	/**
 	 * X resolution of the rendered image
 	 */
@@ -171,7 +174,7 @@ public final class Global {
 	public static class Raycast {
 		public static WorldMap mainMap;
 		public static Camera camera = new Camera()
-								      .setPos(new Vector2(1,1))
+								      .setPos(new Vector2(4,4))
 								      .setDir(new Vector2(-0.75f,0))
 								      .setPlane(new Vector2(0,0.5f));
 		
@@ -195,7 +198,7 @@ public final class Global {
 																								   new Wall(0.75f,0.25f,0.75f,0.75f),
 																								   new Wall(0.75f,0.75f,0.25f,0.75f),
 																								   new Wall(0.25f,0.75f,0.25f,0.25f)));
-			/**
+			
 			int[][] map = {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 					{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,0,1},
@@ -249,7 +252,7 @@ public final class Global {
 					{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 
 			};
-			**/
+			
 			int[][] testroom = {
 					{1,1,1,1,1,1,1,1,1,1},
 					{1,0,0,0,0,0,0,0,0,1},
@@ -268,7 +271,7 @@ public final class Global {
 			Sprite angrydude = new Sprite("assets/raycast/sprites/angrydude.png",64).at(8.5, 1.5);
 			Sprite weirdThing = new Sprite("assets/raycast/sprites/weirdthing.png",64).at(3, 2);
 			
-			mainMap = new WorldMap(testroom,table);
+			mainMap = new WorldMap(map,table);
 			mainMap.setBorder(new Element(3,"red",Color.RED,true).applyTexture(wood));
 			mainMap.startAt(2, 2);
 			mainMap.applyStartPos(camera);
