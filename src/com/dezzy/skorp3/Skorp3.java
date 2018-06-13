@@ -48,6 +48,8 @@ public class Skorp3 {
 		
 		frame.pack();
 		frame.setSize(Global.SCREENWIDTH,Global.SCREENHEIGHT);
+		//frame.setUndecorated(true);
+		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
